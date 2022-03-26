@@ -65,11 +65,11 @@ class GamesView(LoginRequiredMixin, View):
                 game.bid_result = res
             else:
                 game.isBid = False
-            if game.date.date() < today_date.date():
+            if game.date.astimezone(timezone('Asia/Kolkata')).date() < today_date.date():
                 completed_games.append(game)
-            if game.date.date() == today_date.date():
+            if game.date.astimezone(timezone('Asia/Kolkata')).date() == today_date.date():
                 ongoing_games.append(game)
-            if game.date.date() > today_date.date():
+            if game.date.astimezone(timezone('Asia/Kolkata')).date() > today_date.date():
                 upcoming_games.append(game)
         completed_games.sort(key=lambda x: x.date, reverse=True)
         ongoing_games.sort(key=lambda x: x.date, reverse=False)
@@ -79,8 +79,9 @@ class GamesView(LoginRequiredMixin, View):
     def post(self, request):
         print(request.POST)
         game = Game.objects.get(id=request.POST['gameId'])
+        game_date = game.date.astimezone(timezone('Asia/Kolkata'))
         today_date = datetime.datetime.now(timezone('Asia/Kolkata')) + datetime.timedelta(minutes=5)
-        if today_date < game.date and (game.date - today_date).days <=1 and int(request.POST['amount']) >= 100 and int(request.POST['amount']) <= 3000:
+        if today_date < game_date and (game_date - today_date).days <=1 and int(request.POST['amount']) >= 100 and int(request.POST['amount']) <= 3000:
             if request.POST['method'] == 'create':
                 game_result = Game_Result.objects.create(user=request.user.userprofile, game=game, bid_amount=request.POST['amount'], team=request.POST['team'])
             else:
