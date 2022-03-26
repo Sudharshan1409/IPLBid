@@ -17,5 +17,6 @@ def dateParse(value, arg):
 @register.filter(name = 'dateCheck')
 def dateCheck(date):
     today_date = datetime.datetime.now(timezone('Asia/Kolkata')) + datetime.timedelta(minutes=5)
+    print(today_date < date and (date - today_date).days <=1, today_date, date)
     return today_date < date and (date - today_date).days <=1
 
