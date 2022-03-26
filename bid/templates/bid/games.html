@@ -22,7 +22,7 @@
             <th scope="col">Bid</th>
             <th scope="col">Winner</th>
             <th scope="col">Result</th>
-            <th scope="col"></th>
+            <th scope="col">Status</th>
         </tr>
         </thead>
         <tbody>
@@ -37,26 +37,26 @@
                 {% endif %}
                 <td>{{ game.winner }}</td>
                 {% if game.bid_result.completed %}
-                    {% if game.bid_result.won %}
-                        <td style="color: green">+{{ game.bid_result.bid_amount }}</td>
+                    {% if not game.bid_result.did_not_bid %}
+                        {% if game.bid_result.won %}
+                            <td style="color: green">+{{ game.bid_result.bid_amount }}</td>
+                        {% else %}
+                            <td style="color: red">-{{ game.bid_result.bid_amount }}</td>
+                        {% endif %}
                     {% else %}
-                        <td style="color: red">-{{ game.bid_result.bid_amount }}</td>
+                        <td style="color: red">-1000</td>
                     {% endif %}
                 {% else %}
                     <td>N/A</td>
                 {% endif %}
-                {% if not game.isBid %}
-                    {% if game.date|dateCheck %}
-                        <td><a class="btn btn-primary" style="font-size:65%" data-toggle="modal" data-target="#exampleModal" data-whatever=",{{ game.team1 }},{{ game.team2 }},{{ game.pk }},create" href="#" role="button">BID AMOUNT</a></td>
+                {% if not game.bid_result.did_not_bid %}
+                    {% if game.bid_result.won %}
+                        <td>Won</td>
                     {% else %}
-                        <td><button class="btn btn-primary" style="font-size:65%" disabled>BID AMOUNT</button></td>
+                        <td>Lost</td>
                     {% endif %}
                 {% else %}
-                    {% if game.date|dateCheck %}
-                        <td><a class="btn btn-primary" style="font-size:65%" data-toggle="modal" data-target="#exampleModal" data-whatever="{{ game.bid_result.bid_amount }},{{ game.team1 }},{{ game.team2 }},{{ game.pk }},update,{{ game.bid_result.pk }}" href="#" role="button">UPDATE BID</a></td>
-                    {% else %}
-                        <td><button class="btn btn-primary" style="font-size:65%" disabled>UPDATE BID</button></td>
-                    {% endif %}
+                    <td>No Bid</td>
                 {% endif %}
             </tr>
         {% endfor %}
@@ -86,10 +86,14 @@
                 {% endif %}
                 <td>{{ game.winner }}</td>
                 {% if game.bid_result.completed %}
-                    {% if game.bid_result.won %}
-                        <td style="color: green">+{{ game.bid_result.bid_amount }}</td>
+                    {% if not game.bid_result.did_not_bid %}
+                        {% if game.bid_result.won %}
+                            <td style="color: green">+{{ game.bid_result.bid_amount }}</td>
+                        {% else %}
+                            <td style="color: red">-{{ game.bid_result.bid_amount }}</td>
+                        {% endif %}
                     {% else %}
-                        <td style="color: red">-{{ game.bid_result.bid_amount }}</td>
+                        <td style="color: red">-1000</td>
                     {% endif %}
                 {% else %}
                     <td>N/A</td>
@@ -135,10 +139,14 @@
                 {% endif %}
                 <td>{{ game.winner }}</td>
                 {% if game.bid_result.completed %}
-                    {% if game.bid_result.won %}
-                        <td style="color: green">+{{ game.bid_result.bid_amount }}</td>
+                    {% if not game.bid_result.did_not_bid %}
+                        {% if game.bid_result.won %}
+                            <td style="color: green">+{{ game.bid_result.did_not_bid }}</td>
+                        {% else %}
+                            <td style="color: red">-{{ game.bid_result.did_not_bid }}</td>
+                        {% endif %}
                     {% else %}
-                        <td style="color: red">-{{ game.bid_result.bid_amount }}</td>
+                        <td style="color: red">-1000</td>
                     {% endif %}
                 {% else %}
                     <td>N/A</td>

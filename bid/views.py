@@ -25,6 +25,7 @@ class GameDetailView(LoginRequiredMixin, View):
                     'amount': game_result[0].bid_amount,
                     'won': game_result[0].won,
                     'team': game_result[0].team,
+                    'did_not_bid': game_result[0].did_not_bid,
                 })
             else:
                listObj.append({
@@ -34,6 +35,7 @@ class GameDetailView(LoginRequiredMixin, View):
                     'amount': 'N/A',
                     'won': None,
                     'team': 'N/A',
+                    'did_not_bid': True,
                })
         print(users)
         return render(request, self.template_name, {

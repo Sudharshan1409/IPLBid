@@ -3,7 +3,7 @@
 {% load date %}
 {% block content %}
 <h2>{{ game }}</h2>
-<table class="table table-striped contents" style="font-size:80%;text-align:center;" id="completed">
+<table class="table table-striped contents" style="font-size:80%;text-align:center;">
     <thead>
     <tr>
         <th scope="col">Name</th>
@@ -18,7 +18,19 @@
             <td>{{ obj.name }}</td>
             <td>{{ obj.team }}</td>
             <td>{{ obj.amount }}</td>
-            <td>{{ obj.status }}</td>
+            {% if obj.did_not_bid %}
+                <td>No Bid</td>
+            {% else %}
+                {% if game.completed %}
+                    {% if obj.won %}
+                        <td>Won</td>
+                    {% else %}
+                        <td>Lost</td>
+                    {% endif %}
+                {% else %}
+                    <td>Not Decided</td>
+                {% endif %}
+            {% endif %}
         </tr>
     {% endfor %}
     </tbody>

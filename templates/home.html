@@ -1,4 +1,22 @@
 {% extends "base.html" %}
 {% block content %}
-    <h1>Welcome to the Home Page</h1>
+    <h2>LeaderBoard</h2>
+    <table class="table table-striped contents" style="font-size:100%;text-align:center;">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Name</th>
+            <th scope="col">Amount</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for user in users %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ user.user.first_name.upper }} {{ user.user.last_name.upper }}</td>
+                <td>{{ user.amount }}</td> 
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
 {% endblock %}
