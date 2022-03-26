@@ -45,7 +45,7 @@ class GamesView(LoginRequiredMixin, View):
         print(request.POST)
         game = Game.objects.get(id=request.POST['gameId'])
         today_date = datetime.datetime.now(timezone('Asia/Kolkata'))
-        if today_date < game.date and (game.date - today_date).days <=1:
+        if today_date < game.date and (game.date - today_date).days <=1 and request.POST['amount'] >= 100 and request.POST['amount'] <= 3000:
             if request.POST['method'] == 'create':
                 game_result = Game_Result.objects.create(user=request.user.userprofile, game=game, bid_amount=request.POST['amount'], team=request.POST['team'])
             else:
