@@ -21,7 +21,7 @@ class GameDetailView(LoginRequiredMixin, View):
                 listObj.append({
                     'user': user,
                     'game_result': game_result[0],
-                    'name': f"{user.user.first_name.capitalize()} {user.user.last_name.capitalize()}",
+                    'name': f"{user.user.first_name.upper()} {user.user.last_name.upper()}",
                     'amount': game_result[0].bid_amount,
                     'won': game_result[0].won,
                     'team': game_result[0].team,
@@ -30,7 +30,7 @@ class GameDetailView(LoginRequiredMixin, View):
                listObj.append({
                     'user': user,
                     'game_result': None,
-                    'name': f"{user.user.first_name.capitalize()} {user.user.last_name.capitalize()}",
+                    'name': f"{user.user.first_name.upper()} {user.user.last_name.upper()}",
                     'amount': 'N/A',
                     'won': None,
                     'team': 'N/A',

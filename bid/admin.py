@@ -9,7 +9,7 @@ class UserProfileAdmin(admin.ModelAdmin):
     list_display = ('user', 'amount')
 
 class Game_ResultAdmin(admin.ModelAdmin):
-    list_display = ('user', 'game', 'bid_amount', 'won', 'completed', 'team')
+    list_display = ('user', 'game', 'bid_amount', 'won', 'completed', 'team', 'did_not_bid')
 
 admin.site.register(UserProfile, UserProfileAdmin)
 admin.site.register(Game, GameAdmin)
