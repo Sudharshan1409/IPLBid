@@ -28,7 +28,7 @@
         <tbody>
         {% for game in completed_games %}
             <tr>
-                <td>{{ game.name }}</td>
+                <td><a href="{% url 'bid:game_detail' game.pk %}">{{ game.name }}</a></td>
                 <td>{{ game.date|dateParse:"date" }}</td>
                 {% if game.bid_result %}
                     <td>{{game.bid_result.team}} {{game.bid_result.bid_amount}}</td>
@@ -77,7 +77,7 @@
         <tbody>
         {% for game in upcoming_games %}
             <tr>
-                <td>{{ game.name }}</td>
+                <td><a href="{% url 'bid:game_detail' game.pk %}">{{ game.name }}</a></td>
                 <td>{{ game.date|dateParse:"date" }}</td>
                 {% if game.bid_result %}
                     <td>{{game.bid_result.team}} {{game.bid_result.bid_amount}}</td>
@@ -126,7 +126,7 @@
         <tbody>
         {% for game in ongoing_games %}
             <tr>
-                <td>{{ game.name }}</td>
+                <td><a href="{% url 'bid:game_detail' game.pk %}">{{ game.name }}</a></td>
                 <td>{{ game.date|dateParse:"date" }}</td>
                 {% if game.bid_result %}
                     <td>{{game.bid_result.team}} {{game.bid_result.bid_amount}}</td>

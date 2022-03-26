@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+{% load date %}
+{% block content %}
+<h2>{{ game }}</h2>
+<table class="table table-striped contents" style="font-size:65%;text-align:center;" id="completed">
+    <thead>
+    <tr>
+        <th scope="col">Name</th>
+        <th scope="col">Team</th>
+        <th scope="col">Bid Amount</th>
+        <th scope="col">Status</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for obj in listObj %}
+        <tr>
+            <td>{{ obj.name }}</td>
+            <td>{{ obj.team }}</td>
+            <td>{{ obj.amount }}</td>
+            <td>{{ obj.status }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

@@ -1,12 +1,45 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.mixins import LoginRequiredMixin
-from bid.models import Game, Game_Result
+from bid.models import Game, Game_Result, UserProfile
 from django.views.generic import View
 import datetime
 from pytz import timezone
 from django.urls import reverse
 # Create your views here.
 
+class GameDetailView(LoginRequiredMixin, View):
+    model = Game
+    template_name = 'bid/game_detail.html'
+    def get(self, request, *args, **kwargs):
+        game = Game.objects.get(pk=kwargs['pk'])
+        users = UserProfile.objects.all()
+        listObj = []
+        for user in users:
+            game_result = Game_Result.objects.filter(user=user, game=game)
+            print(game_result)
+            if game_result:
+                listObj.append({
+                    'user': user,
+                    'game_result': game_result[0],
+                    'name': f"{user.user.first_name.capitalize()} {user.user.last_name.capitalize()}",
+                    'amount': game_result[0].bid_amount,
+                    'won': game_result[0].won,
+                    'team': game_result[0].team,
+                })
+            else:
+               listObj.append({
+                    'user': user,
+                    'game_result': None,
+                    'name': f"{user.user.first_name.capitalize()} {user.user.last_name.capitalize()}",
+                    'amount': 'N/A',
+                    'won': None,
+                    'team': 'N/A',
+               })
+        print(users)
+        return render(request, self.template_name, {
+            'listObj': listObj,
+            'game': game
+        })
 class GamesView(LoginRequiredMixin, View):
     model = Game
     template_name = 'bid/games.html'
@@ -45,7 +78,7 @@ class GamesView(LoginRequiredMixin, View):
         print(request.POST)
         game = Game.objects.get(id=request.POST['gameId'])
         today_date = datetime.datetime.now(timezone('Asia/Kolkata')) + datetime.timedelta(minutes=5)
-        if today_date < game.date and (game.date - today_date).days <=1 and request.POST['amount'] >= 100 and request.POST['amount'] <= 3000:
+        if today_date < game.date and (game.date - today_date).days <=1 and int(request.POST['amount']) >= 100 and int(request.POST['amount']) <= 3000:
             if request.POST['method'] == 'create':
                 game_result = Game_Result.objects.create(user=request.user.userprofile, game=game, bid_amount=request.POST['amount'], team=request.POST['team'])
             else:
