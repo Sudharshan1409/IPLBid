@@ -141,9 +141,9 @@
                 {% if game.bid_result.completed %}
                     {% if not game.bid_result.did_not_bid %}
                         {% if game.bid_result.won %}
-                            <td style="color: green">+{{ game.bid_result.did_not_bid }}</td>
+                            <td style="color: green">+{{ game.bid_result.bid_amount }}</td>
                         {% else %}
-                            <td style="color: red">-{{ game.bid_result.did_not_bid }}</td>
+                            <td style="color: red">-{{ game.bid_result.bid_amount }}</td>
                         {% endif %}
                     {% else %}
                         <td style="color: red">-1000</td>
