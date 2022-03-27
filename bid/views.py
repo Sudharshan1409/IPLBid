@@ -3,9 +3,23 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from bid.models import Game, Game_Result, UserProfile
 from django.views.generic import View
 import datetime
+from django.shortcuts import get_object_or_404
 from pytz import timezone
 from django.urls import reverse
 # Create your views here.
+
+class UserDetailView(LoginRequiredMixin, View):
+    model = UserProfile
+    template_name = 'bid/user_detail.html'
+    def get(self, request, *args, **kwargs):
+        print('hello')
+        user = UserProfile.objects.get(pk=kwargs['pk'])
+        game_results = Game_Result.objects.filter(user=user)
+        results_array = []
+        for game_result in game_results:
+            results_array.append(game_result)
+        results_array.sort(key=lambda x: x.game.date, reverse=True)
+        return render(request, self.template_name, {'results': results_array, 'result_user': user})
 
 class GameDetailView(LoginRequiredMixin, View):
     model = Game

@@ -49,11 +49,11 @@
                 {% else %}
                     <td>N/A</td>
                 {% endif %}
-                {% if not game.bid_result.did_not_bid %}
+                {% if game.bid_result and not game.bid_result.did_not_bid %}
                     {% if game.bid_result.won %}
-                        <td>Won</td>
+                        <td style="color:green">Won</td>
                     {% else %}
-                        <td>Lost</td>
+                        <td style="color:red">Lost</td>
                     {% endif %}
                 {% else %}
                     <td>No Bid</td>

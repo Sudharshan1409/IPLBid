@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+{% load date %}
+{% block content %}
+    <h2>{{ result_user.user.first_name.capitalize }}'s Bid History</h2>
+    <table class="table table-striped contents" style="font-size:80%;text-align:left;">
+        <thead>
+        <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Team</th>
+            <th scope="col">Status</th>
+            <th scope="col">Result</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for result in results %}
+            <tr>
+                <td>{{ result_user.user.first_name.upper }}</td>
+                <td>{{ result.team }}</td>
+                {% if result.did_not_bid %}
+                    <td>No Bid</td>
+                {% else %}
+                    {% if result.game.completed %}
+                        {% if result.won %}
+                            <td style="color:green">Won</td>
+                        {% else %}
+                            <td style="color:red">Lost</td>
+                        {% endif %}
+                    {% else %}
+                        <td>Not Decided</td>
+                    {% endif %}
+                {% endif %}
+                {% if result.completed %}
+                    {% if not result.did_not_bid %}
+                        {% if result.won %}
+                            <td style="color: green">+{{ result.bid_amount }}</td>
+                        {% else %}
+                            <td style="color: red">-{{ result.bid_amount }}</td>
+                        {% endif %}
+                    {% else %}
+                        <td style="color: red">-1000</td>
+                    {% endif %}
+                {% else %}
+                    <td>N/A</td>
+                {% endif %}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

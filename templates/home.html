@@ -13,7 +13,7 @@
         {% for user in users %}
             <tr>
                 <td>{{ forloop.counter }}</td>
-                <td>{{ user.user.first_name.upper }} {{ user.user.last_name.upper }}</td>
+                <td><a href="{% url 'bid:user' user.pk %}">{{ user.user.first_name.upper }} {{ user.user.last_name.upper }}</a></td>
                 <td>{{ user.amount }}</td> 
             </tr>
         {% endfor %}
