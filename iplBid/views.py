@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from .forms import UserForm
 from bid.models import UserProfile
 from django.utils.decorators import method_decorator
-from .decorators import should_not_be_logged_in
+from bid.decorators import should_not_be_logged_in
 from django.urls import reverse
 # Create your views here.
 

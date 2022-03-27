@@ -11,23 +11,42 @@ class UserProfile(models.Model):
 
     def __str__(self):
         return f"{self.user.username.capitalize()} Profile"
-
+choices = [
+    ('DC', 'DC'),
+    ('PBKS', 'PBKS'),
+    ('KKR', 'KKR'),
+    ('LSG', 'LSG'),
+    ('SRH', 'SRH'),
+    ('RR', 'RR'),
+    ('GT', 'GT'),
+    ('CSK', 'CSK'),
+    ('RCB', 'RCB'),
+    ('MI', 'MI'),
+]
 class Game(models.Model):
-    name = models.CharField(max_length=200)
+    name = models.CharField(max_length=200, null=True, blank=True)
     date = models.DateTimeField()
     completed = models.BooleanField(default=False)
-    winner = models.CharField(max_length=200, null=True, blank=True)
-    team1 = models.CharField(max_length=200)
-    team2 = models.CharField(max_length=200)
+    winner = models.CharField(max_length=200, null=True, blank=True, choices=choices)
+    team1 = models.CharField(max_length=200, choices=choices)
+    team2 = models.CharField(max_length=200, choices=choices)
+
     def __str__(self):
         return f"{self.name}"
+    
+    def save(self, *args, **kwargs):
+        if not self.name:
+            self.name = f"{self.team1} vs {self.team2}"
+        else:
+            self.name = f"{self.name} {self.team1} vs {self.team2}"
+        super().save(*args, **kwargs)
 
 class Game_Result(models.Model):
     user = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name="Game_Results_profile")
     game = models.ForeignKey(Game, on_delete=models.CASCADE, related_name="Game_Results")
     bid_amount = models.IntegerField()
     won = models.BooleanField(default=False)
-    team = models.CharField(max_length=200, null=True, blank=True)
+    team = models.CharField(max_length=200, null=True, blank=True, choices=choices)
     completed = models.BooleanField(default=False)
     did_not_bid = models.BooleanField(default=False)
 

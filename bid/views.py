@@ -1,13 +1,19 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.mixins import LoginRequiredMixin
 from bid.models import Game, Game_Result, UserProfile
-from django.views.generic import View
+from django.views.generic import View, CreateView
 import datetime
-from django.shortcuts import get_object_or_404
 from pytz import timezone
+from django.utils.decorators import method_decorator
+from bid.decorators import super_user_or_not
 from django.urls import reverse
 # Create your views here.
 
+@method_decorator(super_user_or_not,name = 'dispatch')
+class CreateGameView(CreateView):
+    template_name = 'bid/add_game.html'
+    fields = ['name', 'date', 'team1', 'team2']
+    model = Game
 class UserDetailView(LoginRequiredMixin, View):
     model = UserProfile
     template_name = 'bid/user_detail.html'
