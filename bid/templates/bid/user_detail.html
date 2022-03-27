@@ -3,6 +3,7 @@
 {% load date %}
 {% block content %}
     <h2>{{ result_user.user.first_name.capitalize }}'s Bid History</h2>
+    <h5>Amount: {{ result_user.amount }}</h5>
     <table class="table table-striped contents" style="font-size:80%;text-align:left;">
         <thead>
         <tr>
