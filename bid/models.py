@@ -34,6 +34,9 @@ class Game_Result(models.Model):
     def __str__(self):
         return f"{self.game.name} Result"
 
+    class Meta:
+        unique_together = ('user', 'game',)
+
 @receiver(post_save, sender=User)
 def create_profile(sender, instance, created, **kwargs):
     if created:
