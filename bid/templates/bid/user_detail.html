@@ -8,6 +8,7 @@
         <tr>
             <th scope="col">Name</th>
             <th scope="col">Team</th>
+            <th scope="col">Bid</th>
             <th scope="col">Status</th>
             <th scope="col">Result</th>
         </tr>
@@ -17,6 +18,7 @@
             <tr>
                 <td>{{ result.game.name }}</td>
                 <td>{{ result.team }}</td>
+                <td>{{ result.bid_amount }}</td>
                 {% if result.did_not_bid %}
                     <td>No Bid</td>
                 {% else %}
