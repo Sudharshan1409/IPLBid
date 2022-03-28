@@ -106,7 +106,7 @@
                     {% endif %}
                 {% else %}
                     {% if game.date|dateCheck %}
-                        <td><a class="btn btn-primary" style="font-size:65%" data-toggle="modal" data-target="#exampleModal" data-whatever="{{ game.bid_result.bid_amount }},{{ game.team1 }},{{ game.team2 }},{{ game.pk }},update,{{ game.bid_result.pk }}" href="#" role="button">UPDATE BID</a></td>
+                        <td><a class="btn btn-primary" style="font-size:65%" data-toggle="modal" data-target="#exampleModal" data-whatever="{{ game.bid_result.bid_amount }},{{ game.team1 }},{{ game.team2 }},{{ game.pk }},update,{{ game.bid_result.pk }},{{ game.bid_result.team }}" href="#" role="button">UPDATE BID</a></td>
                     {% else %}
                         <td><button class="btn btn-primary" style="font-size:65%" disabled>UPDATE BID</button></td>
                     {% endif %}

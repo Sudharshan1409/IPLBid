@@ -7,6 +7,7 @@ from pytz import timezone
 from django.utils.decorators import method_decorator
 from bid.decorators import super_user_or_not
 from django.urls import reverse
+from django.contrib import messages
 # Create your views here.
 
 @method_decorator(super_user_or_not,name = 'dispatch')
@@ -106,6 +107,9 @@ class GamesView(LoginRequiredMixin, View):
                 game_results = Game_Result.objects.filter(user=request.user.userprofile, game=game)
                 if not game_results:
                     game_result = Game_Result.objects.create(user=request.user.userprofile, game=game, bid_amount=request.POST['amount'], team=request.POST['team'])
+                    messages.success(request, 'Bid Created Successfully')
+                else:
+                    messages.warning(request, 'Bid Already Exist')
             else:
                 game_result = Game_Result.objects.get(id=request.POST['pk'])
                 print('before', game_result.team)
@@ -113,4 +117,7 @@ class GamesView(LoginRequiredMixin, View):
                 game_result.team = request.POST['team']
                 print('after', game_result.team)
                 game_result.save()
+                messages.success(request, 'Bid Updated Successfully')
+        else:
+            messages.warning(request, 'Bid Time Expired or not Started Yet')
         return redirect(reverse('bid:games'))
