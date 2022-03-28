@@ -6,7 +6,7 @@ class GameAdmin(admin.ModelAdmin):
     list_display = ('name', 'date', 'winner', 'completed', 'team1', 'team2')
 
 class UserProfileAdmin(admin.ModelAdmin):
-    list_display = ('id', 'user', 'amount')
+    list_display = ('id', 'user', 'amount', 'win_percentage')
 
 class Game_ResultAdmin(admin.ModelAdmin):
     list_display = ('user', 'game', 'bid_amount', 'won', 'completed', 'team', 'did_not_bid')
