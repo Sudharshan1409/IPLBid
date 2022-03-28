@@ -7,6 +7,7 @@
             <th scope="col">#</th>
             <th scope="col">Name</th>
             <th scope="col">Amount</th>
+            <th scope="col">Win Percentage</th>
         </tr>
         </thead>
         <tbody>
@@ -15,6 +16,7 @@
                 <td>{{ forloop.counter }}</td>
                 <td><a href="{% url 'bid:user' current_user.pk %}">{{ current_user.user.first_name.upper }} {{ current_user.user.last_name.upper }}</a></td>
                 <td>{{ current_user.amount }}</td> 
+                <td {% if current_user.win_percentage < 0.50 %} style="color:red" {% else %} style="color:green" {% endif %}>{{ current_user.win_percentage }}%</td> 
             </tr>
         {% endfor %}
         </tbody>

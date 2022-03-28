@@ -83,6 +83,7 @@
         <div class="topnav" id="myTopnav">
           <a href="/" class="active">Home</a>
           <a href="{% url 'bid:games' %}#ongoing">Games</a>
+          {% comment %} <a href="/admin/bid/game/">Create/Update Games</a> {% endcomment %}
           {% if user.is_authenticated %}
               <a href="{% url 'logout' %}">Log Out</a>
           {% else %}

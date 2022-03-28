@@ -11,6 +11,22 @@ class UserProfile(models.Model):
 
     def __str__(self):
         return f"{self.user.username.capitalize()} Profile"
+
+    @property
+    def win_percentage(self):
+        game_results = self.results_user.all()
+        amount = 0
+        total = 0
+        for result in game_results:
+            if result.completed:
+                if result.bid_amount > 0:
+                    if result.won:
+                        amount += result.bid_amount
+                    total += result.bid_amount
+                else:
+                    total += 1000
+        return round(amount / total, 2)
+
 choices = [
     ('DC', 'DC'),
     ('PBKS', 'PBKS'),
@@ -42,8 +58,8 @@ class Game(models.Model):
         super().save(*args, **kwargs)
 
 class Game_Result(models.Model):
-    user = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name="Game_Results_profile")
-    game = models.ForeignKey(Game, on_delete=models.CASCADE, related_name="Game_Results")
+    user = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name="results_user")
+    game = models.ForeignKey(Game, on_delete=models.CASCADE, related_name="results_game")
     bid_amount = models.IntegerField()
     won = models.BooleanField(default=False)
     team = models.CharField(max_length=200, null=True, blank=True, choices=choices)
@@ -81,7 +97,7 @@ def update_game(sender, instance, created, **kwargs):
                 game_result[0].save()
             else:
                 user.amount -= 1000
-                Game_Result.objects.create(user=user, game=instance, bid_amount=0, won=False, completed=True, did_not_bid=True)
+                Game_Result.objects.create(user=user, game=instance, bid_amount=1000, won=False, completed=True, did_not_bid=True)
 
             user.save()
         instance.completed = True

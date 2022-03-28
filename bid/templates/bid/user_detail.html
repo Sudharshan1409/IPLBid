@@ -17,7 +17,7 @@
         <tbody>
         {% for result in results %}
             <tr>
-                <td>{{ result.game.name }}</td>
+                <td><a href="{% url 'bid:game_detail' result.game.pk %}">{{ result.game.name }}</a></td>
                 <td>{{ result.team }}</td>
                 <td>{{ result.bid_amount }}</td>
                 {% if result.did_not_bid %}
@@ -34,14 +34,10 @@
                     {% endif %}
                 {% endif %}
                 {% if result.completed %}
-                    {% if not result.did_not_bid %}
-                        {% if result.won %}
-                            <td style="color: green">+{{ result.bid_amount }}</td>
-                        {% else %}
-                            <td style="color: red">-{{ result.bid_amount }}</td>
-                        {% endif %}
+                    {% if result.won %}
+                        <td style="color: green">+{{ result.bid_amount }}</td>
                     {% else %}
-                        <td style="color: red">-1000</td>
+                        <td style="color: red">-{{ result.bid_amount }}</td>
                     {% endif %}
                 {% else %}
                     <td>N/A</td>

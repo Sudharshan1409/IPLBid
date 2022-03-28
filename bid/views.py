@@ -76,7 +76,7 @@ class GamesView(LoginRequiredMixin, View):
         for game in games:
             found = False
             res = None
-            for result in game.Game_Results.all():
+            for result in game.results_game.all():
                 if result.user.user == request.user:
                     found = True
                     res = result
