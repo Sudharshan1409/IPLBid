@@ -51,10 +51,7 @@ class Game(models.Model):
         return f"{self.name}"
     
     def save(self, *args, **kwargs):
-        if not self.name:
-            self.name = f"{self.team1} vs {self.team2}"
-        else:
-            self.name = f"{self.name.split(' ')[0]} {self.team1} vs {self.team2}"
+        self.name = f"{self.team1} vs {self.team2}"
         super().save(*args, **kwargs)
 
 class Game_Result(models.Model):
