@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+{% load date %}
+{% block content %}
+<h2>Create Game Page:</h2>
+<form action="{% url 'bid:create_game' %}" method="POST">
+    {% csrf_token %}
+    <div class="mb-3">
+      <label for="date" class="form-label">Date</label>
+      <input type="text" class="form-control" name="date" id="date" required>
+    </div>
+    <div class="mb-3">
+      <label for="date" class="form-label">Month</label>
+      <select class="form-select" name="month">
+        <option value="04">April</option>
+        <option value="05">May</option>
+        <option value="06">June</option>
+      </select>
+    </div>
+    <div class="mb-3">
+      <label for="date" class="form-label">Time</label>
+      <select class="form-select" name="time">
+        <option value="19:00:00">7:30</option>
+        <option value="15:00:00">3:30</option>
+      </select>
+    </div>
+    <div class="mb-3">
+      <label for="date" class="form-label">Team 1:</label>
+      <select class="form-select" name="team1">
+        <option value="PBKS">PBKS</option>
+        <option value="KKR">KKR</option>
+        <option value="LSG">LSG</option>
+        <option value="SRH">SRH</option>
+        <option value="RR">RR</option>
+        <option value="GT">GT</option>
+        <option value="CSK">CSK</option>
+        <option value="RCB">RCB</option>
+        <option value="MI">MI</option>
+      </select>
+    </div>
+    <div class="mb-3">
+      <label for="date" class="form-label">Team 2:</label>
+      <select class="form-select" name="team2">
+        <option value="PBKS">PBKS</option>
+        <option value="KKR">KKR</option>
+        <option value="LSG">LSG</option>
+        <option value="SRH">SRH</option>
+        <option value="RR">RR</option>
+        <option value="GT">GT</option>
+        <option value="CSK">CSK</option>
+        <option value="RCB">RCB</option>
+        <option value="MI">MI</option>
+      </select>
+    </div>
+    <div class="mb-3 form-check">
+        <input type="checkbox" class="form-check-input" name="add" id="exampleCheck1">
+        <label class="form-check-label" for="exampleCheck1">Add Another Game</label>
+      </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+{% endblock %}

@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.mixins import LoginRequiredMixin
 from bid.models import Game, Game_Result, UserProfile
-from django.views.generic import View, CreateView
+from django.views.generic import View
 import datetime
 from pytz import timezone
 from django.utils.decorators import method_decorator
@@ -11,10 +11,35 @@ from django.contrib import messages
 # Create your views here.
 
 @method_decorator(super_user_or_not,name = 'dispatch')
-class CreateGameView(CreateView):
-    template_name = 'bid/add_game.html'
-    fields = ['name', 'date', 'team1', 'team2']
-    model = Game
+class CreateGameView(View):
+    template_name = 'bid/create_game.html'
+    
+    def get(self, request):
+        return render(request, self.template_name)
+
+    def post(self, request):
+        print(request.POST)
+        date = f"2022-{request.POST['month']}-{request.POST['date']}T{request.POST['time']}+05:30"
+        Game.objects.create(date=date, team1=request.POST['team1'], team2=request.POST['team2'])
+        messages.success(request, 'Game Created Successfully')
+        if 'add' in request.POST:
+            return redirect(reverse('bid:create_game'))
+        else:
+            return redirect(reverse('bid:games'))
+
+class UpdateGameView(View):
+    template_name = 'bid/update_game.html'
+
+    def get(self, request):
+        games = Game.objects.filter(completed=False).filter(date__lte = datetime.datetime.now(timezone('Asia/Kolkata')))
+        return render(request, self.template_name, {'games':games})
+
+    def post(self, request):
+        print(request.POST)
+        game = Game.objects.get(id=request.POST['gameId'])
+        game.winner = request.POST['team']
+        game.save()
+        return redirect(reverse('bid:update_game'))
 class UserDetailView(LoginRequiredMixin, View):
     model = UserProfile
     template_name = 'bid/user_detail.html'
