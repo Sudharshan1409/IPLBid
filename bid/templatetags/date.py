@@ -19,6 +19,6 @@ def dateParse(value, arg):
 def dateCheck(date):
     game_date = date.astimezone(timezone('Asia/Kolkata'))
     today_date = datetime.datetime.now(timezone('Asia/Kolkata')) + datetime.timedelta(minutes=5)
-    print(today_date < game_date and (game_date - today_date).days <=1, today_date, game_date)
-    return today_date < game_date and (game_date - today_date).days <=1
+    print(today_date < game_date and (game_date - today_date).days <=2, today_date, game_date)
+    return today_date < game_date and (game_date - today_date).days <=2
 

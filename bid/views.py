@@ -144,5 +144,8 @@ class GamesView(LoginRequiredMixin, View):
                 game_result.save()
                 messages.success(request, 'Bid Updated Successfully')
         else:
-            messages.warning(request, 'Bid Time Expired or not Started Yet')
+            if not (today_date < game_date and (game_date - today_date).days <=1):
+                messages.warning(request, 'Bid Time Expired or not Started Yet')
+            else:
+                messages.warning(request, 'Bid Amount is not in Range of 100 to 3000')
         return redirect(reverse('bid:games'))
