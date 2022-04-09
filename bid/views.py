@@ -8,6 +8,7 @@ from django.utils.decorators import method_decorator
 from bid.decorators import super_user_or_not
 from django.urls import reverse
 from django.contrib import messages
+from django.core.paginator import Paginator
 # Create your views here.
 
 @method_decorator(super_user_or_not,name = 'dispatch')
@@ -118,9 +119,13 @@ class GamesView(LoginRequiredMixin, View):
             if game.date.astimezone(timezone('Asia/Kolkata')).date() > today_date.date():
                 upcoming_games.append(game)
         completed_games.sort(key=lambda x: x.date, reverse=True)
+        completed_games_paginator = Paginator(list(completed_games), 10)
+        upcoming_games_paginator = Paginator(list(upcoming_games), 10)
+        completed_games_page = completed_games_paginator.get_page(request.GET.get('page', 1))
+        upcoming_games_page = upcoming_games_paginator.get_page(request.GET.get('page', 1))
         ongoing_games.sort(key=lambda x: x.date, reverse=False)
         upcoming_games.sort(key=lambda x: x.date, reverse=False)
-        return render(self.request, self.template_name, {'completed_games': completed_games, "ongoing_games": ongoing_games, "upcoming_games": upcoming_games, "date": datetime.datetime.now()})
+        return render(self.request, self.template_name, {'completed_games_page': completed_games_page, 'upcoming_games_page': upcoming_games_page, 'completed_games': completed_games, "ongoing_games": ongoing_games, "upcoming_games": upcoming_games, "date": datetime.datetime.now()})
 
     def post(self, request):
         print(request.POST)

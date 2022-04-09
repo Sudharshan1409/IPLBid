@@ -26,7 +26,7 @@
         </tr>
         </thead>
         <tbody>
-        {% for game in completed_games %}
+        {% for game in completed_games_page %}
             <tr>
                 <td><a href="{% url 'bid:game_detail' game.pk %}">{{ game.name }}</a></td>
                 <td>{{ game.date|dateParse:"date" }}</td>
@@ -71,7 +71,7 @@
         </tr>
         </thead>
         <tbody>
-        {% for game in upcoming_games %}
+        {% for game in upcoming_games_page %}
             <tr>
                 <td><a href="{% url 'bid:game_detail' game.pk %}">{{ game.name }}</a></td>
                 <td>{{ game.date|dateParse:"date" }}</td>
@@ -195,6 +195,32 @@
           </div>
         </div>
       </div>
+      <div class="pagination" id="pagination_completed" style="display:none">
+        <nav aria-label="...">
+            <ul class="pagination">
+              
+            <li class="page-item {% if not completed_games_page.has_previous %} disabled {% endif %}">
+                <a class="page-link" href="?page={% if completed_games_page.has_previous %}{{ completed_games_page.previous_page_number }}{% endif %}#completed">Previous</a>
+            </li>
+              <li class="page-item {% if not completed_games_page.has_next %} disabled {% endif %}">
+                <a class="page-link" href="?page={% if completed_games_page.has_next %}{{ completed_games_page.next_page_number }}{% endif %}#completed">Next</a>
+              </li>
+            </ul>
+          </nav>
+    </div>
+      <div class="pagination" id="pagination_upcoming" style="display:none">
+        <nav aria-label="...">
+            <ul class="pagination">
+              
+            <li class="page-item {% if not upcoming_games_page.has_previous %} disabled {% endif %}">
+                <a class="page-link" href="?page={% if upcoming_games_page.has_previous %}{{ upcoming_games_page.previous_page_number }}{% endif %}#upcoming">Previous</a>
+            </li>
+              <li class="page-item {% if not upcoming_games_page.has_next %} disabled {% endif %}">
+                <a class="page-link" href="?page={% if upcoming_games_page.has_next %}{{ upcoming_games_page.next_page_number }}{% endif %}#upcoming">Next</a>
+              </li>
+            </ul>
+          </nav>
+    </div>
 {% endblock %}
 
 {% block script %}
@@ -257,6 +283,15 @@
             $('button[content-id='+content_id+']').addClass("active").addClass("on");
             });
           $(document).ready(function(){
+              console.log(window.location.href.split('#')[1])
+              if (window.location.href.split('#')[1] == "completed") {
+                $('#pagination_completed').show();
+              }
+              else if (window.location.href.split('#')[1] == "upcoming") {
+                $('#pagination_upcoming').show();
+              }
+          })
+          $(document).ready(function(){
             $(".selector").click(function(event) {
                 event.preventDefault();
                 url = window.location.href.split('#')[0]
@@ -268,6 +303,18 @@
             
                 $(".contents").hide();
                 $("#"+content).show();
+                console.log($(this).attr('content-id'))
+                if (content === "completed") {
+                    $('#pagination_upcoming').hide()
+                    $('#pagination_completed').show();
+                } else if (content === "upcoming") {
+                    $('#pagination_completed').hide();
+                    $('#pagination_upcoming').show();
+                }
+                else {
+                    $('#pagination_completed').hide();
+                    $('#pagination_upcoming').hide();
+                }
             });
             });
             $('#myModal').on('shown.bs.modal', function () {
