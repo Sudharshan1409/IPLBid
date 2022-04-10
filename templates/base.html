@@ -89,8 +89,10 @@
               <a href="{% url 'bid:update_game' %}">Update Games</a>
           {% endif %}
           {% if user.is_authenticated %}
+              <a href="{% url 'password_change' %}">Change Password</a>
               <a href="{% url 'logout' %}">Log Out</a>
           {% else %}
+          <a href="{% url 'password_reset' %}">Reset Password</a>
               {% if request.path == '/login/' %}
                   <a class="nav navbar-right" href="{% url 'signup' %}"><span class="glyphicon glyphicon-user">SignUp</span></a>
               {% else %}
