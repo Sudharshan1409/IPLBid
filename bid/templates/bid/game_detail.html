@@ -1,8 +1,9 @@
 {% extends "base.html" %}
 {% load bootstrap3 %}
 {% load date %}
+{% load static %}
 {% block content %}
-<h2>{{ game }}</h2>
+<h2><span {% if game.winner %}style="color:{% if game.winner == game.team1 %}green{% else %}red{% endif %}"{% endif %}><img style="width: 50px; height: 50px;" src="{% static 'bid/img/' %}{{ game.team1 }}.png" alt="Italian Trulli"> {{ game.team1 }}</span> vs <span {% if game.winner %}style="color:{% if game.winner == game.team2 %}green{% else %}red{% endif %}"{% endif %}><img style="width: 50px; height: 50px" src="{% static 'bid/img/' %}{{ game.team2 }}.png" alt="Italian Trulli"> {{ game.team2 }}</span></h2>
 <table class="table table-striped contents" style="font-size:80%;text-align:left;">
     <thead>
     <tr>
@@ -16,7 +17,7 @@
     {% for obj in listObj %}
         <tr>
             <td><a href="{% url 'bid:user' obj.user.pk %}">{{ obj.name }}</a></td>
-            <td>{{ obj.team }}</td>
+            <td><span>{{ obj.team }}</span></td>
             <td>{{ obj.amount }}</td>
             {% if obj.did_not_bid %}
                 <td>No Bid</td>

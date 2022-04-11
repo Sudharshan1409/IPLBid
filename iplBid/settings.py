@@ -20,6 +20,19 @@ creds_file = open(os.path.join(BASE_DIR, 'creds.json'), 'r')
 creds = json.load(creds_file)
 creds_file.close()
 
+TEAM_COLOR_CODES = {
+    'MI': '#004ba0',
+    'KKR': '#2e0854',
+    'RCB': '#ec1c23',
+    'CSK': '#ffff3c',
+    'RR': '#254aa5',
+    'KXIP': '#ed1b24',
+    'DD': '#0000b8',
+    'SRH': '#ff822a',
+    'GT': '#f9f9f9',
+    'LSG': '#50cdc3',
+}
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
