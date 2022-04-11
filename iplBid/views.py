@@ -52,7 +52,9 @@ class ResetPasswordView(View):
                 send_mail(
                     'Password Reset',
                     f'''
-                    Hi, you can reset your password here: {request.build_absolute_uri()}?token={token}
+                    Hi {user[0].first_name}, 
+                    Your Username is: {user[0].username}
+                    you can reset your password here: {request.build_absolute_uri()}?token={token}
                     ''',
                     settings.EMAIL_HOST_USER,
                     [user[0].email],
