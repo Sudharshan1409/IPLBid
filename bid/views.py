@@ -28,6 +28,10 @@ class CreateGameView(View):
         else:
             return redirect(reverse('bid:games'))
 
+@method_decorator(super_user_or_not, name = 'dispatch')
+class OtherBids(View):
+    pass
+
 class UpdateGameView(View):
     template_name = 'bid/update_game.html'
 
@@ -140,7 +144,7 @@ class GamesView(LoginRequiredMixin, View):
                     messages.success(request, 'Bid Created Successfully')
                 else:
                     messages.warning(request, 'Bid Already Exist')
-            else:
+            elif request.POST['method'] == 'update':
                 game_result = Game_Result.objects.get(id=request.POST['pk'])
                 print('before', game_result.team)
                 game_result.bid_amount = request.POST['amount']
@@ -148,6 +152,25 @@ class GamesView(LoginRequiredMixin, View):
                 print('after', game_result.team)
                 game_result.save()
                 messages.success(request, 'Bid Updated Successfully')
+            elif request.POST['method'] == 'other_create':
+                user = UserProfile.objects.get(id=request.POST['user_pk'])
+                game_results = Game_Result.objects.filter(user=user, game=game)
+                if not game_results:
+                    game_result = Game_Result.objects.create(user=user, game=game, bid_amount=request.POST['amount'], team=request.POST['team'])
+                    messages.success(request, 'Bid Created Successfully')
+                else:
+                    messages.warning(request, 'Bid Already Exist')
+            elif request.POST['method'] == 'other_update':
+                user = UserProfile.objects.get(id=request.POST['user_pk'])
+                game_results = Game_Result.objects.filter(user=user, game=game)
+                game_result = game_results[0]
+                game_result.bid_amount = request.POST['amount']
+                game_result.team = request.POST['team']
+                game_result.save()
+                messages.success(request, 'Bid Updated Successfully')
+            else:
+                pass
+
         else:
             if not (today_date < game_date and (game_date - today_date).days <=1):
                 messages.warning(request, 'Bid Time Expired or not Started Yet')
