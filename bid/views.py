@@ -28,10 +28,6 @@ class CreateGameView(View):
         else:
             return redirect(reverse('bid:games'))
 
-@method_decorator(super_user_or_not, name = 'dispatch')
-class OtherBids(View):
-    pass
-
 class UpdateGameView(View):
     template_name = 'bid/update_game.html'
 
