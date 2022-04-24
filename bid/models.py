@@ -25,7 +25,7 @@ class UserProfile(models.Model):
                     total += result.bid_amount
                 else:
                     total += 1000
-        return round(amount / total, 2)
+        return round((amount / total) * 100, 2) 
 
 choices = [
     ('DC', 'DC'),

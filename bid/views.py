@@ -131,7 +131,7 @@ class GamesView(LoginRequiredMixin, View):
         print(request.POST)
         game = Game.objects.get(id=request.POST['gameId'])
         game_date = game.date.astimezone(timezone('Asia/Kolkata'))
-        today_date = datetime.datetime.now(timezone('Asia/Kolkata')) + datetime.timedelta(minutes=5)
+        today_date = datetime.datetime.now(timezone('Asia/Kolkata')) + datetime.timedelta(minutes=1)
         if today_date < game_date and (game_date - today_date).days <=1 and int(request.POST['amount']) >= 100 and int(request.POST['amount']) <= 3000:
             if request.POST['method'] == 'create':
                 game_results = Game_Result.objects.filter(user=request.user.userprofile, game=game)
@@ -148,28 +148,28 @@ class GamesView(LoginRequiredMixin, View):
                 print('after', game_result.team)
                 game_result.save()
                 messages.success(request, 'Bid Updated Successfully')
-            elif request.POST['method'] == 'other_create':
-                user = UserProfile.objects.get(id=request.POST['user_pk'])
-                game_results = Game_Result.objects.filter(user=user, game=game)
-                if not game_results:
-                    game_result = Game_Result.objects.create(user=user, game=game, bid_amount=request.POST['amount'], team=request.POST['team'])
-                    messages.success(request, 'Bid Created Successfully')
-                else:
-                    messages.warning(request, 'Bid Already Exist')
-            elif request.POST['method'] == 'other_update':
-                user = UserProfile.objects.get(id=request.POST['user_pk'])
-                game_results = Game_Result.objects.filter(user=user, game=game)
-                game_result = game_results[0]
-                game_result.bid_amount = request.POST['amount']
-                game_result.team = request.POST['team']
-                game_result.save()
-                messages.success(request, 'Bid Updated Successfully')
-            else:
-                pass
-
         else:
             if not (today_date < game_date and (game_date - today_date).days <=1):
                 messages.warning(request, 'Bid Time Expired or not Started Yet')
             else:
                 messages.warning(request, 'Bid Amount is not in Range of 100 to 3000')
+        if request.POST['method'] == 'other_create':
+            user = UserProfile.objects.get(id=request.POST['user_pk'])
+            game_results = Game_Result.objects.filter(user=user, game=game)
+            if not game_results:
+                game_result = Game_Result.objects.create(user=user, game=game, bid_amount=request.POST['amount'], team=request.POST['team'])
+                messages.success(request, 'Bid Created Successfully')
+            else:
+                messages.warning(request, 'Bid Already Exist')
+        elif request.POST['method'] == 'other_update':
+            user = UserProfile.objects.get(id=request.POST['user_pk'])
+            game_results = Game_Result.objects.filter(user=user, game=game)
+            game_result = game_results[0]
+            game_result.bid_amount = request.POST['amount']
+            game_result.team = request.POST['team']
+            game_result.save()
+            messages.success(request, 'Bid Updated Successfully')
+        else:
+            pass
+
         return redirect(reverse('bid:games'))

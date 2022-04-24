@@ -18,7 +18,7 @@ def dateParse(value, arg):
 @register.filter(name = 'dateCheck')
 def dateCheck(date):
     game_date = date.astimezone(timezone('Asia/Kolkata'))
-    today_date = datetime.datetime.now(timezone('Asia/Kolkata')) + datetime.timedelta(minutes=5)
+    today_date = datetime.datetime.now(timezone('Asia/Kolkata')) + datetime.timedelta(minutes=1)
     print(today_date < game_date and (game_date - today_date).days <=1, today_date, game_date)
     return today_date < game_date and (game_date - today_date).days <=1
 

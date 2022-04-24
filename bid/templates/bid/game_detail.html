@@ -25,7 +25,7 @@
             {% if obj.did_not_bid %}
                 <td>No Bid</td>
                 {% if user.is_superuser %}
-                    {% if game.date|dateCheck %}
+                    {% if not game.completed %}
                         <td><a class="btn btn-primary" style="font-size:65%" data-toggle="modal" data-target="#exampleModal" data-whatever=",{{ game.team1 }},{{ game.team2 }},{{ game.pk }},other_create,{{ obj.user.pk }}" href="#" role="button">BID AMOUNT</a></td>
                     {% else %}
                         <td><button class="btn btn-primary" style="font-size:65%" disabled>BID AMOUNT</button></td>
@@ -40,13 +40,13 @@
                     {% endif %}
                 {% else %}
                     <td>Not Decided</td>
-                        {% if user.is_superuser %}
-                            {% if game.date|dateCheck %}
-                                <td><a class="btn btn-primary" style="font-size:65%" data-toggle="modal" data-target="#exampleModal" data-whatever="{{ game.bid_result.bid_amount }},{{ game.team1 }},{{ game.team2 }},{{ game.pk }},other_update,{{ obj.user.pk }}" href="#" role="button">UPDATE BID</a></td>
-                            {% else %}
-                                <td><button class="btn btn-primary" style="font-size:65%" disabled>UPDATE BID</button></td>
-                            {% endif %}
-                        {% endif %}
+                {% endif %}
+                {% if user.is_superuser %}
+                    {% if not game.completed %}
+                        <td><a class="btn btn-primary" style="font-size:65%" data-toggle="modal" data-target="#exampleModal" data-whatever="{{ game.bid_result.bid_amount }},{{ game.team1 }},{{ game.team2 }},{{ game.pk }},other_update,{{ obj.user.pk }}" href="#" role="button">UPDATE BID</a></td>
+                    {% else %}
+                        <td><button class="btn btn-primary" style="font-size:65%" disabled>UPDATE BID</button></td>
+                    {% endif %}
                 {% endif %}
             {% endif %}
         </tr>
