@@ -4,6 +4,32 @@
 {% block content %}
     <h2>{{ result_user.user.first_name.capitalize }}'s Bid History</h2>
     <h5>Amount: {{ result_user.amount }}</h5>
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+        View Chart
+      </button>
+      
+      <!-- Modal -->
+      <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">{{ result_user.user.first_name.capitalize }}'s Chart</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+                <canvas id="myChart" width="400" height="400"></canvas>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <br/>
+      <br/>
     <table class="table table-striped contents" style="font-size:80%;text-align:left;">
         <thead>
         <tr>
@@ -47,3 +73,35 @@
         </tbody>
     </table>
 {% endblock %}
+
+{% block script %}
+<script>
+    const ctx = document.getElementById('myChart').getContext('2d');
+    const myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: {{ result_user.chart.0|safe }},
+            datasets: [{
+                label: '# of Votes',
+                data: {{ result_user.chart.1|safe }},
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+    </script>
+{% endblock script %}

@@ -27,6 +27,34 @@ class UserProfile(models.Model):
                     total += 1000
         return round((amount / total) * 100, 2) 
 
+    @property
+    def stats(self):
+        game_results = self.results_user.all()
+        wins = 0
+        lost = 0
+        for result in game_results:
+            if result.completed:
+                if result.won:
+                    wins += 1
+                else:
+                    lost += 1
+        return (wins, lost)
+
+    @property
+    def chart(self):
+        game_results = list(self.results_user.all())
+        game_results.sort(key=lambda x: x.game.date, reverse=False)
+        games = ['', ]
+        amounts = [10000, ]
+        for result in game_results:
+            if result.completed:
+                games.append(result.game.name)
+                if result.won:
+                    amounts.append(amounts[-1] + result.bid_amount)
+                else:
+                    amounts.append(amounts[-1] - result.bid_amount)
+        return (games, amounts)
+
 choices = [
     ('DC', 'DC'),
     ('PBKS', 'PBKS'),
