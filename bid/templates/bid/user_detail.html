@@ -23,7 +23,6 @@
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary">Save changes</button>
             </div>
           </div>
         </div>
@@ -82,7 +81,7 @@
         data: {
             labels: {{ result_user.chart.0|safe }},
             datasets: [{
-                label: '# of Votes',
+                label: 'Amount',
                 data: {{ result_user.chart.1|safe }},
                 borderColor: [
                     'rgba(255, 99, 132, 1)',
