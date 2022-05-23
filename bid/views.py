@@ -128,7 +128,8 @@ class GamesView(LoginRequiredMixin, View):
         return render(self.request, self.template_name, {'completed_games_page': completed_games_page, 'upcoming_games_page': upcoming_games_page, 'completed_games': completed_games, "ongoing_games": ongoing_games, "upcoming_games": upcoming_games, "date": datetime.datetime.now()})
 
     def post(self, request):
-        print(request.POST)
+        print('user', request.user)
+        print('bid', request.POST)
         game = Game.objects.get(id=request.POST['gameId'])
         game_date = game.date.astimezone(timezone('Asia/Kolkata'))
         today_date = datetime.datetime.now(timezone('Asia/Kolkata')) + datetime.timedelta(minutes=1)
