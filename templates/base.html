@@ -94,8 +94,8 @@
               <a href="{% url 'logout' %}">Log Out</a>
           {% else %}
           <a href="{% url 'password_reset' %}">Reset Password</a>
-          <a class="nav navbar-right" href="{% url 'signup' %}"><span class="glyphicon glyphicon-user">SignUp</span></a>
           <a class="nav navbar-right" href="{% url 'login' %}"><span class="glyphicon glyphicon-user">Login</span></a>
+          <a class="nav navbar-right" href="{% url 'signup' %}"><span class="glyphicon glyphicon-user">SignUp</span></a>
           {% endif %}
           <a href="javascript:void(0);" class="icon" onclick="myFunction()">
             <i class="fa fa-bars"></i>
