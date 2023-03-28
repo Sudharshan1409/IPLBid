@@ -19,6 +19,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from .views import HomePageView, RegisterUserView, ResetPasswordView, ChangePasswordView
 from django.contrib.auth.views import LoginView,LogoutView
+from .forms import LoginForm
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -27,6 +28,6 @@ urlpatterns = [
     path('signup/', RegisterUserView.as_view(), name='signup'),
     path('password/reset/', ResetPasswordView.as_view(), name='password_reset'),
     path('password/change/', ChangePasswordView.as_view(), name='password_change'),
-    path('login/',LoginView.as_view(template_name = 'login.html'), name="login"),
+    path('login/',LoginView.as_view(template_name = 'login.html', authentication_form=LoginForm), name="login"),
     path('logout/',LogoutView.as_view(next_page = '/'),name = 'logout',kwargs = {'next_page':'/'}),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

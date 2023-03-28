@@ -25,6 +25,8 @@ class UserProfile(models.Model):
                     total += result.bid_amount
                 else:
                     total += 1000
+        if total == 0:
+            return 0
         return round((amount / total) * 100, 2) 
 
     @property
