@@ -20,7 +20,7 @@ class CreateGameView(View):
 
     def post(self, request):
         print(request.POST)
-        date = f"2022-{request.POST['month']}-{request.POST['date']}T{request.POST['time']}+05:30"
+        date = f"2023-{request.POST['month']}-{request.POST['date']}T{request.POST['time']}+05:30"
         Game.objects.create(date=date, team1=request.POST['team1'], team2=request.POST['team2'])
         messages.success(request, 'Game Created Successfully')
         if 'add' in request.POST:
@@ -133,7 +133,7 @@ class GamesView(LoginRequiredMixin, View):
         game = Game.objects.get(id=request.POST['gameId'])
         game_date = game.date.astimezone(timezone('Asia/Kolkata'))
         today_date = datetime.datetime.now(timezone('Asia/Kolkata')) + datetime.timedelta(minutes=1)
-        if today_date < game_date and (game_date - today_date).days <=1 and int(request.POST['amount']) >= 1000 and int(request.POST['amount']) <= 5000:
+        if today_date < game_date and (game_date - today_date).days <=1 and int(request.POST['amount']) >= 100 and int(request.POST['amount']) <= 3000:
             if request.POST['method'] == 'create':
                 game_results = Game_Result.objects.filter(user=request.user.userprofile, game=game)
                 if not game_results:
@@ -153,7 +153,7 @@ class GamesView(LoginRequiredMixin, View):
             if not (today_date < game_date and (game_date - today_date).days <=1):
                 messages.warning(request, 'Bid Time Expired or not Started Yet')
             else:
-                messages.warning(request, 'Bid Amount is not in Range of 1000 to 5000')
+                messages.warning(request, 'Bid Amount is not in Range of 100 to 3000')
         if request.POST['method'] == 'other_create':
             user = UserProfile.objects.get(id=request.POST['user_pk'])
             game_results = Game_Result.objects.filter(user=user, game=game)
