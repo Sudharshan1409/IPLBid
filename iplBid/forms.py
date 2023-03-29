@@ -7,6 +7,9 @@ from bid.models import UserProfile
 class UserForm(UserCreationForm):
     class Meta():
         fields = ('first_name','last_name','username','email','password1','password2')
+        username = forms.RegexField(label=("Username"), max_length=30, regex=r'^[\w.@+-]+$',
+        help_text = ("Required. 30 characters or fewer. Letters, digits and @/./+/-/_ only."),
+        error_messages = {'invalid': ("This value may contain only letters, numbers and @/./+/-/_ characters.")})
         model = User
 
     def __init__(self,*args,**kwargs):
@@ -15,6 +18,13 @@ class UserForm(UserCreationForm):
         self.fields['email'].label = 'Email Address'
         self.fields['first_name'].label = 'First Name'
         self.fields['last_name'].label = 'Last Name'
+    
+    def clean(self):
+        email = self.cleaned_data.get('email')
+        if User.objects.filter(email=email).exists():
+            raise forms.ValidationError("User with the following email already exists")
+        return self.cleaned_data
+
 
 class LoginForm(AuthenticationForm):
 

@@ -47,6 +47,9 @@ class ResetPasswordView(View):
             print('send email')
             print(request.POST.get('email'))
             user = User.objects.filter(email=request.POST.get('email'))
+            if not user:
+                messages.warning(request, 'User with Email not found')
+                return redirect(reverse('password_reset'))
             token = jwt.encode({"email": request.POST.get('email'), "username": user[0].username, "userId": user[0].id}, settings.SECRET_KEY, algorithm="HS256")
             if user:
                 send_mail(
