@@ -9,6 +9,7 @@ from bid.decorators import super_user_or_not
 from django.urls import reverse
 from django.contrib import messages
 from django.core.paginator import Paginator
+from iplBid.settings import MINIMUM_BID_VALUE, MAXIMUM_BID_VALUE
 # Create your views here.
 
 @method_decorator(super_user_or_not,name = 'dispatch')
@@ -87,7 +88,9 @@ class GameDetailView(LoginRequiredMixin, View):
         print(users)
         return render(request, self.template_name, {
             'listObj': listObj,
-            'game': game
+            'game': game,
+            'min_bid': MINIMUM_BID_VALUE,
+            'max_bid': MAXIMUM_BID_VALUE,
         })
 class GamesView(LoginRequiredMixin, View):
     model = Game
@@ -125,7 +128,7 @@ class GamesView(LoginRequiredMixin, View):
         upcoming_games_page = upcoming_games_paginator.get_page(request.GET.get('page', 1))
         ongoing_games.sort(key=lambda x: x.date, reverse=False)
         upcoming_games.sort(key=lambda x: x.date, reverse=False)
-        return render(self.request, self.template_name, {'completed_games_page': completed_games_page, 'upcoming_games_page': upcoming_games_page, 'completed_games': completed_games, "ongoing_games": ongoing_games, "upcoming_games": upcoming_games, "date": datetime.datetime.now()})
+        return render(self.request, self.template_name, {'completed_games_page': completed_games_page, 'upcoming_games_page': upcoming_games_page, 'completed_games': completed_games, "ongoing_games": ongoing_games, "upcoming_games": upcoming_games, "date": datetime.datetime.now(), 'min_bid': MINIMUM_BID_VALUE, 'max_bid': MAXIMUM_BID_VALUE})
 
     def post(self, request):
         print('user', request.user)
@@ -133,7 +136,7 @@ class GamesView(LoginRequiredMixin, View):
         game = Game.objects.get(id=request.POST['gameId'])
         game_date = game.date.astimezone(timezone('Asia/Kolkata'))
         today_date = datetime.datetime.now(timezone('Asia/Kolkata')) + datetime.timedelta(minutes=1)
-        if today_date < game_date and (game_date - today_date).days <=1 and int(request.POST['amount']) >= 100 and int(request.POST['amount']) <= 3000:
+        if today_date < game_date and (game_date - today_date).days <=1 and int(request.POST['amount']) >= MINIMUM_BID_VALUE and int(request.POST['amount']) <= MAXIMUM_BID_VALUE:
             if request.POST['method'] == 'create':
                 game_results = Game_Result.objects.filter(user=request.user.userprofile, game=game)
                 if not game_results:
@@ -153,7 +156,7 @@ class GamesView(LoginRequiredMixin, View):
             if not (today_date < game_date and (game_date - today_date).days <=1):
                 messages.warning(request, 'Bid Time Expired or not Started Yet')
             else:
-                messages.warning(request, 'Bid Amount is not in Range of 100 to 3000')
+                messages.warning(request, f"Bid Amount is not in Range of { MINIMUM_BID_VALUE } to { MAXIMUM_BID_VALUE }")
         if request.POST['method'] == 'other_create':
             user = UserProfile.objects.get(id=request.POST['user_pk'])
             game_results = Game_Result.objects.filter(user=user, game=game)
