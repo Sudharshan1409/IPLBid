@@ -136,7 +136,7 @@ class GamesView(LoginRequiredMixin, View):
         game = Game.objects.get(id=request.POST['gameId'])
         game_date = game.date.astimezone(timezone('Asia/Kolkata'))
         today_date = datetime.datetime.now(timezone('Asia/Kolkata')) + datetime.timedelta(minutes=1)
-        if today_date < game_date and (game_date - today_date).days <=1 and int(request.POST['amount']) >= MINIMUM_BID_VALUE and int(request.POST['amount']) <= MAXIMUM_BID_VALUE:
+        if today_date < (game_date - datetime.timedelta(minutes=1)) and (game_date - today_date).days <=1 and int(request.POST['amount']) >= MINIMUM_BID_VALUE and int(request.POST['amount']) <= MAXIMUM_BID_VALUE:
             if request.POST['method'] == 'create':
                 game_results = Game_Result.objects.filter(user=request.user.userprofile, game=game)
                 if not game_results:
@@ -153,7 +153,7 @@ class GamesView(LoginRequiredMixin, View):
                 game_result.save()
                 messages.success(request, 'Bid Updated Successfully')
         else:
-            if not (today_date < game_date and (game_date - today_date).days <=1):
+            if not (today_date < (game_date - datetime.timedelta(minutes=1)) and (game_date - today_date).days <=1):
                 messages.warning(request, 'Bid Time Expired or not Started Yet')
             else:
                 messages.warning(request, f"Bid Amount is not in Range of { MINIMUM_BID_VALUE } to { MAXIMUM_BID_VALUE }")
