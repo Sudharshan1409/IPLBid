@@ -9,7 +9,7 @@ from bid.decorators import super_user_or_not
 from django.urls import reverse
 from django.contrib import messages
 from django.core.paginator import Paginator
-from iplBid.settings import MINIMUM_BID_VALUE, MAXIMUM_BID_VALUE
+from iplBid.settings import MINIMUM_BID_VALUE, MAXIMUM_BID_VALUE, CURRENT_YEAR
 # Create your views here.
 
 @method_decorator(super_user_or_not,name = 'dispatch')
@@ -21,7 +21,7 @@ class CreateGameView(View):
 
     def post(self, request):
         print(request.POST)
-        date = f"2023-{request.POST['month']}-{request.POST['date']}T{request.POST['time']}+05:30"
+        date = f"{CURRENT_YEAR}-{request.POST['month']}-{request.POST['date']}T{request.POST['time']}+05:30"
         Game.objects.create(date=date, team1=request.POST['team1'], team2=request.POST['team2'])
         messages.success(request, 'Game Created Successfully')
         if 'add' in request.POST:
@@ -46,9 +46,8 @@ class UserDetailView(LoginRequiredMixin, View):
     model = UserProfile
     template_name = 'bid/user_detail.html'
     def get(self, request, *args, **kwargs):
-        print('hello')
         user = UserProfile.objects.get(pk=kwargs['pk'])
-        game_results = Game_Result.objects.filter(user=user)
+        game_results = Game_Result.objects.filter(user=user, year = CURRENT_YEAR)
         results_array = []
         for game_result in game_results:
             results_array.append(game_result)
@@ -60,7 +59,7 @@ class GameDetailView(LoginRequiredMixin, View):
     template_name = 'bid/game_detail.html'
     def get(self, request, *args, **kwargs):
         game = Game.objects.get(pk=kwargs['pk'])
-        users = UserProfile.objects.all()
+        users = UserProfile.objects.filter(year=CURRENT_YEAR)
         listObj = []
         for user in users:
             game_result = Game_Result.objects.filter(user=user, game=game)
@@ -101,11 +100,11 @@ class GamesView(LoginRequiredMixin, View):
         ongoing_games = []
         upcoming_games = []
         today_date = datetime.datetime.now(timezone('Asia/Kolkata'))
-        games = Game.objects.all()
+        games = Game.objects.filter(year=CURRENT_YEAR)
         for game in games:
             found = False
             res = None
-            for result in game.results_game.all():
+            for result in game.results_game.filter(year=CURRENT_YEAR):
                 if result.user.user == request.user:
                     found = True
                     res = result
@@ -133,14 +132,17 @@ class GamesView(LoginRequiredMixin, View):
     def post(self, request):
         print('user', request.user)
         print('bid', request.POST)
+        if not request.user.profiles.filter(year=CURRENT_YEAR):
+            messages.warning(request, 'You are not registered for this year. Please contact the admin.')
+            return redirect(reverse('bid:games'))
         game = Game.objects.get(id=request.POST['gameId'])
         game_date = game.date.astimezone(timezone('Asia/Kolkata'))
         today_date = datetime.datetime.now(timezone('Asia/Kolkata')) + datetime.timedelta(minutes=1)
         if today_date < (game_date - datetime.timedelta(minutes=1)) and (game_date - today_date).days <=1 and int(request.POST['amount']) >= MINIMUM_BID_VALUE and int(request.POST['amount']) <= MAXIMUM_BID_VALUE:
             if request.POST['method'] == 'create':
-                game_results = Game_Result.objects.filter(user=request.user.userprofile, game=game)
+                game_results = Game_Result.objects.filter(user=request.user.profiles.filter(year=CURRENT_YEAR)[0], game=game)
                 if not game_results:
-                    game_result = Game_Result.objects.create(user=request.user.userprofile, game=game, bid_amount=request.POST['amount'], team=request.POST['team'])
+                    game_result = Game_Result.objects.create(user=request.user.profiles.filter(year=CURRENT_YEAR)[0], game=game, bid_amount=request.POST['amount'], team=request.POST['team'])
                     messages.success(request, 'Bid Created Successfully')
                 else:
                     messages.warning(request, 'Bid Already Exist')

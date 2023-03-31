@@ -46,7 +46,7 @@
                 <td>{{ result.team }}</td>
                 <td>{{ result.bid_amount }}</td>
                 {% if result.did_not_bid %}
-                    <td>No Bid</td>
+                    <td style="color: red">No Bid</td>
                 {% else %}
                     {% if result.game.completed %}
                         {% if result.won %}

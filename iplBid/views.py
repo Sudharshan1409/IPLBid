@@ -91,7 +91,7 @@ class ChangePasswordView(LoginRequiredMixin, View):
 class HomePageView(View):
     template_name = 'home.html'
     def get(self, request):
-        users = UserProfile.objects.all()
+        users = UserProfile.objects.filter(year=settings.CURRENT_YEAR)
         users_array = []
         for user in users:
             users_array.append(user)

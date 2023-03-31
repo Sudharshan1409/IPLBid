@@ -33,7 +33,7 @@
                 {% if game.bid_result %}
                     <td>{{game.bid_result.team}} {{game.bid_result.bid_amount}}</td>
                 {% else %}
-                    <td>No Bid</td>
+                    <td style="color: red">No Bid</td>
                 {% endif %}
                 <td>{{ game.winner }}</td>
                 {% if game.bid_result.completed %}
@@ -52,7 +52,7 @@
                         <td style="color:red">Lost</td>
                     {% endif %}
                 {% else %}
-                    <td>No Bid</td>
+                    <td style="color: red">No Bid</td>
                 {% endif %}
             </tr>
         {% endfor %}
@@ -78,7 +78,7 @@
                 {% if game.bid_result %}
                     <td>{{game.bid_result.team}} {{game.bid_result.bid_amount}}</td>
                 {% else %}
-                    <td>No Bid</td>
+                    <td style="color: red">No Bid</td>
                 {% endif %}
                 <td>{{ game.winner }}</td>
                 {% if game.bid_result.completed %}
@@ -131,7 +131,7 @@
                 {% if game.bid_result %}
                     <td>{{game.bid_result.team}} {{game.bid_result.bid_amount}}</td>
                 {% else %}
-                    <td>No Bid</td>
+                    <td style="color: red">No Bid</td>
                 {% endif %}
                 <td>{{ game.winner }}</td>
                 {% if game.bid_result.completed %}
