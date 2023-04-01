@@ -87,6 +87,10 @@ class Game(models.Model):
         self.name = f"{self.team1} vs {self.team2}"
         super().save(*args, **kwargs)
 
+class ActiveYear(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="active_year")
+    year = models.IntegerField(default=CURRENT_YEAR)
+
 class Game_Result(models.Model):
     user = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name="results_user")
     game = models.ForeignKey(Game, on_delete=models.CASCADE, related_name="results_game")
