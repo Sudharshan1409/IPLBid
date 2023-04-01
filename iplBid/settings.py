@@ -33,7 +33,7 @@ TEAM_COLOR_CODES = {
     'LSG': '#50cdc3',
 }
 
-CURRENT_YEAR = 2023
+os.environ['CURRENT_YEAR'] = '2023'
 
 
 # Quick-start development settings - unsuitable for production

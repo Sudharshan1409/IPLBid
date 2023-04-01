@@ -12,6 +12,7 @@ from django.core.mail import send_mail
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import authenticate, login
 import jwt
+import os
 # Create your views here.
 
 @method_decorator(should_not_be_logged_in,name = 'dispatch')
@@ -72,9 +73,11 @@ class ResetPasswordView(View):
 class ChangePasswordView(LoginRequiredMixin, View):
     template_name = 'change_password.html'
     def get(self, request):
+        os.environ['CURRENT_YEAR'] = str(request.user.active_year.year)
         return render(request, self.template_name)
     
     def post(self, request):
+        os.environ['CURRENT_YEAR'] = str(request.user.active_year.year)
         print(request.POST)
         if request.POST.get('password1') == request.POST.get('password2'):
             user = User.objects.get(id=request.user.id)
@@ -91,7 +94,12 @@ class ChangePasswordView(LoginRequiredMixin, View):
 class HomePageView(View):
     template_name = 'home.html'
     def get(self, request):
-        users = UserProfile.objects.filter(year=settings.CURRENT_YEAR)
+        if request.user.is_authenticated:
+            print("changing environment")
+            print(os.environ['CURRENT_YEAR'])
+            os.environ['CURRENT_YEAR'] = str(request.user.active_year.year)
+            print(os.environ['CURRENT_YEAR'], request.user.active_year.year)
+        users = UserProfile.objects.filter(year=int(os.environ['CURRENT_YEAR']))
         users_array = []
         for user in users:
             users_array.append(user)

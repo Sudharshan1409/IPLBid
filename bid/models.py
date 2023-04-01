@@ -2,21 +2,20 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.dispatch import receiver
 from django.db.models.signals import post_save
-from iplBid.settings import CURRENT_YEAR
-
+import os
 # Create your models here.
 
 class UserProfile(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="profiles")
     amount = models.IntegerField(default=10000)
-    year = models.IntegerField(default=CURRENT_YEAR)
+    year = models.IntegerField(default=int(os.environ['CURRENT_YEAR']))
 
     def __str__(self):
         return f"{self.user.username.capitalize()} Profile"
 
     @property
     def win_percentage(self):
-        game_results = self.results_user.filter(year=CURRENT_YEAR)
+        game_results = self.results_user.filter(year=int(os.environ['CURRENT_YEAR']))
         amount = 0
         total = 0
         for result in game_results:
@@ -33,7 +32,7 @@ class UserProfile(models.Model):
 
     @property
     def stats(self):
-        game_results = self.results_user.filter(year=CURRENT_YEAR)
+        game_results = self.results_user.filter(year=int(os.environ['CURRENT_YEAR']))
         wins = 0
         lost = 0
         for result in game_results:
@@ -46,7 +45,7 @@ class UserProfile(models.Model):
 
     @property
     def chart(self):
-        game_results = list(self.results_user.filter(year=CURRENT_YEAR))
+        game_results = list(self.results_user.filter(year=int(os.environ['CURRENT_YEAR'])))
         game_results.sort(key=lambda x: x.game.date, reverse=False)
         games = ['', ]
         amounts = [10000, ]
@@ -78,7 +77,7 @@ class Game(models.Model):
     winner = models.CharField(max_length=200, null=True, blank=True, choices=choices)
     team1 = models.CharField(max_length=200, choices=choices)
     team2 = models.CharField(max_length=200, choices=choices)
-    year = models.IntegerField(default=CURRENT_YEAR)
+    year = models.IntegerField(default=int(os.environ['CURRENT_YEAR']))
 
     def __str__(self):
         return f"{self.name}"
@@ -89,7 +88,7 @@ class Game(models.Model):
 
 class ActiveYear(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="active_year")
-    year = models.IntegerField(default=CURRENT_YEAR)
+    year = models.IntegerField(default=int(os.environ['CURRENT_YEAR']))
 
 class Game_Result(models.Model):
     user = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name="results_user")
@@ -99,7 +98,7 @@ class Game_Result(models.Model):
     team = models.CharField(max_length=200, null=True, blank=True, choices=choices)
     completed = models.BooleanField(default=False)
     did_not_bid = models.BooleanField(default=False)
-    year = models.IntegerField(default=CURRENT_YEAR)
+    year = models.IntegerField(default=int(os.environ['CURRENT_YEAR']))
 
     def __str__(self):
         return f"{self.game.name} Result"
@@ -116,7 +115,7 @@ def create_profile(sender, instance, created, **kwargs):
 @receiver(post_save, sender=Game)
 def update_game(sender, instance, created, **kwargs):
     if not created and not instance.completed and instance.winner:
-        users = UserProfile.objects.filter(year=CURRENT_YEAR)
+        users = UserProfile.objects.filter(year=int(os.environ['CURRENT_YEAR']))
         for user in users:
             game_result = Game_Result.objects.filter(user=user, game=instance)
             print(game_result)

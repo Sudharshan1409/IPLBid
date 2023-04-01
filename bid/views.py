@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.mixins import LoginRequiredMixin
-from bid.models import Game, Game_Result, UserProfile
+from bid.models import Game, Game_Result, UserProfile, ActiveYear
 from django.views.generic import View
 import datetime
 from pytz import timezone
@@ -9,7 +9,8 @@ from bid.decorators import super_user_or_not
 from django.urls import reverse
 from django.contrib import messages
 from django.core.paginator import Paginator
-from iplBid.settings import MINIMUM_BID_VALUE, MAXIMUM_BID_VALUE, CURRENT_YEAR
+from iplBid.settings import MINIMUM_BID_VALUE, MAXIMUM_BID_VALUE
+import os
 # Create your views here.
 
 @method_decorator(super_user_or_not,name = 'dispatch')
@@ -21,7 +22,7 @@ class CreateGameView(View):
 
     def post(self, request):
         print(request.POST)
-        date = f"{CURRENT_YEAR}-{request.POST['month']}-{request.POST['date']}T{request.POST['time']}+05:30"
+        date = f"{int(os.environ['CURRENT_YEAR'])}-{request.POST['month']}-{request.POST['date']}T{request.POST['time']}+05:30"
         Game.objects.create(date=date, team1=request.POST['team1'], team2=request.POST['team2'])
         messages.success(request, 'Game Created Successfully')
         if 'add' in request.POST:
@@ -46,20 +47,31 @@ class UserDetailView(LoginRequiredMixin, View):
     model = UserProfile
     template_name = 'bid/user_detail.html'
     def get(self, request, *args, **kwargs):
+        os.environ['CURRENT_YEAR'] = str(request.user.active_year.year)
         user = UserProfile.objects.get(pk=kwargs['pk'])
-        game_results = Game_Result.objects.filter(user=user, year = CURRENT_YEAR)
+        game_results = Game_Result.objects.filter(user=user, year = int(os.environ['CURRENT_YEAR']))
         results_array = []
         for game_result in game_results:
             results_array.append(game_result)
         results_array.sort(key=lambda x: x.game.date, reverse=True)
         return render(request, self.template_name, {'results': results_array, 'result_user': user})
+    
+class ChangeActiveYearView(LoginRequiredMixin, View):
+    model = ActiveYear
+    def post(self, request):
+        activeYear = ActiveYear.objects.get(user=request.user)
+        print('request post', request.POST)
+        activeYear.year = int(request.POST['year'])
+        activeYear.save()
+        return redirect(reverse('home'))
 
 class GameDetailView(LoginRequiredMixin, View):
     model = Game
     template_name = 'bid/game_detail.html'
     def get(self, request, *args, **kwargs):
+        os.environ['CURRENT_YEAR'] = str(request.user.active_year.year)
         game = Game.objects.get(pk=kwargs['pk'])
-        users = UserProfile.objects.filter(year=CURRENT_YEAR)
+        users = UserProfile.objects.filter(year=int(os.environ['CURRENT_YEAR']))
         listObj = []
         for user in users:
             game_result = Game_Result.objects.filter(user=user, game=game)
@@ -96,15 +108,16 @@ class GamesView(LoginRequiredMixin, View):
     template_name = 'bid/games.html'
     context_object_name = 'games'
     def get(self, request):
+        os.environ['CURRENT_YEAR'] = str(request.user.active_year.year)
         completed_games = []
         ongoing_games = []
         upcoming_games = []
         today_date = datetime.datetime.now(timezone('Asia/Kolkata'))
-        games = Game.objects.filter(year=CURRENT_YEAR)
+        games = Game.objects.filter(year=int(os.environ['CURRENT_YEAR']))
         for game in games:
             found = False
             res = None
-            for result in game.results_game.filter(year=CURRENT_YEAR):
+            for result in game.results_game.filter(year=int(os.environ['CURRENT_YEAR'])):
                 if result.user.user == request.user:
                     found = True
                     res = result
@@ -130,9 +143,10 @@ class GamesView(LoginRequiredMixin, View):
         return render(self.request, self.template_name, {'completed_games_page': completed_games_page, 'upcoming_games_page': upcoming_games_page, 'completed_games': completed_games, "ongoing_games": ongoing_games, "upcoming_games": upcoming_games, "date": datetime.datetime.now(), 'min_bid': MINIMUM_BID_VALUE, 'max_bid': MAXIMUM_BID_VALUE})
 
     def post(self, request):
+        os.environ['CURRENT_YEAR'] = str(request.user.active_year.year)
         print('user', request.user)
         print('bid', request.POST)
-        if not request.user.profiles.filter(year=CURRENT_YEAR):
+        if not request.user.profiles.filter(year=int(os.environ['CURRENT_YEAR'])):
             messages.warning(request, 'You are not registered for this year. Please contact the admin.')
             return redirect(reverse('bid:games'))
         game = Game.objects.get(id=request.POST['gameId'])
@@ -140,9 +154,9 @@ class GamesView(LoginRequiredMixin, View):
         today_date = datetime.datetime.now(timezone('Asia/Kolkata')) + datetime.timedelta(minutes=1)
         if today_date < (game_date - datetime.timedelta(minutes=1)) and (game_date - today_date).days <=1 and int(request.POST['amount']) >= MINIMUM_BID_VALUE and int(request.POST['amount']) <= MAXIMUM_BID_VALUE:
             if request.POST['method'] == 'create':
-                game_results = Game_Result.objects.filter(user=request.user.profiles.filter(year=CURRENT_YEAR)[0], game=game)
+                game_results = Game_Result.objects.filter(user=request.user.profiles.filter(year=int(os.environ['CURRENT_YEAR']))[0], game=game)
                 if not game_results:
-                    game_result = Game_Result.objects.create(user=request.user.profiles.filter(year=CURRENT_YEAR)[0], game=game, bid_amount=request.POST['amount'], team=request.POST['team'])
+                    game_result = Game_Result.objects.create(user=request.user.profiles.filter(year=int(os.environ['CURRENT_YEAR']))[0], game=game, bid_amount=request.POST['amount'], team=request.POST['team'])
                     messages.success(request, 'Bid Created Successfully')
                 else:
                     messages.warning(request, 'Bid Already Exist')
