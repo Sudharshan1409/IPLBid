@@ -108,7 +108,7 @@
         <br>
         <form id="change-year-form" method="POST" action="{% url 'bid:change_active_year' %}">
           {% csrf_token %}
-          <select id="year-select" name="year" class="form-select" aria-label="Default select example" style="margin-left: 5%; width: 20%" onchange="changeYear()">
+          <select id="year-select" name="year" class="form-select" aria-label="Default select example" style="margin-left: 5%; width: 20vw" onchange="changeYear()">
             <option {% if user.active_year.year == 2023 %} selected {% endif %} value="2023">Current Year (2023)</option>
             <option {% if user.active_year.year == 2022 %} selected {% endif %}value="2022">2022</option>
           </select>
