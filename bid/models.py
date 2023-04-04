@@ -87,7 +87,7 @@ class Dream11Matches(models.Model):
     third = models.CharField(max_length=400, null=True)
 
 class Dream11Scores(models.Model):
-    name = models.CharField(max_length=200, choices=players)
+    name = models.CharField(max_length=200, choices=players, unique=True)
     score = models.FloatField(default=0)
 
     def addScore(self, score):
