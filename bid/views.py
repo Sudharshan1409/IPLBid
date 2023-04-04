@@ -41,8 +41,8 @@ class AddMatchView(View):
             third = request.POST.get('thirdText')
         team1 = request.POST.get('team1')
         team2 = request.POST.get('team2')
-        # if team1 == team2:
-        #     messages.warning(request, 'Please select different teams')
+        if team1 == team2:
+            messages.warning(request, 'Please select different teams')
         Dream11Matches.objects.create(team1=team1, team2=team2, first=first, second=second, third=third)
         return redirect(reverse('bid:add_match'))
     
