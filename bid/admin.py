@@ -15,7 +15,7 @@ class ActiveYearAdmin(admin.ModelAdmin):
     list_display = ('user', 'year')
 
 class Dream11ScoresAdmin(admin.ModelAdmin):
-    list_display = ('name', 'score')
+    list_display = ('name', 'score', 'profit')
 
 class Dream11MatchesAdmin(admin.ModelAdmin):
     list_display = ('team1', 'team2', 'first', 'second', 'third')
