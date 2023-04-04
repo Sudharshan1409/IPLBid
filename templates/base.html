@@ -92,6 +92,7 @@
           {% if user.is_superuser %}
               <a href="{% url 'bid:create_game' %}">Create Games</a>
               <a href="{% url 'bid:update_game' %}">Update Games</a>
+              <a href="{% url 'bid:add_player' %}">Add Player</a>
               <a href="{% url 'bid:add_match' %}">Add Match</a>
               <a href="{% url 'bid:scores' %}">Scores</a>
           {% endif %}
