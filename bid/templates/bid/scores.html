@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+{% load date %}
+{% block content %}
+<h2>Scores:</h2>
+<table class="table table-striped contents" style="font-size:100%;text-align:left;overflow: scroll;">
+    <thead>
+    <tr>
+        <th scope="col">#</th>
+        <th scope="col">Name</th>
+        <th scope="col">Amount</th>
+        <th scope="col">Profit</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for score in scores %}
+        <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ score.name }}</td>
+            <td>{{ score.score }}</td> 
+            <td>{{ score.profit }}</td> 
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

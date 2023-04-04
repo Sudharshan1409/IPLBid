@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import UserProfile, Game, Game_Result, ActiveYear
+from .models import UserProfile, Game, Game_Result, ActiveYear, Dream11Scores, Dream11Matches
 # Register your models here.
 
 class GameAdmin(admin.ModelAdmin):
@@ -14,7 +14,15 @@ class Game_ResultAdmin(admin.ModelAdmin):
 class ActiveYearAdmin(admin.ModelAdmin):
     list_display = ('user', 'year')
 
+class Dream11ScoresAdmin(admin.ModelAdmin):
+    list_display = ('name', 'score')
+
+class Dream11MatchesAdmin(admin.ModelAdmin):
+    list_display = ('team1', 'team2', 'first', 'second', 'third')
+
 admin.site.register(UserProfile, UserProfileAdmin)
 admin.site.register(Game, GameAdmin)
 admin.site.register(Game_Result, Game_ResultAdmin)
 admin.site.register(ActiveYear, ActiveYearAdmin)
+admin.site.register(Dream11Scores, Dream11ScoresAdmin)
+admin.site.register(Dream11Matches, Dream11MatchesAdmin)

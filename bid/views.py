@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.mixins import LoginRequiredMixin
-from bid.models import Game, Game_Result, UserProfile, ActiveYear
+from bid.models import Game, Game_Result, UserProfile, ActiveYear, Dream11Matches, Dream11Scores
 from django.views.generic import View
 import datetime
 from pytz import timezone
@@ -9,11 +9,43 @@ from bid.decorators import super_user_or_not
 from django.urls import reverse
 from django.contrib import messages
 from django.core.paginator import Paginator
-from iplBid.settings import MINIMUM_BID_VALUE, MAXIMUM_BID_VALUE
+from iplBid.settings import MINIMUM_BID_VALUE, MAXIMUM_BID_VALUE, IPL_TEAMS as teams, DREAM11_PLAYERS as players
 import os
 # Create your views here.
 
-@method_decorator(super_user_or_not,name = 'dispatch')
+@method_decorator(super_user_or_not, name = 'dispatch')
+class AddMatchView(View):
+    template_name = 'bid/add_match.html'
+    
+    def get(self, request):
+        return render(request, self.template_name, {'teams': teams, 'players': players})
+    
+    def post(self, request):
+        print(request.POST)
+        first = request.POST.get('first')
+        second = request.POST.get('second')
+        third = request.POST.get('third')
+        if request.POST.get('firstCheck') == 'on':
+            first = request.POST.get('firstText')
+        if request.POST.get('secondCheck') == 'on':
+            second = request.POST.get('secondText')
+        if request.POST.get('thirdCheck') == 'on':
+            third = request.POST.get('thirdText')
+        team1 = request.POST.get('team1')
+        team2 = request.POST.get('team2')
+        # if team1 == team2:
+        #     messages.warning(request, 'Please select different teams')
+        Dream11Matches.objects.create(team1=team1, team2=team2, first=first, second=second, third=third)
+        return redirect(reverse('bid:add_match'))
+    
+class ScoresView(View):
+    template_name = 'bid/scores.html'
+    
+    def get(self, request):
+        scores = Dream11Scores.objects.all()
+        return render(request, self.template_name, {'scores': scores})
+        
+@method_decorator(super_user_or_not, name = 'dispatch')
 class CreateGameView(View):
     template_name = 'bid/create_game.html'
     

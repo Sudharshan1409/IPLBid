@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.dispatch import receiver
 from django.db.models.signals import post_save
 import os
+from iplBid.settings import IPL_TEAMS as choices, DREAM11_PLAYERS as players, PRICE_VALUES as prices
 # Create your models here.
 
 class UserProfile(models.Model):
@@ -58,18 +59,6 @@ class UserProfile(models.Model):
                     amounts.append(amounts[-1] - result.bid_amount)
         return (games, amounts)
 
-choices = [
-    ('DC', 'DC'),
-    ('PBKS', 'PBKS'),
-    ('KKR', 'KKR'),
-    ('LSG', 'LSG'),
-    ('SRH', 'SRH'),
-    ('RR', 'RR'),
-    ('GT', 'GT'),
-    ('CSK', 'CSK'),
-    ('RCB', 'RCB'),
-    ('MI', 'MI'),
-]
 class Game(models.Model):
     name = models.CharField(max_length=200, null=True, blank=True)
     date = models.DateTimeField()
@@ -89,6 +78,26 @@ class Game(models.Model):
 class ActiveYear(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="active_year")
     year = models.IntegerField(default=int(os.environ['CURRENT_YEAR']))
+
+class Dream11Matches(models.Model):
+    team1 = models.CharField(max_length=200, choices=choices)
+    team2 = models.CharField(max_length=200, choices=choices)
+    first = models.CharField(max_length=400, null=True)
+    second = models.CharField(max_length=400, null=True)
+    third = models.CharField(max_length=400, null=True)
+
+class Dream11Scores(models.Model):
+    name = models.CharField(max_length=200, choices=players)
+    score = models.FloatField(default=0)
+
+    def addScore(self, score):
+        self.score += score
+        self.save() 
+    
+    @property
+    def profit(self):
+        amountUsed = Dream11Matches.objects.all().count() * 10
+        return self.score - amountUsed
 
 class Game_Result(models.Model):
     user = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name="results_user")
@@ -111,6 +120,32 @@ def create_profile(sender, instance, created, **kwargs):
     if created:
         UserProfile.objects.create(user = instance)
         print('profile created')
+
+@receiver(post_save, sender=Dream11Matches)
+def create_profile(sender, instance, created, **kwargs):
+    if created:
+        if '&' in instance.first or '&' in instance.second or '&' in instance.third:
+            if len(instance.first.split('&')) == 2:
+                Dream11Scores.objects.filter(name=instance.first.split('&')[0])[0].addScore((prices[1] + prices[2])/2)
+                Dream11Scores.objects.filter(name=instance.first.split('&')[1])[0].addScore((prices[1] + prices[2])/2)
+                Dream11Scores.objects.filter(name=instance.third)[0].addScore(prices[3])
+                instance.second = None
+                instance.save()
+            elif len(instance.second.split('&')) == 2:
+                Dream11Scores.objects.filter(name=instance.second.split('&')[0])[0].addScore((prices[2] + prices[3])/2)
+                Dream11Scores.objects.filter(name=instance.second.split('&')[1])[0].addScore((prices[2] + prices[3])/2)
+                Dream11Scores.objects.filter(name=instance.first)[0].addScore(prices[1])
+                instance.third = None
+            elif len(instance.third.split('&')) == 2:
+                Dream11Scores.objects.filter(name=instance.third.split('&')[0])[0].addScore(prices[3]/2)
+                Dream11Scores.objects.filter(name=instance.third.split('&')[1])[0].addScore(prices[3]/2)
+                Dream11Scores.objects.filter(name=instance.first)[0].addScore(prices[1])
+                Dream11Scores.objects.filter(name=instance.second)[0].addScore(prices[2])
+        else:
+            Dream11Scores.objects.filter(name=instance.first)[0].addScore(prices[1])
+            Dream11Scores.objects.filter(name=instance.second)[0].addScore(prices[2])
+            Dream11Scores.objects.filter(name=instance.third)[0].addScore(prices[3])
+        
 
 @receiver(post_save, sender=Game)
 def update_game(sender, instance, created, **kwargs):

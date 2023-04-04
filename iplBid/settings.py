@@ -35,6 +35,36 @@ TEAM_COLOR_CODES = {
 
 os.environ['CURRENT_YEAR'] = '2023'
 
+IPL_TEAMS = [
+    ('DC', 'DC'),
+    ('PBKS', 'PBKS'),
+    ('KKR', 'KKR'),
+    ('LSG', 'LSG'),
+    ('SRH', 'SRH'),
+    ('RR', 'RR'),
+    ('GT', 'GT'),
+    ('CSK', 'CSK'),
+    ('RCB', 'RCB'),
+    ('MI', 'MI'),
+]
+
+DREAM11_PLAYERS = [
+    ('Darshan', 'Darshan'),
+    ('Panee', 'Panee'),
+    ('Badri', 'Badri'),
+    ('Srinidhi', 'Srinidhi'),
+    ('Nandan', 'Nandan'),
+    ('PavanG', 'PavanG'),
+    ('PavanK', 'PavanK'),
+    ('Ananthu', 'Ananthu'),
+]
+
+PRICE_VALUES = {
+    1: 40,
+    2: 25,
+    3: 15,
+}
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
