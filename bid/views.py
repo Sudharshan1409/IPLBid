@@ -43,8 +43,9 @@ class AddMatchView(View):
         team2 = request.POST.get('team2')
         if team1 == team2:
             messages.warning(request, 'Please select different teams')
+            return redirect(reverse('bid:add_match'))
         Dream11Matches.objects.create(team1=team1, team2=team2, first=first, second=second, third=third)
-        return redirect(reverse('bid:add_match'))
+        return redirect(reverse('bid:scores'))
     
 class ScoresView(View):
     template_name = 'bid/scores.html'
