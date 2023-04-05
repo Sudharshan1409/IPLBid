@@ -94,15 +94,18 @@
               <a href="{% url 'bid:update_game' %}">Update Games</a>
               <a href="{% url 'bid:add_player' %}">Add Player</a>
               <a href="{% url 'bid:add_match' %}">Add Match</a>
-              <a href="{% url 'bid:scores' %}">Scores</a>
+              <a href="{% url 'bid:scores' %}">Dream11 Scoresheet</a>
           {% endif %}
           {% if user.is_authenticated %}
+              {% if user.username == 'paneendragautham' or user.username == 'bprasadv' or user.username == 'Pavangautham@17' or user.username == 'AnanthaM_95' %}
+                <a href="{% url 'bid:scores' %}">Dream11 Scoresheet</a>
+              {% endif %}
               <a href="{% url 'password_change' %}">Change Password</a>
               <a href="{% url 'logout' %}">Log Out</a>
           {% else %}
-          <a href="{% url 'password_reset' %}">Reset Password</a>
-          <a class="nav navbar-right" href="{% url 'login' %}"><span class="glyphicon glyphicon-user">Login</span></a>
-          <a class="nav navbar-right" href="{% url 'signup' %}"><span class="glyphicon glyphicon-user">SignUp</span></a>
+              <a href="{% url 'password_reset' %}">Reset Password</a>
+              <a class="nav navbar-right" href="{% url 'login' %}"><span class="glyphicon glyphicon-user">Login</span></a>
+              <a class="nav navbar-right" href="{% url 'signup' %}"><span class="glyphicon glyphicon-user">SignUp</span></a>
           {% endif %}
           <a href="javascript:void(0);" class="icon" onclick="myFunction()">
             <i class="fa fa-bars"></i>
@@ -111,10 +114,12 @@
         <br>
         <form id="change-year-form" method="POST" action="{% url 'bid:change_active_year' %}">
           {% csrf_token %}
-          <select id="year-select" name="year" class="form-select" aria-label="Default select example" style="margin-left: 5%; width: 60vw" onchange="changeYear()">
-            <option {% if user.active_year.year == 2023 %} selected {% endif %} value="2023">Current Year (2023)</option>
-            <option {% if user.active_year.year == 2022 %} selected {% endif %}value="2022">2022</option>
-          </select>
+          {% if request.path == '/' or '/bid/games' in request.path or '/bid/user' in request.path %}
+            <select id="year-select" name="year" class="form-select" aria-label="Default select example" style="margin-left: 5%; width: 60vw" onchange="changeYear()">
+              <option {% if user.active_year.year == 2023 %} selected {% endif %} value="2023">Current Year (2023)</option>
+              <option {% if user.active_year.year == 2022 %} selected {% endif %}value="2022">2022</option>
+            </select>
+          {% endif %}
         </form>
         <br>
         <div class="content container">

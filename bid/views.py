@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.mixins import LoginRequiredMixin
 from bid.models import Game, Game_Result, UserProfile, ActiveYear, Dream11Matches, Dream11Scores
-from django.views.generic import View, CreateView
+from django.views.generic import View, CreateView, ListView
 import datetime
 from pytz import timezone
 from django.utils.decorators import method_decorator
@@ -20,6 +20,12 @@ class AddPlayerView(CreateView):
     fields = ['name']
     success_url = '/bid/dream11/add_player/'
     context_object_name = 'form'
+
+class MatchesView(ListView):
+    template_name = 'bid/matches.html'
+    model = Dream11Matches
+    context_object_name = 'matches'
+    # paginate_by = 10
 
 @method_decorator(super_user_or_not, name = 'dispatch')
 class AddMatchView(View):

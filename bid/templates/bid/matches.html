@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+{% block content %}
+<h3>Add Player Page:</h3><br/>
+<table class="table table-striped contents" style="font-size:100%;text-align:left;overflow: scroll;">
+    <thead>
+    <tr>
+        <th scope="col">#</th>
+        <th scope="col">Match</th>
+        <th scope="col">First</th>
+        <th scope="col">Second</th>
+        <th scope="col">Third</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for match in matches %}
+        <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ match.team1 }} vs {{ match.team2 }}</td>
+            <td>{{ match.first }}</td>
+            <td>{{ match.second }}</td>
+            <td>{{ match.third }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+    <br><br>
+{% endblock %}
