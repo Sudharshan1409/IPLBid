@@ -47,6 +47,7 @@ class AddMatchView(View):
         Dream11Matches.objects.create(team1=team1, team2=team2, first=first, second=second, third=third)
         return redirect(reverse('bid:scores'))
     
+@method_decorator(super_user_or_not, name = 'dispatch')
 class ScoresView(View):
     template_name = 'bid/scores.html'
     
