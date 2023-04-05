@@ -11,7 +11,6 @@ urlpatterns = [
     path('game/update/', views.UpdateGameView.as_view(), name='update_game'),
     path('dream11/add_match/', views.AddMatchView.as_view(), name='add_match'),
     path('dream11/scores/', views.ScoresView.as_view(), name='scores'),
-    path('dream11/matches/', views.MatchesView.as_view(), name='matches'),
     path('dream11/add_player/', views.AddPlayerView.as_view(), name='add_player'),
     path('change_active_year/', views.ChangeActiveYearView.as_view(), name='change_active_year'),
 ]

@@ -21,12 +21,6 @@ class AddPlayerView(CreateView):
     success_url = '/bid/dream11/add_player/'
     context_object_name = 'form'
 
-class MatchesView(ListView):
-    template_name = 'bid/matches.html'
-    model = Dream11Matches
-    context_object_name = 'matches'
-    # paginate_by = 10
-
 @method_decorator(super_user_or_not, name = 'dispatch')
 class AddMatchView(View):
     template_name = 'bid/add_match.html'
@@ -59,7 +53,8 @@ class ScoresView(View):
     
     def get(self, request):
         scores = Dream11Scores.objects.all()
-        return render(request, self.template_name, {'scores': scores})
+        matches = Dream11Matches.objects.all()
+        return render(request, self.template_name, {'scores': scores, 'matches': matches})
         
 @method_decorator(super_user_or_not, name = 'dispatch')
 class CreateGameView(View):
