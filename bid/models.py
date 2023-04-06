@@ -89,6 +89,10 @@ class Dream11Matches(models.Model):
     def __str__(self):
         return self.game.name
     
+    def save(self, *args, **kwargs):
+        self.date = self.game.date
+        super().save(*args, **kwargs)
+    
 
 class Dream11Scores(models.Model):
     name = models.CharField(max_length=200, choices=players, unique=True)
