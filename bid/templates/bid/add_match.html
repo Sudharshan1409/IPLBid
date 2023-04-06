@@ -15,23 +15,13 @@
     <div class="mb-3">
         <input type="checkbox" class="form-checkbox-row" onchange="handleFields('thirdCheck')" name="thirdCheck" id="thirdCheck">Third
     </div>
+    
     <div class="mb-3">
-      <label for="date" class="form-label">Team 1</label>
-      <select class="form-select" name="team1">
-        {% for team in teams %}
-            <option value="{{ team.1 }}">{{ team.0 }}</option>
-        {% endfor %}
-      </select>
+      <label for="date" class="form-label">Game</label>
+      <input type="text" class="form-control" name="game" value="{{ game.name }}" id="firstText" readonly="readonly">
+      <input class="form-control" name="gameId" value="{{ game.pk }}" type="hidden">
     </div>
-    <div class="mb-3">
-      <label for="date" class="form-label">Team 2</label>
-      <select class="form-select" name="team2">
-        {% for team in teams %}
-            <option value="{{ team.1 }}">{{ team.0 }}</option>
-        {% endfor %}
-      </select>
-    </div>
-
+    
     <div class="mb-3">
       <label for="date" class="form-label">First</label>
       <select class="form-select" name="first"  id="firstSelect">

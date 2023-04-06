@@ -32,8 +32,8 @@ TEAM_COLOR_CODES = {
     'GT': '#f9f9f9',
     'LSG': '#50cdc3',
 }
-
-os.environ['CURRENT_YEAR'] = '2023'
+CURRENT_YEAR = 2023
+os.environ['CURRENT_YEAR'] = str(CURRENT_YEAR)
 
 IPL_TEAMS = [
     ('DC', 'DC'),

@@ -26,7 +26,10 @@ class AddMatchView(View):
     template_name = 'bid/add_match.html'
     
     def get(self, request):
-        return render(request, self.template_name, {'teams': teams, 'players': players})
+        latestMatch = Dream11Matches.objects.latest('date')
+        # get Games from the date of the latest match
+        game = Game.objects.filter(date__gt=latestMatch.date).first()
+        return render(request, self.template_name, {'teams': teams, 'players': players, 'game': game})
     
     def post(self, request):
         print(request.POST)
@@ -39,12 +42,9 @@ class AddMatchView(View):
             second = request.POST.get('secondText')
         if request.POST.get('thirdCheck') == 'on':
             third = request.POST.get('thirdText')
-        team1 = request.POST.get('team1')
-        team2 = request.POST.get('team2')
-        if team1 == team2:
-            messages.warning(request, 'Please select different teams')
-            return redirect(reverse('bid:add_match'))
-        Dream11Matches.objects.create(team1=team1, team2=team2, first=first, second=second, third=third)
+
+        game = Game.objects.get(id=request.POST.get('gameId'))
+        Dream11Matches.objects.create(game=game, first=first, second=second, third=third)
         return redirect(reverse('bid:scores'))
     
 @method_decorator(super_user_or_not, name = 'dispatch')

@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.dispatch import receiver
 from django.db.models.signals import post_save
 import os
-from iplBid.settings import IPL_TEAMS as choices, DREAM11_PLAYERS as players, PRICE_VALUES as prices
+from iplBid.settings import IPL_TEAMS as choices, DREAM11_PLAYERS as players, PRICE_VALUES as prices, CURRENT_YEAR as current_year
 # Create your models here.
 
 class UserProfile(models.Model):
@@ -69,7 +69,7 @@ class Game(models.Model):
     year = models.IntegerField(default=int(os.environ['CURRENT_YEAR']))
 
     def __str__(self):
-        return f"{self.name}"
+        return f"{self.name} {self.year}"
     
     def save(self, *args, **kwargs):
         self.name = f"{self.team1} vs {self.team2}"
@@ -90,6 +90,8 @@ class Dream11Matches(models.Model):
         return self.game.name
     
     def save(self, *args, **kwargs):
+        if not self.game.year == current_year:
+            raise Exception("Game year does not match current year")
         self.date = self.game.date
         super().save(*args, **kwargs)
     
