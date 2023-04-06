@@ -82,6 +82,7 @@ class ActiveYear(models.Model):
 class Dream11Matches(models.Model):
     team1 = models.CharField(max_length=200, choices=choices)
     team2 = models.CharField(max_length=200, choices=choices)
+    game = models.OneToOneField(Game, on_delete=models.CASCADE, related_name="match", null=True)
     first = models.CharField(max_length=400, null=True)
     second = models.CharField(max_length=400, null=True)
     third = models.CharField(max_length=400, null=True)
@@ -171,5 +172,3 @@ def update_game(sender, instance, created, **kwargs):
             user.save()
         instance.completed = True
         instance.save()
-
-

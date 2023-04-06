@@ -61,7 +61,15 @@ class CreateGameView(View):
     template_name = 'bid/create_game.html'
     
     def get(self, request):
-        return render(request, self.template_name)
+        latestGameDate = Game.objects.latest('date').date
+        latestGameDate = latestGameDate.astimezone(timezone('Asia/Kolkata'))
+        print(latestGameDate.date(), latestGameDate.hour)
+        if latestGameDate.hour == 19:
+            latestGameDate = latestGameDate + datetime.timedelta(days=1)
+            latestGameTime = '15:00:00'
+        else:
+            latestGameTime = '19:00:00'
+        return render(request, self.template_name, {'teams': teams, 'latestGameDate': latestGameDate.day, 'latestGameMonth': latestGameDate.month, 'latestGameTime': latestGameTime})
 
     def post(self, request):
         print(request.POST)
