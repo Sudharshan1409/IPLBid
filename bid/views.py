@@ -81,8 +81,8 @@ class CreateGameView(View):
         else:
             return redirect(reverse('bid:games'))
 
-class UpdateGameWinnerView(View):
-    template_name = 'bid/update_game_winner.html'
+class UpdateGameView(View):
+    template_name = 'bid/update_game.html'
 
     def get(self, request):
         games = Game.objects.filter(completed=False).filter(date__lte = datetime.datetime.now(timezone('Asia/Kolkata')))
@@ -93,7 +93,7 @@ class UpdateGameWinnerView(View):
         game = Game.objects.get(id=request.POST['gameId'])
         game.winner = request.POST['team']
         game.save()
-        return redirect(reverse('bid:update_game_winner'))
+        return redirect(reverse('bid:update_game'))
 class UserDetailView(LoginRequiredMixin, View):
     model = UserProfile
     template_name = 'bid/user_detail.html'

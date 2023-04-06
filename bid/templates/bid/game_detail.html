@@ -1,222 +1,143 @@
-{% extends "base.html" %} {% load bootstrap3 %} {% load date %} {% load static
-%} {% block content %}
-<h2>
-  <span
-    {%
-    if
-    game.winner
-    %}style="color:{% if game.winner == game.team1 %}green{% else %}red{% endif %}"
-    {%
-    endif
-    %}
-    ><img
-      style="width: 50px; height: 50px"
-      src="{% static 'bid/img/' %}{{ game.team1 }}.png"
-      alt="Italian Trulli"
-    />
-    {{ game.team1 }}</span
-  >
-  vs
-  <span
-    {%
-    if
-    game.winner
-    %}style="color:{% if game.winner == game.team2 %}green{% else %}red{% endif %}"
-    {%
-    endif
-    %}
-    ><img
-      style="width: 50px; height: 50px"
-      src="{% static 'bid/img/' %}{{ game.team2 }}.png"
-      alt="Italian Trulli"
-    />
-    {{ game.team2 }}</span
-  >
-</h2>
-<table
-  class="table table-striped contents"
-  style="font-size: 80%; text-align: left"
->
-  <thead>
+{% extends "base.html" %}
+{% load bootstrap3 %}
+{% load date %}
+{% load static %}
+{% block content %}
+<h2><span {% if game.winner %}style="color:{% if game.winner == game.team1 %}green{% else %}red{% endif %}"{% endif %}><img style="width: 50px; height: 50px;" src="{% static 'bid/img/' %}{{ game.team1 }}.png" alt="Italian Trulli"> {{ game.team1 }}</span> vs <span {% if game.winner %}style="color:{% if game.winner == game.team2 %}green{% else %}red{% endif %}"{% endif %}><img style="width: 50px; height: 50px" src="{% static 'bid/img/' %}{{ game.team2 }}.png" alt="Italian Trulli"> {{ game.team2 }}</span></h2>
+<table class="table table-striped contents" style="font-size:80%;text-align:left;">
+    <thead>
     <tr>
-      <th scope="col">Name</th>
-      <th scope="col">Team</th>
-      <th scope="col">Bid Amount</th>
-      <th scope="col">Status</th>
-      {% if user.is_superuser %}
-      <th scope="col"></th>
-      {% endif %}
+        <th scope="col">Name</th>
+        <th scope="col">Team</th>
+        <th scope="col">Bid Amount</th>
+        <th scope="col">Status</th>
+        {% if user.is_superuser %}
+            <th scope="col"></th>
+        {% endif %}
     </tr>
-  </thead>
-  <tbody>
+    </thead>
+    <tbody>
     {% for obj in listObj %}
-    <tr>
-      <td><a href="{% url 'bid:user' obj.user.pk %}">{{ obj.name }}</a></td>
-      <td><span>{{ obj.team }}</span></td>
-      <td>{{ obj.amount }}</td>
-      {% if obj.did_not_bid %}
-      <td style="color: red">No Bid</td>
-      {% if user.is_superuser %} {% if not game.completed %}
-      <td>
-        <a
-          class="btn btn-primary"
-          style="font-size: 65%"
-          data-toggle="modal"
-          data-target="#exampleModal"
-          data-whatever=",{{ game.team1 }},{{ game.team2 }},{{ game.pk }},other_create,{{ obj.user.pk }}"
-          href="#"
-          role="button"
-          >BID AMOUNT</a
-        >
-      </td>
-      {% else %}
-      <td>
-        <button class="btn btn-primary" style="font-size: 65%" disabled>
-          BID AMOUNT
-        </button>
-      </td>
-      {% endif %} {% endif %} {% else %} {% if game.completed %} {% if obj.won
-      %}
-      <td style="color: green">Won</td>
-      {% else %}
-      <td style="color: red">Lost</td>
-      {% endif %} {% else %}
-      <td>Not Decided</td>
-      {% endif %} {% if user.is_superuser %} {% if not game.completed %}
-      <td>
-        <a
-          class="btn btn-primary"
-          style="font-size: 65%"
-          data-toggle="modal"
-          data-target="#exampleModal"
-          data-whatever="{{ game.bid_result.bid_amount }},{{ game.team1 }},{{ game.team2 }},{{ game.pk }},other_update,{{ obj.user.pk }}"
-          href="#"
-          role="button"
-          >UPDATE BID</a
-        >
-      </td>
-      {% else %}
-      <td>
-        <button class="btn btn-primary" style="font-size: 65%" disabled>
-          UPDATE BID
-        </button>
-      </td>
-      {% endif %} {% endif %} {% endif %}
-    </tr>
+        <tr>
+            <td><a href="{% url 'bid:user' obj.user.pk %}">{{ obj.name }}</a></td>
+            <td><span>{{ obj.team }}</span></td>
+            <td>{{ obj.amount }}</td>
+            {% if obj.did_not_bid %}
+                <td style="color: red">No Bid</td>
+                {% if user.is_superuser %}
+                    {% if not game.completed %}
+                        <td><a class="btn btn-primary" style="font-size:65%" data-toggle="modal" data-target="#exampleModal" data-whatever=",{{ game.team1 }},{{ game.team2 }},{{ game.pk }},other_create,{{ obj.user.pk }}" href="#" role="button">BID AMOUNT</a></td>
+                    {% else %}
+                        <td><button class="btn btn-primary" style="font-size:65%" disabled>BID AMOUNT</button></td>
+                    {% endif %}
+                {% endif %}
+            {% else %}
+                {% if game.completed %}
+                    {% if obj.won %}
+                        <td style="color:green">Won</td>
+                    {% else %}
+                        <td style="color:red">Lost</td>
+                    {% endif %}
+                {% else %}
+                    <td>Not Decided</td>
+                {% endif %}
+                {% if user.is_superuser %}
+                    {% if not game.completed %}
+                        <td><a class="btn btn-primary" style="font-size:65%" data-toggle="modal" data-target="#exampleModal" data-whatever="{{ game.bid_result.bid_amount }},{{ game.team1 }},{{ game.team2 }},{{ game.pk }},other_update,{{ obj.user.pk }}" href="#" role="button">UPDATE BID</a></td>
+                    {% else %}
+                        <td><button class="btn btn-primary" style="font-size:65%" disabled>UPDATE BID</button></td>
+                    {% endif %}
+                {% endif %}
+            {% endif %}
+        </tr>
     {% endfor %}
-  </tbody>
+    </tbody>
 </table>
-<div
-  class="modal fade"
-  id="exampleModal"
-  tabindex="-1"
-  role="dialog"
-  aria-labelledby="exampleModalLabel"
-  aria-hidden="true"
->
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">New message</h5>
-        <button
-          type="button"
-          class="close"
-          data-dismiss="modal"
-          aria-label="Close"
-        >
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <form
-          class="form-container"
-          action="{% url 'bid:games' %}"
-          method="POST"
-          enctype="multipart/form-data"
-          id="bid_form"
-        >
-          {% csrf_token %}
-          <div class="form-group">
-            <label for="team" class="col-form-label">Team:</label>
-            <select name="team" class="form-select" id="team" required></select>
-          </div>
-          <div class="form-group">
-            <label for="amount" class="col-form-label">Bid Amount:</label>
-            <input
-              name="amount"
-              type="number"
-              min="{{ min_bid }}"
-              max="{{ max_bid }}"
-              class="form-control"
-              id="amount"
-              required
-            />
-          </div>
-          <div class="modal-footer">
-            <button
-              type="button"
-              class="btn btn-secondary"
-              data-dismiss="modal"
-            >
-              Close
-            </button>
-            <button type="submit" class="btn btn-primary">Submit</button>
-          </div>
-        </form>
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">New message</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form class="form-container" action="{% url 'bid:games' %}" method="POST" enctype="multipart/form-data" id="bid_form">
+            {% csrf_token %}
+            <div class="form-group">
+              <label for="team" class="col-form-label">Team:</label>
+              <select name="team" class="form-select" id="team" required>
+              </select>
+              
+            </div>
+            <div class="form-group">
+              <label for="amount" class="col-form-label">Bid Amount:</label>
+              <input name="amount" type="number" min="{{ min_bid }}" max="{{ max_bid }}" class="form-control" id="amount" required>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   </div>
-</div>
-{% endblock %} {% block script %}
-<script>
-  $("#exampleModal").on("show.bs.modal", function (event) {
-    var button = $(event.relatedTarget); // Button that triggered the modal
-    var recipient = button.data("whatever"); // Extract info from data-* attributes
-    // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
-    // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
-    amount = recipient.split(",")[0];
-    team1 = recipient.split(",")[1];
-    team2 = recipient.split(",")[2];
-    gameId = recipient.split(",")[3];
-    method = recipient.split(",")[4];
-    pk = recipient.split(",")[5];
-    select = document.getElementById("team");
-    var options = document.querySelectorAll("#team option");
-    options.forEach((o) => o.remove());
-    select.options[select.options.length] = new Option(team1, team1);
-    select.options[select.options.length] = new Option(team2, team2);
-    if (team1 === team) {
-      select.value = team1;
-    } else if (team2 === team) {
-      select.value = team2;
-    } else {
-      select.value = "";
-    }
-    amount_field = document.getElementById("amount");
-    amount_field.value = amount;
-    var bid_form = document.getElementById("bid_form");
-    // create an input field to insert
-    var gameIdField = document.createElement("input");
-    var methodField = document.createElement("input");
-    var pkField = document.createElement("input");
-    // set input field data type to text
-    gameIdField.setAttribute("type", "hidden");
-    methodField.setAttribute("type", "hidden");
-    pkField.setAttribute("type", "hidden");
-    // set input field name
-    gameIdField.setAttribute("name", "gameId");
-    gameIdField.value = gameId;
-    methodField.setAttribute("name", "method");
-    methodField.value = method;
-    pkField.setAttribute("name", "user_pk");
-    pkField.value = pk;
-    // select last position to insert element before it
-    var pos = bid_form.childElementCount;
+{% endblock %}
 
-    // insert element
-    bid_form.insertBefore(gameIdField, bid_form.childNodes[pos]);
-    bid_form.insertBefore(methodField, bid_form.childNodes[pos + 1]);
-    bid_form.insertBefore(pkField, bid_form.childNodes[pos + 2]);
-  });
-</script>
+{% block script %}
+    <script>
+        $('#exampleModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget) // Button that triggered the modal
+            var recipient = button.data('whatever') // Extract info from data-* attributes
+            // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+            // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+            amount = recipient.split(",")[0]
+            team1 = recipient.split(",")[1]
+            team2 = recipient.split(",")[2]
+            gameId = recipient.split(",")[3]
+            method = recipient.split(",")[4]
+            pk = recipient.split(",")[5]
+            select = document.getElementById('team');
+            var options = document.querySelectorAll('#team option');
+            options.forEach(o => o.remove());
+            select.options[select.options.length] = new Option(team1, team1);
+            select.options[select.options.length] = new Option(team2, team2);
+            if (team1 === team) {
+                select.value = team1;
+            } else if (team2 === team) {
+                select.value = team2;
+            }
+            else {
+                select.value = "";
+            }
+            amount_field = document.getElementById('amount')
+            amount_field.value = amount
+            var bid_form = document.getElementById("bid_form");
+            // create an input field to insert
+            var gameIdField = document.createElement("input");
+            var methodField = document.createElement("input");
+            var pkField = document.createElement("input");
+            // set input field data type to text
+            gameIdField.setAttribute("type", "hidden");
+            methodField.setAttribute("type", "hidden");
+            pkField.setAttribute("type", "hidden");
+            // set input field name 
+            gameIdField.setAttribute("name", "gameId");
+            gameIdField.value = gameId;
+            methodField.setAttribute("name", "method");
+            methodField.value = method;
+            pkField.setAttribute("name", "user_pk");
+            pkField.value = pk;
+            // select last position to insert element before it
+            var pos = bid_form.childElementCount;
+
+            // insert element
+            bid_form.insertBefore(gameIdField, bid_form.childNodes[pos]);
+            bid_form.insertBefore(methodField, bid_form.childNodes[pos+1]);
+            bid_form.insertBefore(pkField, bid_form.childNodes[pos+2]);
+          })
+    </script>
 {% endblock script %}
+

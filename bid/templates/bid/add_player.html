@@ -1,10 +1,12 @@
-{% extends "base.html" %} {% load bootstrap3 %} {% block content %}
-<h3>Add Player Page:</h3>
-<br />
-
-<form method="post" enctype="multipart/form-data">
-  {% csrf_token %} {% bootstrap_form form %}
-  <input type="submit" name="submit" value="Add" class="btn btn-primary" />
-</form>
-<br /><br />
+{% extends "base.html" %}
+{% load bootstrap3 %}
+{% block content %}
+<h3>Add Player Page:</h3><br/>
+    
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {% bootstrap_form form %}
+        <input type="submit" name="submit" value="Add" class="btn btn-primary">
+    </form>
+    <br><br>
 {% endblock %}
