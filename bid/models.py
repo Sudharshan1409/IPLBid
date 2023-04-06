@@ -80,12 +80,15 @@ class ActiveYear(models.Model):
     year = models.IntegerField(default=int(os.environ['CURRENT_YEAR']))
 
 class Dream11Matches(models.Model):
-    team1 = models.CharField(max_length=200, choices=choices)
-    team2 = models.CharField(max_length=200, choices=choices)
     game = models.OneToOneField(Game, on_delete=models.CASCADE, related_name="match", null=True)
     first = models.CharField(max_length=400, null=True)
     second = models.CharField(max_length=400, null=True)
     third = models.CharField(max_length=400, null=True)
+    date = models.DateTimeField(null=True)
+
+    def __str__(self):
+        return self.game.name
+    
 
 class Dream11Scores(models.Model):
     name = models.CharField(max_length=200, choices=players, unique=True)

@@ -18,7 +18,7 @@ class Dream11ScoresAdmin(admin.ModelAdmin):
     list_display = ('name', 'score', 'profit')
 
 class Dream11MatchesAdmin(admin.ModelAdmin):
-    list_display = ('team1', 'team2', 'game', 'first', 'second', 'third')
+    list_display = ('game', 'first', 'second', 'third', 'date')
 
 admin.site.register(UserProfile, UserProfileAdmin)
 admin.site.register(Game, GameAdmin)
