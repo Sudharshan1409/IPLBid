@@ -1,74 +1,122 @@
-{% extends "base.html" %}
-{% load bootstrap3 %}
-{% load date %}
-{% block content %}
+{% extends "base.html" %} {% load bootstrap3 %} {% load date %} {% block content
+%}
 <h3>Dream11:</h3>
 <form action="{% url 'bid:add_match' %}" method="POST">
-    {% csrf_token %}
+  {% csrf_token %}
 
-    <div class="mb-3">
-        <input type="checkbox" class="form-checkbox-row", onchange="handleFields('firstCheck')" name="firstCheck" id="firstCheck">First
-    </div>
-    <div class="mb-3">
-        <input type="checkbox" class="form-checkbox-row" onchange="handleFields('secondCheck')" name="secondCheck" id="secondCheck">Second
-    </div>
-    <div class="mb-3">
-        <input type="checkbox" class="form-checkbox-row" onchange="handleFields('thirdCheck')" name="thirdCheck" id="thirdCheck">Third
-    </div>
-    
-    <div class="mb-3">
-      <label for="date" class="form-label">Game</label>
-      <input type="text" class="form-control" name="game" value="{{ game.name }}" id="firstText" readonly="readonly">
-      <input class="form-control" name="gameId" value="{{ game.pk }}" type="hidden">
-    </div>
-    
-    <div class="mb-3">
-      <label for="date" class="form-label">First</label>
-      <select class="form-select" name="first"  id="firstSelect">
-        {% for player in players %}
-            <option value="{{ player.1 }}">{{ player.0 }}</option>
-        {% endfor %}
-      </select>
-      <input type="text" class="form-control" name="firstText" id="firstText" style="display:none;">
-    </div>
-    <div class="mb-3">
-      <label for="date" class="form-label">Second</label>
-      <select class="form-select" name="second" id="secondSelect">
-        {% for player in players %}
-            <option value="{{ player.1 }}">{{ player.0 }}</option>
-        {% endfor %}
-      </select>
-      <input type="text" class="form-control" name="secondText" id="secondText" style="display:none;">
-    </div>
-    <div class="mb-3">
-      <label for="date" class="form-label">Third</label>
-      <select class="form-select" name="third" id="thirdSelect">
-        {% for player in players %}
-            <option value="{{ player.1 }}">{{ player.0 }}</option>
-        {% endfor %}
-      </select>
-      <input type="text" class="form-control" name="thirdText" id="thirdText" style="display:none;">
-    </div>
-    <button type="submit" class="btn btn-primary">Submit</button>
-  </form>
-{% endblock %}
+  <div class="mb-3">
+    <input
+      type="checkbox"
+      class="form-checkbox-row"
+      ,
+      onchange="handleFields('firstCheck')"
+      name="firstCheck"
+      id="firstCheck"
+    />First
+  </div>
+  <div class="mb-3">
+    <input
+      type="checkbox"
+      class="form-checkbox-row"
+      onchange="handleFields('secondCheck')"
+      name="secondCheck"
+      id="secondCheck"
+    />Second
+  </div>
+  <div class="mb-3">
+    <input
+      type="checkbox"
+      class="form-checkbox-row"
+      onchange="handleFields('thirdCheck')"
+      name="thirdCheck"
+      id="thirdCheck"
+    />Third
+  </div>
 
-{% block script %}
+  <div class="mb-3">
+    <label for="date" class="form-label">Game</label>
+    <input
+      type="text"
+      class="form-control"
+      name="game"
+      value="{{ game.name }}"
+      id="firstText"
+      readonly="readonly"
+    />
+    <input
+      class="form-control"
+      name="gameId"
+      value="{{ game.pk }}"
+      type="hidden"
+    />
+  </div>
+
+  <div class="mb-3">
+    <label for="date" class="form-label">First</label>
+    <select class="form-select" name="first" id="firstSelect">
+      {% for player in players %}
+      <option value="{{ player.1 }}">{{ player.0 }}</option>
+      {% endfor %}
+    </select>
+    <input
+      type="text"
+      class="form-control"
+      name="firstText"
+      id="firstText"
+      style="display: none"
+    />
+  </div>
+  <div class="mb-3">
+    <label for="date" class="form-label">Second</label>
+    <select class="form-select" name="second" id="secondSelect">
+      {% for player in players %}
+      <option value="{{ player.1 }}">{{ player.0 }}</option>
+      {% endfor %}
+    </select>
+    <input
+      type="text"
+      class="form-control"
+      name="secondText"
+      id="secondText"
+      style="display: none"
+    />
+  </div>
+  <div class="mb-3">
+    <label for="date" class="form-label">Third</label>
+    <select class="form-select" name="third" id="thirdSelect">
+      {% for player in players %}
+      <option value="{{ player.1 }}">{{ player.0 }}</option>
+      {% endfor %}
+    </select>
+    <input
+      type="text"
+      class="form-control"
+      name="thirdText"
+      id="thirdText"
+      style="display: none"
+    />
+  </div>
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+{% endblock %} {% block script %}
 
 <script>
-    const handleFields = (id) => {
-        console.log("id", id);
-        console.log(document.getElementById(id).checked);
-        console.log(id.split('Check')[0] + "Field")
-        if (document.getElementById(id).checked) {
-            document.getElementById(id.split('Check')[0] + "Select").style.display = "none";
-            document.getElementById(id.split('Check')[0] + "Text").style.display = "block";
-        }
-        else {
-            document.getElementById(id.split('Check')[0] + "Select").style.display = "block";
-            document.getElementById(id.split('Check')[0] + "Text").style.display = "none";
-        }
+  const handleFields = (id) => {
+    console.log("id", id);
+    console.log(document.getElementById(id).checked);
+    console.log(id.split("Check")[0] + "Field");
+    if (document.getElementById(id).checked) {
+      document.getElementById(id.split("Check")[0] + "Select").style.display =
+        "none";
+      document.getElementById(id.split("Check")[0] + "Text").style.display =
+        "block";
+    } else {
+      document.getElementById(id.split("Check")[0] + "Select").style.display =
+        "block";
+      document.getElementById(id.split("Check")[0] + "Text").style.display =
+        "none";
     }
+  };
 </script>
 
 {% endblock %}

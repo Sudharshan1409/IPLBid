@@ -1,13 +1,13 @@
-{% extends "base.html" %}
-{% load bootstrap3 %}
-{% block content %}
-<h3>Login:</h3><br/>
-    <form method="post">
-        {% csrf_token %}
-        {% bootstrap_form form %}
-        <span class="psw">Forgot password? <a href="{% url 'password_reset' %}">Reset here</a></span>
-        <br/><br/>
-        <input type="submit" name="submit" value="Login" class="btn btn-primary">
-    </form>
-    <br><br>
+{% extends "base.html" %} {% load bootstrap3 %} {% block content %}
+<h3>Login:</h3>
+<br />
+<form method="post">
+  {% csrf_token %} {% bootstrap_form form %}
+  <span class="psw"
+    >Forgot password? <a href="{% url 'password_reset' %}">Reset here</a></span
+  >
+  <br /><br />
+  <input type="submit" name="submit" value="Login" class="btn btn-primary" />
+</form>
+<br /><br />
 {% endblock %}

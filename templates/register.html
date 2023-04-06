@@ -1,13 +1,11 @@
-{% extends "base.html" %}
-{% load bootstrap3 %}
-{% block content %}
-<h3>Sign Up Page:</h3><br/>
-    <h5> Sorry for the inconvenience, but the registration is currently closed. </h5>
-    {% comment %} <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        {% bootstrap_form form %}
-        <input type="submit" name="submit" value="Register" class="btn btn-primary">
-
-    </form> {% endcomment %}
-    <br><br>
+{% extends "base.html" %} {% load bootstrap3 %} {% block content %}
+<h3>Sign Up Page:</h3>
+<br />
+<h5>Sorry for the inconvenience, but the registration is currently closed.</h5>
+{% comment %}
+<form method="post" enctype="multipart/form-data">
+  {% csrf_token %} {% bootstrap_form form %}
+  <input type="submit" name="submit" value="Register" class="btn btn-primary" />
+</form>
+{% endcomment %} <br /><br />
 {% endblock %}

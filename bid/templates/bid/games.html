@@ -1,325 +1,446 @@
-{% extends "base.html" %}
-{% load bootstrap3 %}
-{% load date %}
-{% block content %}
-<button type="button" class="btn btn-secondary selector" content-id="completed" data-container="body" data-toggle="popover" data-placement="right" style="font-size:2vmin;">
-    Completed Matches
+{% extends "base.html" %} {% load bootstrap3 %} {% load date %} {% block content
+%}
+<button
+  type="button"
+  class="btn btn-secondary selector"
+  content-id="completed"
+  data-container="body"
+  data-toggle="popover"
+  data-placement="right"
+  style="font-size: 2vmin"
+>
+  Completed Matches
 </button>
-<button type="button" class="btn btn-secondary selector" content-id="ongoing" data-container="body" data-toggle="popover" data-placement="right" style="font-size:2vmin;">
-    Current Matches
+<button
+  type="button"
+  class="btn btn-secondary selector"
+  content-id="ongoing"
+  data-container="body"
+  data-toggle="popover"
+  data-placement="right"
+  style="font-size: 2vmin"
+>
+  Current Matches
 </button>
-<button type="button" class="btn btn-secondary selector" content-id="upcoming" data-container="body" data-toggle="popover" data-placement="bottom" style="font-size:2vmin;">
-    Upcoming Matches
+<button
+  type="button"
+  class="btn btn-secondary selector"
+  content-id="upcoming"
+  data-container="body"
+  data-toggle="popover"
+  data-placement="bottom"
+  style="font-size: 2vmin"
+>
+  Upcoming Matches
 </button>
-<br/>
-<br/>
+<br />
+<br />
 
-    <table class="table table-striped contents" style="font-size:65%;text-align:left;display:none" id="completed">
-        <thead>
-        <tr>
-            <th scope="col">Name</th>
-            <th scope="col">Date</th>
-            <th scope="col">Bid</th>
-            <th scope="col">Winner</th>
-            <th scope="col">Result</th>
-            <th scope="col">Status</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for game in completed_games_page %}
-            <tr>
-                <td><a href="{% url 'bid:game_detail' game.pk %}">{{ game.name }}</a></td>
-                <td>{{ game.date|dateParse:"date" }}</td>
-                {% if game.bid_result %}
-                    <td>{{game.bid_result.team}} {{game.bid_result.bid_amount}}</td>
-                {% else %}
-                    <td style="color: red">No Bid</td>
-                {% endif %}
-                <td>{{ game.winner }}</td>
-                {% if game.bid_result.completed %}
-                    {% if game.bid_result.won %}
-                        <td style="color: green">+{{ game.bid_result.bid_amount }}</td>
-                    {% else %}
-                        <td style="color: red">-{{ game.bid_result.bid_amount }}</td>
-                    {% endif %}
-                {% else %}
-                    <td>N/A</td>
-                {% endif %}
-                {% if game.bid_result and not game.bid_result.did_not_bid %}
-                    {% if game.bid_result.won %}
-                        <td style="color:green">Won</td>
-                    {% else %}
-                        <td style="color:red">Lost</td>
-                    {% endif %}
-                {% else %}
-                    <td style="color: red">No Bid</td>
-                {% endif %}
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+<table
+  class="table table-striped contents"
+  style="font-size: 65%; text-align: left; display: none"
+  id="completed"
+>
+  <thead>
+    <tr>
+      <th scope="col">Name</th>
+      <th scope="col">Date</th>
+      <th scope="col">Bid</th>
+      <th scope="col">Winner</th>
+      <th scope="col">Result</th>
+      <th scope="col">Status</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for game in completed_games_page %}
+    <tr>
+      <td><a href="{% url 'bid:game_detail' game.pk %}">{{ game.name }}</a></td>
+      <td>{{ game.date|dateParse:"date" }}</td>
+      {% if game.bid_result %}
+      <td>{{game.bid_result.team}} {{game.bid_result.bid_amount}}</td>
+      {% else %}
+      <td style="color: red">No Bid</td>
+      {% endif %}
+      <td>{{ game.winner }}</td>
+      {% if game.bid_result.completed %} {% if game.bid_result.won %}
+      <td style="color: green">+{{ game.bid_result.bid_amount }}</td>
+      {% else %}
+      <td style="color: red">-{{ game.bid_result.bid_amount }}</td>
+      {% endif %} {% else %}
+      <td>N/A</td>
+      {% endif %} {% if game.bid_result and not game.bid_result.did_not_bid %}
+      {% if game.bid_result.won %}
+      <td style="color: green">Won</td>
+      {% else %}
+      <td style="color: red">Lost</td>
+      {% endif %} {% else %}
+      <td style="color: red">No Bid</td>
+      {% endif %}
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
 
-    <table class="table table-striped contents" style="font-size:65%;text-align:left;display:none" id="upcoming">
-        <thead>
-        <tr>
-            <th scope="col">Name</th>
-            <th scope="col">Date</th>
-            <th scope="col">Bid</th>
-            <th scope="col">Winner</th>
-            <th scope="col">Result</th>
-            <th scope="col"></th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for game in upcoming_games_page %}
-            <tr>
-                <td><a href="{% url 'bid:game_detail' game.pk %}">{{ game.name }}</a></td>
-                <td>{{ game.date|dateParse:"date" }}</td>
-                {% if game.bid_result %}
-                    <td>{{game.bid_result.team}} {{game.bid_result.bid_amount}}</td>
-                {% else %}
-                    <td style="color: red">No Bid</td>
-                {% endif %}
-                <td>{{ game.winner }}</td>
-                {% if game.bid_result.completed %}
-                    {% if not game.bid_result.did_not_bid %}
-                        {% if game.bid_result.won %}
-                            <td style="color: green">+{{ game.bid_result.bid_amount }}</td>
-                        {% else %}
-                            <td style="color: red">-{{ game.bid_result.bid_amount }}</td>
-                        {% endif %}
-                    {% else %}
-                        <td style="color: red">-1000</td>
-                    {% endif %}
-                {% else %}
-                    <td>N/A</td>
-                {% endif %}
-                {% if not game.isBid %}
-                    {% if game.date|dateCheck %}
-                        <td><a class="btn btn-primary" style="font-size:65%" data-toggle="modal" data-target="#exampleModal" data-whatever=",{{ game.team1 }},{{ game.team2 }},{{ game.pk }},create" href="#" role="button">BID AMOUNT</a></td>
-                    {% else %}
-                        <td><button class="btn btn-primary" style="font-size:65%" disabled>BID AMOUNT</button></td>
-                    {% endif %}
-                {% else %}
-                    {% if game.date|dateCheck %}
-                        <td><a class="btn btn-primary" style="font-size:65%" data-toggle="modal" data-target="#exampleModal" data-whatever="{{ game.bid_result.bid_amount }},{{ game.team1 }},{{ game.team2 }},{{ game.pk }},update,{{ game.bid_result.pk }},{{ game.bid_result.team }}" href="#" role="button">UPDATE BID</a></td>
-                    {% else %}
-                        <td><button class="btn btn-primary" style="font-size:65%" disabled>UPDATE BID</button></td>
-                    {% endif %}
-                {% endif %}
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+<table
+  class="table table-striped contents"
+  style="font-size: 65%; text-align: left; display: none"
+  id="upcoming"
+>
+  <thead>
+    <tr>
+      <th scope="col">Name</th>
+      <th scope="col">Date</th>
+      <th scope="col">Bid</th>
+      <th scope="col">Winner</th>
+      <th scope="col">Result</th>
+      <th scope="col"></th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for game in upcoming_games_page %}
+    <tr>
+      <td><a href="{% url 'bid:game_detail' game.pk %}">{{ game.name }}</a></td>
+      <td>{{ game.date|dateParse:"date" }}</td>
+      {% if game.bid_result %}
+      <td>{{game.bid_result.team}} {{game.bid_result.bid_amount}}</td>
+      {% else %}
+      <td style="color: red">No Bid</td>
+      {% endif %}
+      <td>{{ game.winner }}</td>
+      {% if game.bid_result.completed %} {% if not game.bid_result.did_not_bid
+      %} {% if game.bid_result.won %}
+      <td style="color: green">+{{ game.bid_result.bid_amount }}</td>
+      {% else %}
+      <td style="color: red">-{{ game.bid_result.bid_amount }}</td>
+      {% endif %} {% else %}
+      <td style="color: red">-1000</td>
+      {% endif %} {% else %}
+      <td>N/A</td>
+      {% endif %} {% if not game.isBid %} {% if game.date|dateCheck %}
+      <td>
+        <a
+          class="btn btn-primary"
+          style="font-size: 65%"
+          data-toggle="modal"
+          data-target="#exampleModal"
+          data-whatever=",{{ game.team1 }},{{ game.team2 }},{{ game.pk }},create"
+          href="#"
+          role="button"
+          >BID AMOUNT</a
+        >
+      </td>
+      {% else %}
+      <td>
+        <button class="btn btn-primary" style="font-size: 65%" disabled>
+          BID AMOUNT
+        </button>
+      </td>
+      {% endif %} {% else %} {% if game.date|dateCheck %}
+      <td>
+        <a
+          class="btn btn-primary"
+          style="font-size: 65%"
+          data-toggle="modal"
+          data-target="#exampleModal"
+          data-whatever="{{ game.bid_result.bid_amount }},{{ game.team1 }},{{ game.team2 }},{{ game.pk }},update,{{ game.bid_result.pk }},{{ game.bid_result.team }}"
+          href="#"
+          role="button"
+          >UPDATE BID</a
+        >
+      </td>
+      {% else %}
+      <td>
+        <button class="btn btn-primary" style="font-size: 65%" disabled>
+          UPDATE BID
+        </button>
+      </td>
+      {% endif %} {% endif %}
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
 
-    <table class="table table-striped contents" style="font-size:65%;text-align:left;display:none" id="ongoing">
-        <thead>
-        <tr>
-            <th scope="col">Name</th>
-            <th scope="col">Date</th>
-            <th scope="col">Bid</th>
-            <th scope="col">Winner</th>
-            <th scope="col">Result</th>
-            <th scope="col"></th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for game in ongoing_games %}
-            <tr>
-                <td><a href="{% url 'bid:game_detail' game.pk %}">{{ game.name }}</a></td>
-                <td>{{ game.date|dateParse:"date" }}</td>
-                {% if game.bid_result %}
-                    <td>{{game.bid_result.team}} {{game.bid_result.bid_amount}}</td>
-                {% else %}
-                    <td style="color: red">No Bid</td>
-                {% endif %}
-                <td>{{ game.winner }}</td>
-                {% if game.bid_result.completed %}
-                    {% if not game.bid_result.did_not_bid %}
-                        {% if game.bid_result.won %}
-                            <td style="color: green">+{{ game.bid_result.bid_amount }}</td>
-                        {% else %}
-                            <td style="color: red">-{{ game.bid_result.bid_amount }}</td>
-                        {% endif %}
-                    {% else %}
-                        <td style="color: red">-1000</td>
-                    {% endif %}
-                {% else %}
-                    <td>N/A</td>
-                {% endif %}
-                {% if not game.isBid %}
-                    {% if game.date|dateCheck %}
-                        <td><a class="btn btn-primary" style="font-size:65%" data-toggle="modal" data-target="#exampleModal" data-whatever=",{{ game.team1 }},{{ game.team2 }},{{ game.pk }},create" href="#" role="button">BID AMOUNT</a></td>
-                    {% else %}
-                        <td><button class="btn btn-primary" style="font-size:65%" disabled>BID AMOUNT</button></td>
-                    {% endif %}
-                {% else %}
-                    {% if game.date|dateCheck %}
-                        <td><a class="btn btn-primary" style="font-size:65%" data-toggle="modal" data-target="#exampleModal" data-whatever="{{ game.bid_result.bid_amount }},{{ game.team1 }},{{ game.team2 }},{{ game.pk }},update,{{ game.bid_result.pk }},{{ game.bid_result.team }}" href="#" role="button">UPDATE BID</a></td>
-                    {% else %}
-                        <td><button class="btn btn-primary" style="font-size:65%" disabled>UPDATE BID</button></td>
-                    {% endif %}
-                {% endif %}
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLabel">New message</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body">
-              <form class="form-container" method="POST" enctype="multipart/form-data" id="bid_form">
-                {% csrf_token %}
-                <div class="form-group">
-                  <label for="team" class="col-form-label">Team:</label>
-                  <select name="team" class="form-select" id="team" required>
-                  </select>
-                  
-                </div>
-                <div class="form-group">
-                  <label for="amount" class="col-form-label">Bid Amount:</label>
-                  <input name="amount" type="number" min="{{ min_bid }}" max="{{ max_bid }}" class="form-control" id="amount" required>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                </div>
-              </form>
-            </div>
-          </div>
-        </div>
+<table
+  class="table table-striped contents"
+  style="font-size: 65%; text-align: left; display: none"
+  id="ongoing"
+>
+  <thead>
+    <tr>
+      <th scope="col">Name</th>
+      <th scope="col">Date</th>
+      <th scope="col">Bid</th>
+      <th scope="col">Winner</th>
+      <th scope="col">Result</th>
+      <th scope="col"></th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for game in ongoing_games %}
+    <tr>
+      <td><a href="{% url 'bid:game_detail' game.pk %}">{{ game.name }}</a></td>
+      <td>{{ game.date|dateParse:"date" }}</td>
+      {% if game.bid_result %}
+      <td>{{game.bid_result.team}} {{game.bid_result.bid_amount}}</td>
+      {% else %}
+      <td style="color: red">No Bid</td>
+      {% endif %}
+      <td>{{ game.winner }}</td>
+      {% if game.bid_result.completed %} {% if not game.bid_result.did_not_bid
+      %} {% if game.bid_result.won %}
+      <td style="color: green">+{{ game.bid_result.bid_amount }}</td>
+      {% else %}
+      <td style="color: red">-{{ game.bid_result.bid_amount }}</td>
+      {% endif %} {% else %}
+      <td style="color: red">-1000</td>
+      {% endif %} {% else %}
+      <td>N/A</td>
+      {% endif %} {% if not game.isBid %} {% if game.date|dateCheck %}
+      <td>
+        <a
+          class="btn btn-primary"
+          style="font-size: 65%"
+          data-toggle="modal"
+          data-target="#exampleModal"
+          data-whatever=",{{ game.team1 }},{{ game.team2 }},{{ game.pk }},create"
+          href="#"
+          role="button"
+          >BID AMOUNT</a
+        >
+      </td>
+      {% else %}
+      <td>
+        <button class="btn btn-primary" style="font-size: 65%" disabled>
+          BID AMOUNT
+        </button>
+      </td>
+      {% endif %} {% else %} {% if game.date|dateCheck %}
+      <td>
+        <a
+          class="btn btn-primary"
+          style="font-size: 65%"
+          data-toggle="modal"
+          data-target="#exampleModal"
+          data-whatever="{{ game.bid_result.bid_amount }},{{ game.team1 }},{{ game.team2 }},{{ game.pk }},update,{{ game.bid_result.pk }},{{ game.bid_result.team }}"
+          href="#"
+          role="button"
+          >UPDATE BID</a
+        >
+      </td>
+      {% else %}
+      <td>
+        <button class="btn btn-primary" style="font-size: 65%" disabled>
+          UPDATE BID
+        </button>
+      </td>
+      {% endif %} {% endif %}
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+<div
+  class="modal fade"
+  id="exampleModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">New message</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
       </div>
-      <div class="pagination" id="pagination_completed" style="display:none">
-        <nav aria-label="...">
-            <ul class="pagination">
-              
-            <li class="page-item {% if not completed_games_page.has_previous %} disabled {% endif %}">
-                <a class="page-link" href="?page={% if completed_games_page.has_previous %}{{ completed_games_page.previous_page_number }}{% endif %}#completed">Previous</a>
-            </li>
-              <li class="page-item {% if not completed_games_page.has_next %} disabled {% endif %}">
-                <a class="page-link" href="?page={% if completed_games_page.has_next %}{{ completed_games_page.next_page_number }}{% endif %}#completed">Next</a>
-              </li>
-            </ul>
-          </nav>
+      <div class="modal-body">
+        <form
+          class="form-container"
+          method="POST"
+          enctype="multipart/form-data"
+          id="bid_form"
+        >
+          {% csrf_token %}
+          <div class="form-group">
+            <label for="team" class="col-form-label">Team:</label>
+            <select name="team" class="form-select" id="team" required></select>
+          </div>
+          <div class="form-group">
+            <label for="amount" class="col-form-label">Bid Amount:</label>
+            <input
+              name="amount"
+              type="number"
+              min="{{ min_bid }}"
+              max="{{ max_bid }}"
+              class="form-control"
+              id="amount"
+              required
+            />
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-dismiss="modal"
+            >
+              Close
+            </button>
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </div>
+        </form>
+      </div>
     </div>
-      <div class="pagination" id="pagination_upcoming" style="display:none">
-        <nav aria-label="...">
-            <ul class="pagination">
-              
-            <li class="page-item {% if not upcoming_games_page.has_previous %} disabled {% endif %}">
-                <a class="page-link" href="?page={% if upcoming_games_page.has_previous %}{{ upcoming_games_page.previous_page_number }}{% endif %}#upcoming">Previous</a>
-            </li>
-              <li class="page-item {% if not upcoming_games_page.has_next %} disabled {% endif %}">
-                <a class="page-link" href="?page={% if upcoming_games_page.has_next %}{{ upcoming_games_page.next_page_number }}{% endif %}#upcoming">Next</a>
-              </li>
-            </ul>
-          </nav>
-    </div>
+  </div>
+</div>
+<div class="pagination" id="pagination_completed" style="display: none">
+  <nav aria-label="...">
+    <ul class="pagination">
+      <li
+        class="page-item {% if not completed_games_page.has_previous %} disabled {% endif %}"
+      >
+        <a
+          class="page-link"
+          href="?page={% if completed_games_page.has_previous %}{{ completed_games_page.previous_page_number }}{% endif %}#completed"
+          >Previous</a
+        >
+      </li>
+      <li
+        class="page-item {% if not completed_games_page.has_next %} disabled {% endif %}"
+      >
+        <a
+          class="page-link"
+          href="?page={% if completed_games_page.has_next %}{{ completed_games_page.next_page_number }}{% endif %}#completed"
+          >Next</a
+        >
+      </li>
+    </ul>
+  </nav>
+</div>
+<div class="pagination" id="pagination_upcoming" style="display: none">
+  <nav aria-label="...">
+    <ul class="pagination">
+      <li
+        class="page-item {% if not upcoming_games_page.has_previous %} disabled {% endif %}"
+      >
+        <a
+          class="page-link"
+          href="?page={% if upcoming_games_page.has_previous %}{{ upcoming_games_page.previous_page_number }}{% endif %}#upcoming"
+          >Previous</a
+        >
+      </li>
+      <li
+        class="page-item {% if not upcoming_games_page.has_next %} disabled {% endif %}"
+      >
+        <a
+          class="page-link"
+          href="?page={% if upcoming_games_page.has_next %}{{ upcoming_games_page.next_page_number }}{% endif %}#upcoming"
+          >Next</a
+        >
+      </li>
+    </ul>
+  </nav>
+</div>
+{% endblock %} {% block script %}
+<script>
+  $("#exampleModal").on("show.bs.modal", function (event) {
+    var button = $(event.relatedTarget); // Button that triggered the modal
+    var recipient = button.data("whatever"); // Extract info from data-* attributes
+    // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+    // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+    amount = recipient.split(",")[0];
+    team1 = recipient.split(",")[1];
+    team2 = recipient.split(",")[2];
+    gameId = recipient.split(",")[3];
+    method = recipient.split(",")[4];
+    pk = recipient.split(",")[5];
+    team = recipient.split(",")[6];
+    select = document.getElementById("team");
+    var options = document.querySelectorAll("#team option");
+    options.forEach((o) => o.remove());
+    select.options[select.options.length] = new Option(team1, team1);
+    select.options[select.options.length] = new Option(team2, team2);
+    if (team1 === team) {
+      select.value = team1;
+    } else if (team2 === team) {
+      select.value = team2;
+    } else {
+      select.value = "";
+    }
+    amount_field = document.getElementById("amount");
+    amount_field.value = amount;
+    var bid_form = document.getElementById("bid_form");
+    // create an input field to insert
+    var gameIdField = document.createElement("input");
+    var methodField = document.createElement("input");
+    var pkField = document.createElement("input");
+    // set input field data type to text
+    gameIdField.setAttribute("type", "hidden");
+    methodField.setAttribute("type", "hidden");
+    pkField.setAttribute("type", "hidden");
+    // set input field name
+    gameIdField.setAttribute("name", "gameId");
+    gameIdField.value = gameId;
+    methodField.setAttribute("name", "method");
+    methodField.value = method;
+    pkField.setAttribute("name", "pk");
+    pkField.value = pk;
+    // select last position to insert element before it
+    var pos = bid_form.childElementCount;
+
+    // insert element
+    bid_form.insertBefore(gameIdField, bid_form.childNodes[pos]);
+    bid_form.insertBefore(methodField, bid_form.childNodes[pos + 1]);
+    bid_form.insertBefore(pkField, bid_form.childNodes[pos + 2]);
+  });
+  $(document).ready(function () {
+    content_id = window.location.href.split("#")[1];
+    $("#" + content_id).show();
+    $(".selector").removeClass("active").removeClass("on");
+    $("button[content-id=" + content_id + "]")
+      .addClass("active")
+      .addClass("on");
+  });
+  $(document).ready(function () {
+    console.log(window.location.href.split("#")[1]);
+    if (window.location.href.split("#")[1] == "completed") {
+      $("#pagination_completed").show();
+    } else if (window.location.href.split("#")[1] == "upcoming") {
+      $("#pagination_upcoming").show();
+    }
+  });
+  $(document).ready(function () {
+    $(".selector").click(function (event) {
+      event.preventDefault();
+      url = window.location.href.split("#")[0];
+      window.location.href = url + "#" + $(this).attr("content-id");
+      $(".selector").removeClass("active").removeClass("on");
+      $(this).addClass("active").addClass("on");
+
+      var content = $(this).attr("content-id");
+
+      $(".contents").hide();
+      $("#" + content).show();
+      console.log($(this).attr("content-id"));
+      if (content === "completed") {
+        $("#pagination_upcoming").hide();
+        $("#pagination_completed").show();
+      } else if (content === "upcoming") {
+        $("#pagination_completed").hide();
+        $("#pagination_upcoming").show();
+      } else {
+        $("#pagination_completed").hide();
+        $("#pagination_upcoming").hide();
+      }
+    });
+  });
+  $("#myModal").on("shown.bs.modal", function () {
+    $("#myInput").trigger("focus");
+  });
+</script>
 {% endblock %}
-
-{% block script %}
-      <script>
-        $('#exampleModal').on('show.bs.modal', function (event) {
-            var button = $(event.relatedTarget) // Button that triggered the modal
-            var recipient = button.data('whatever') // Extract info from data-* attributes
-            // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
-            // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
-            amount = recipient.split(",")[0]
-            team1 = recipient.split(",")[1]
-            team2 = recipient.split(",")[2]
-            gameId = recipient.split(",")[3]
-            method = recipient.split(",")[4]
-            pk = recipient.split(",")[5]
-            team = recipient.split(",")[6]
-            select = document.getElementById('team');
-            var options = document.querySelectorAll('#team option');
-            options.forEach(o => o.remove());
-            select.options[select.options.length] = new Option(team1, team1);
-            select.options[select.options.length] = new Option(team2, team2);
-            if (team1 === team) {
-                select.value = team1;
-            } else if (team2 === team) {
-                select.value = team2;
-            }
-            else {
-                select.value = "";
-            }
-            amount_field = document.getElementById('amount')
-            amount_field.value = amount
-            var bid_form = document.getElementById("bid_form");
-            // create an input field to insert
-            var gameIdField = document.createElement("input");
-            var methodField = document.createElement("input");
-            var pkField = document.createElement("input");
-            // set input field data type to text
-            gameIdField.setAttribute("type", "hidden");
-            methodField.setAttribute("type", "hidden");
-            pkField.setAttribute("type", "hidden");
-            // set input field name 
-            gameIdField.setAttribute("name", "gameId");
-            gameIdField.value = gameId;
-            methodField.setAttribute("name", "method");
-            methodField.value = method;
-            pkField.setAttribute("name", "pk");
-            pkField.value = pk;
-            // select last position to insert element before it
-            var pos = bid_form.childElementCount;
-
-            // insert element
-            bid_form.insertBefore(gameIdField, bid_form.childNodes[pos]);
-            bid_form.insertBefore(methodField, bid_form.childNodes[pos+1]);
-            bid_form.insertBefore(pkField, bid_form.childNodes[pos+2]);
-          })
-          $(document).ready(function(){
-            content_id = window.location.href.split('#')[1]
-            $('#'+content_id).show()
-            $('.selector').removeClass("active").removeClass("on");
-            $('button[content-id='+content_id+']').addClass("active").addClass("on");
-            });
-          $(document).ready(function(){
-              console.log(window.location.href.split('#')[1])
-              if (window.location.href.split('#')[1] == "completed") {
-                $('#pagination_completed').show();
-              }
-              else if (window.location.href.split('#')[1] == "upcoming") {
-                $('#pagination_upcoming').show();
-              }
-          })
-          $(document).ready(function(){
-            $(".selector").click(function(event) {
-                event.preventDefault();
-                url = window.location.href.split('#')[0]
-                window.location.href = url + '#' + $(this).attr('content-id');
-                $('.selector').removeClass("active").removeClass("on");
-                $(this).addClass("active").addClass("on");
-                
-                var content = $(this).attr('content-id')
-            
-                $(".contents").hide();
-                $("#"+content).show();
-                console.log($(this).attr('content-id'))
-                if (content === "completed") {
-                    $('#pagination_upcoming').hide()
-                    $('#pagination_completed').show();
-                } else if (content === "upcoming") {
-                    $('#pagination_completed').hide();
-                    $('#pagination_upcoming').show();
-                }
-                else {
-                    $('#pagination_completed').hide();
-                    $('#pagination_upcoming').hide();
-                }
-            });
-            });
-            $('#myModal').on('shown.bs.modal', function () {
-              $('#myInput').trigger('focus');
-            })
-      </script>
-{% endblock %}
-
