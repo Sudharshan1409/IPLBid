@@ -2,8 +2,8 @@
 {% load bootstrap3 %}
 {% load date %}
 {% block content %}
-<h2>Update Game Page:</h2>
-<form id="update_game_form" action="{% url 'bid:update_game' %}" method="POST">
+<h2>Update Game Winner Page:</h2>
+<form id="update_game_form" action="{% url 'bid:update_game_winner' %}" method="POST">
     {% csrf_token %}
 </form>
 <table class="table table-striped contents" style="font-size:80%;text-align:left;">
