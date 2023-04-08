@@ -10,6 +10,7 @@
         <th scope="col">Name</th>
         <th scope="col">Amount</th>
         <th scope="col">Profit</th>
+        <th scope="col">Matched Played</th>
     </tr>
     </thead>
     <tbody>
@@ -18,7 +19,8 @@
             <td>{{ forloop.counter }}</td>
             <td>{{ score.name }}</td>
             <td>{{ score.score }}</td> 
-            <td>{{ score.profit }}</td> 
+            <td>{{ score.profit }}</td>
+            <td>{{ score.matchesPlayed }}</td> 
         </tr>
     {% endfor %}
     </tbody>
