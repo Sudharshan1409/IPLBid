@@ -135,6 +135,9 @@ def create_profile(sender, instance, created, **kwargs):
 @receiver(post_save, sender=Dream11Matches)
 def create_profile(sender, instance, created, **kwargs):
     if created:
+        for score in Dream11Scores.objects.all():
+            score.matchesPlayed = score.matchesPlayed + 1
+            score.save()
         if '&' in instance.first or '&' in instance.second or '&' in instance.third:
             if len(instance.first.split('&')) == 2:
                 Dream11Scores.objects.filter(name=instance.first.split('&')[0])[0].addScore((prices[1] + prices[2])/2)
