@@ -99,6 +99,7 @@ class Dream11Matches(models.Model):
 class Dream11Scores(models.Model):
     name = models.CharField(max_length=200, choices=players, unique=True)
     score = models.FloatField(default=0)
+    matchesPlayed = models.IntegerField(default=10)
 
     def addScore(self, score):
         self.score += score
