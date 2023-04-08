@@ -57,6 +57,7 @@ DREAM11_PLAYERS = [
     ('PavanG', 'PavanG'),
     ('PavanK', 'PavanK'),
     ('Ananthu', 'Ananthu'),
+    ('Teju', 'Teju')
 ]
 
 PRICE_VALUES = {
