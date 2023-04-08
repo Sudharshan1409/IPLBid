@@ -107,7 +107,7 @@ class Dream11Scores(models.Model):
     
     @property
     def profit(self):
-        amountUsed = Dream11Matches.objects.all().count() * 10
+        amountUsed = self.matchesPlayed * 10
         return self.score - amountUsed
 
 class Game_Result(models.Model):
