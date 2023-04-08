@@ -13,13 +13,13 @@ from iplBid.settings import MINIMUM_BID_VALUE, MAXIMUM_BID_VALUE, IPL_TEAMS as t
 import os
 # Create your views here.
 
-# @method_decorator(super_user_or_not, name = 'dispatch')
-# class AddPlayerView(CreateView):
-#     template_name = 'bid/add_player.html'
-#     model = Dream11Scores
-#     fields = ['name']
-#     success_url = '/bid/dream11/add_player/'
-#     context_object_name = 'form'
+@method_decorator(super_user_or_not, name = 'dispatch')
+class AddPlayerView(CreateView):
+    template_name = 'bid/add_player.html'
+    model = Dream11Scores
+    fields = ['name']
+    success_url = '/bid/dream11/add_player/'
+    context_object_name = 'form'
 
 @method_decorator(super_user_or_not, name = 'dispatch')
 class AddMatchView(View):
