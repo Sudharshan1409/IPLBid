@@ -3,6 +3,7 @@ import os
 register = template.Library()
 import datetime
 from pytz import timezone
+from iplBid.settings import DREAM11_PLAYERS_USERNAMES as usernames
 
 @register.filter(name = 'dateParse')
 def dateParse(value, arg):
@@ -22,3 +23,6 @@ def dateCheck(date):
     print(today_date < (game_date - datetime.timedelta(minutes=1)) and (game_date - today_date).days <=1, today_date, game_date)
     return today_date < (game_date - datetime.timedelta(minutes=1)) and (game_date - today_date).days <=1
 
+@register.filter(name = 'usernameCheck')
+def usernameCheck(username):
+    return username in usernames

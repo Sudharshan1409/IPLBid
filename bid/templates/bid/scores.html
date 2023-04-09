@@ -10,7 +10,7 @@
         <th scope="col">Name</th>
         <th scope="col">Amount</th>
         <th scope="col">Profit</th>
-        <th scope="col">Matches Played</th>
+        <th scope="col">Matches</th>
     </tr>
     </thead>
     <tbody>
@@ -20,7 +20,7 @@
             <td>{{ score.name }}</td>
             <td>{{ score.score }}</td> 
             <td>{{ score.profit }}</td>
-            <td><center>{{ score.matchesPlayed }}</center></td> 
+            <td>{{ score.matchesPlayed }}</td> 
         </tr>
     {% endfor %}
     </tbody>

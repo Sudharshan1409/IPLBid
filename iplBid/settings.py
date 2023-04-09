@@ -60,6 +60,15 @@ DREAM11_PLAYERS = [
     ('Teju', 'Teju')
 ]
 
+DREAM11_PLAYERS_USERNAMES = [
+    'paneendragautham',
+    'bprasadv',
+    'Pavangautham@17',
+    'AnanthaM_95',
+    'Jagaluru_boys',
+    'txms'
+]
+
 PRICE_VALUES = {
     1: 45,
     2: 30,

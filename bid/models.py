@@ -130,6 +130,7 @@ class Game_Result(models.Model):
 def create_profile(sender, instance, created, **kwargs):
     if created:
         UserProfile.objects.create(user = instance)
+        ActiveYear.objects.create(user = instance)
         print('profile created')
 
 @receiver(post_save, sender=Dream11Matches)
