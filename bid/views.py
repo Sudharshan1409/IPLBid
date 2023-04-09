@@ -79,7 +79,7 @@ class CreateGameView(View):
         if 'add' in request.POST:
             return redirect(reverse('bid:create_game'))
         else:
-            return redirect(reverse('bid:games'))
+            return redirect(reverse('bid:games') + '#upcoming')
 
 class UpdateGameWinnerView(View):
     template_name = 'bid/update_game.html'
