@@ -53,7 +53,7 @@ class ScoresView(View):
     
     def get(self, request):
         scores = Dream11Scores.objects.all()
-        matches = Dream11Matches.objects.all()
+        matches = Dream11Matches.objects.all().order_by('-date')
         return render(request, self.template_name, {'scores': scores, 'matches': matches})
         
 @method_decorator(super_user_or_not, name = 'dispatch')
