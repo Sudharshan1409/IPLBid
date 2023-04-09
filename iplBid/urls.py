@@ -20,6 +20,7 @@ from django.conf.urls.static import static
 from .views import HomePageView, RegisterUserView, ResetPasswordView, ChangePasswordView
 from django.contrib.auth.views import LoginView,LogoutView
 from .forms import LoginForm
+from bid import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -30,4 +31,7 @@ urlpatterns = [
     path('password/change/', ChangePasswordView.as_view(), name='password_change'),
     path('login/',LoginView.as_view(template_name = 'login.html', authentication_form=LoginForm), name="login"),
     path('logout/',LogoutView.as_view(next_page = '/'),name = 'logout',kwargs = {'next_page':'/'}),
+    path('dream11/add_match/', views.AddMatchView.as_view(), name='add_match'),
+    path('dream11/scores/', views.ScoresView.as_view(), name='scores'),
+    path('dream11/add_player/', views.AddPlayerView.as_view(), name='add_player'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

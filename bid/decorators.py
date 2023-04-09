@@ -17,7 +17,7 @@ def super_user_or_not(func):
         if request.user.is_authenticated:
             if request.user.is_superuser:
                 return func(request, *args, **kwargs)
-            elif request.user.username in usernames and request.path == reverse('bid:scores'):
+            elif request.user.username in usernames and request.path == reverse('scores'):
                 return func(request, *args, **kwargs)
             else:
                 messages.warning(request, 'You are not allowed to access this page')
