@@ -111,10 +111,11 @@ class ChangeActiveYearView(LoginRequiredMixin, View):
     model = ActiveYear
     def post(self, request):
         activeYear = ActiveYear.objects.get(user=request.user)
-        print('request post', request.POST)
         activeYear.year = int(request.POST['year'])
         activeYear.save()
-        return redirect(reverse('home'))
+        if request.POST['path'] == '/bid/games/':
+            return redirect(reverse('bid:games')+'#ongoing')
+        return redirect(request.POST['path'])
 
 class GameDetailView(LoginRequiredMixin, View):
     model = Game
