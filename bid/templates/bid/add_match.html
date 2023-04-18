@@ -15,6 +15,9 @@
     <div class="mb-3">
         <input type="checkbox" class="form-checkbox-row" onchange="handleFields('thirdCheck')" name="thirdCheck" id="thirdCheck">Third
     </div>
+    <div class="mb-3">
+        <input type="checkbox" class="form-checkbox-row" onchange="handleFields('fourthCheck')" name="fourthCheck" id="fourthCheck">Fourth
+    </div>
     
     <div class="mb-3">
       <label for="date" class="form-label">Game</label>
@@ -48,6 +51,15 @@
         {% endfor %}
       </select>
       <input type="text" class="form-control" name="thirdText" id="thirdText" style="display:none;">
+    </div>
+    <div class="mb-3">
+      <label for="date" class="form-label">Fourth</label>
+      <select class="form-select" name="fourth" id="fourthSelect">
+        {% for player in players %}
+            <option value="{{ player.1 }}">{{ player.0 }}</option>
+        {% endfor %}
+      </select>
+      <input type="text" class="form-control" name="fourthText" id="fourthText" style="display:none;">
     </div>
     <button type="submit" class="btn btn-primary">Submit</button>
   </form>

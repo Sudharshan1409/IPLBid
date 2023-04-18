@@ -18,7 +18,7 @@ class AddPlayerView(CreateView):
     template_name = 'bid/add_player.html'
     model = Dream11Scores
     fields = ['name']
-    success_url = '/bid/dream11/add_player/'
+    success_url = '/dream11/add_player/'
     context_object_name = 'form'
 
 @method_decorator(super_user_or_not, name = 'dispatch')
@@ -36,15 +36,18 @@ class AddMatchView(View):
         first = request.POST.get('first')
         second = request.POST.get('second')
         third = request.POST.get('third')
+        fourth = request.POST.get('fourth')
         if request.POST.get('firstCheck') == 'on':
             first = request.POST.get('firstText')
         if request.POST.get('secondCheck') == 'on':
             second = request.POST.get('secondText')
         if request.POST.get('thirdCheck') == 'on':
             third = request.POST.get('thirdText')
-
+        if request.POST.get('fourthCheck') == 'on':
+            fourth = request.POST.get('fourthText')
+        
         game = Game.objects.get(id=request.POST.get('gameId'))
-        Dream11Matches.objects.create(game=game, first=first, second=second, third=third)
+        Dream11Matches.objects.create(game=game, first=first, second=second, third=third, fourth=fourth)
         return redirect(reverse('scores'))
     
 @method_decorator(super_user_or_not, name = 'dispatch')

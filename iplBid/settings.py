@@ -57,7 +57,8 @@ DREAM11_PLAYERS = [
     ('PavanG', 'PavanG'),
     ('PavanK', 'PavanK'),
     ('Ananthu', 'Ananthu'),
-    ('Teju', 'Teju')
+    ('Teju', 'Teju'),
+    ('Jithu', 'Jithu'),
 ]
 
 DREAM11_PLAYERS_USERNAMES = [
@@ -66,13 +67,15 @@ DREAM11_PLAYERS_USERNAMES = [
     'Pavangautham@17',
     'AnanthaM_95',
     'Jagaluru_boys',
-    'txms'
+    'txms',
+    'Jithu'
 ]
 
 PRICE_VALUES = {
-    1: 45,
+    1: 40,
     2: 30,
-    3: 15,
+    3: 20,
+    4: 10
 }
 
 
