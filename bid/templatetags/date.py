@@ -26,3 +26,12 @@ def dateCheck(date):
 @register.filter(name = 'usernameCheck')
 def usernameCheck(username):
     return username in usernames
+
+@register.filter(name = 'nameCheck')
+def nameCheck(name):
+    if not name:
+        return None
+    if '&' in name:
+        name_split = name.split('&')
+        return name_split[0] + ' & ' + name_split[1]
+    return name

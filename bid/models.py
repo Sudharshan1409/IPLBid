@@ -108,8 +108,11 @@ class Dream11Scores(models.Model):
     
     @property
     def profit(self):
-        amountUsed = self.matchesPlayed * 10
-        return self.score - amountUsed
+        return self.score - self.amount_used
+    
+    @property
+    def amount_used(self):
+       return self.matchesPlayed * 10
 
 class Game_Result(models.Model):
     user = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name="results_user")
@@ -147,7 +150,6 @@ def create_profile(sender, instance, created, **kwargs):
                 Dream11Scores.objects.filter(name=instance.third)[0].addScore(prices[3])
                 Dream11Scores.objects.filter(name=instance.fourth)[0].addScore(prices[4])
                 instance.second = None
-                instance.save()
             elif len(instance.second.split('&')) == 2:
                 Dream11Scores.objects.filter(name=instance.second.split('&')[0])[0].addScore((prices[2] + prices[3])/2)
                 Dream11Scores.objects.filter(name=instance.second.split('&')[1])[0].addScore((prices[2] + prices[3])/2)
@@ -159,6 +161,8 @@ def create_profile(sender, instance, created, **kwargs):
                 Dream11Scores.objects.filter(name=instance.third.split('&')[1])[0].addScore((prices[3] + prices[4])/2)
                 Dream11Scores.objects.filter(name=instance.first)[0].addScore(prices[1])
                 Dream11Scores.objects.filter(name=instance.second)[0].addScore(prices[2])
+                instance.fourth = None
+                
             elif len(instance.fourth.split('&')) == 2:
                 Dream11Scores.objects.filter(name=instance.third.split('&')[0])[0].addScore(prices[4]/2)
                 Dream11Scores.objects.filter(name=instance.third.split('&')[1])[0].addScore(prices[4]/2)
@@ -170,6 +174,7 @@ def create_profile(sender, instance, created, **kwargs):
             Dream11Scores.objects.filter(name=instance.second)[0].addScore(prices[2])
             Dream11Scores.objects.filter(name=instance.third)[0].addScore(prices[3])
             Dream11Scores.objects.filter(name=instance.fourth)[0].addScore(prices[4])
+        instance.save()
         
 
 @receiver(post_save, sender=Game)

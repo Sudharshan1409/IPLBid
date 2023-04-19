@@ -8,9 +8,10 @@
     <tr>
         <th scope="col">#</th>
         <th scope="col">Name</th>
-        <th scope="col">Amount</th>
+        <th scope="col">Amount Won</th>
+        <th scope="col">Amount Used</th>
         <th scope="col">Profit</th>
-        <th scope="col">Matches</th>
+        <th scope="col">Matches Played</th>
     </tr>
     </thead>
     <tbody>
@@ -18,8 +19,9 @@
         <tr>
             <td>{{ forloop.counter }}</td>
             <td>{{ score.name }}</td>
-            <td>{{ score.score }}</td> 
-            <td>{{ score.profit }}</td>
+            <td {% if score.profit > 0 %} style="color: green;" {% elif score.profit < 0 %} style="color: red;" {% endif %}>{{ score.score }}</td> 
+            <td>{{ score.amount_used }}</td> 
+            <td {% if score.profit > 0 %} style="color: green;" {% elif score.profit < 0 %} style="color: red;" {% endif %}>{{ score.profit }}</td>
             <td>{{ score.matchesPlayed }}</td> 
         </tr>
     {% endfor %}
@@ -43,10 +45,10 @@
         <tr>
             <td>{{ forloop.counter }}</td>
             <td><a href="{% url 'bid:game_detail' match.game.pk %}">{{ match.game.name }}</a></td>
-            <td>{{ match.first }}</td>
-            <td>{{ match.second }}</td>
-            <td>{{ match.third }}</td>
-            <td>{{ match.fourth }}</td>
+            <td {% if not match.first %} style="color: red" {% endif %}>{{ match.first|nameCheck }}</td>
+            <td {% if not match.second %} style="color: red" {% endif %}>{{ match.second|nameCheck }}</td>
+            <td {% if not match.third %} style="color: red" {% endif %}>{{ match.third|nameCheck }}</td>
+            <td {% if not match.fourth %} style="color: red" {% endif %}>{{ match.fourth|nameCheck }}</td>
         </tr>
     {% endfor %}
     </tbody>
