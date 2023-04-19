@@ -55,7 +55,9 @@ class ScoresView(View):
     template_name = 'bid/scores.html'
     
     def get(self, request):
-        scores = Dream11Scores.objects.all()
+        scores = list(Dream11Scores.objects.all())
+        nandan = scores.pop(4)
+        scores.insert(2, nandan)
         matches = Dream11Matches.objects.all().order_by('-date')
         return render(request, self.template_name, {'scores': scores, 'matches': matches})
         
