@@ -9,7 +9,14 @@ from bid.decorators import super_user_or_not
 from django.urls import reverse
 from django.contrib import messages
 from django.core.paginator import Paginator
-from iplBid.settings import MINIMUM_BID_VALUE, MAXIMUM_BID_VALUE, IPL_TEAMS as teams, DREAM11_PLAYERS as players
+from iplBid.settings import (
+    MINIMUM_BID_VALUE, 
+    MAXIMUM_BID_VALUE, 
+    PLAYOFFS_MAXIMUM_BID_VALUE, 
+    PLAYOFFS_MINIMUM_BID_VALUE, 
+    IPL_TEAMS as teams, 
+    DREAM11_PLAYERS as players
+)
 import os
 # Create your views here.
 
@@ -78,8 +85,12 @@ class CreateGameView(View):
 
     def post(self, request):
         print(request.POST)
+        if 'isPlayOffs' in request.POST:
+            isPlayOffs = True
+        else:
+            isPlayOffs = False
         date = f"{int(os.environ['CURRENT_YEAR'])}-{request.POST['month']}-{request.POST['date']}T{request.POST['time']}+05:30"
-        Game.objects.create(date=date, team1=request.POST['team1'], team2=request.POST['team2'])
+        Game.objects.create(date=date, team1=request.POST['team1'], team2=request.POST['team2'], isPlayOffs=isPlayOffs)
         messages.success(request, 'Game Created Successfully')
         if 'add' in request.POST:
             return redirect(reverse('bid:create_game'))
@@ -197,7 +208,19 @@ class GamesView(LoginRequiredMixin, View):
         upcoming_games_page = upcoming_games_paginator.get_page(request.GET.get('page', 1))
         ongoing_games.sort(key=lambda x: x.date, reverse=False)
         upcoming_games.sort(key=lambda x: x.date, reverse=False)
-        return render(self.request, self.template_name, {'completed_games_page': completed_games_page, 'upcoming_games_page': upcoming_games_page, 'completed_games': completed_games, "ongoing_games": ongoing_games, "upcoming_games": upcoming_games, "date": datetime.datetime.now(), 'min_bid': MINIMUM_BID_VALUE, 'max_bid': MAXIMUM_BID_VALUE})
+        return render(self.request, self.template_name, {
+                "completed_games_page": completed_games_page, 
+                "upcoming_games_page": upcoming_games_page, 
+                "completed_games": completed_games, 
+                "ongoing_games": ongoing_games, 
+                "upcoming_games": upcoming_games, 
+                "date": datetime.datetime.now(), 
+                "min_bid": MINIMUM_BID_VALUE, 
+                "max_bid": MAXIMUM_BID_VALUE,
+                "playoffs_min_bid": PLAYOFFS_MINIMUM_BID_VALUE,
+                "playoffs_max_bid": PLAYOFFS_MAXIMUM_BID_VALUE,
+            }
+        )
 
     def post(self, request):
         os.environ['CURRENT_YEAR'] = str(request.user.active_year.year)
@@ -209,7 +232,13 @@ class GamesView(LoginRequiredMixin, View):
         game = Game.objects.get(id=request.POST['gameId'])
         game_date = game.date.astimezone(timezone('Asia/Kolkata'))
         today_date = datetime.datetime.now(timezone('Asia/Kolkata')) + datetime.timedelta(minutes=1)
-        if today_date < (game_date - datetime.timedelta(minutes=1)) and (game_date - today_date).days <=1 and int(request.POST['amount']) >= MINIMUM_BID_VALUE and int(request.POST['amount']) <= MAXIMUM_BID_VALUE:
+        if game.isPlayOffs:
+            min_bid_amount = PLAYOFFS_MINIMUM_BID_VALUE
+            max_bid_amount = PLAYOFFS_MAXIMUM_BID_VALUE
+        else:
+            min_bid_amount = MINIMUM_BID_VALUE
+            max_bid_amount = MAXIMUM_BID_VALUE
+        if today_date < (game_date - datetime.timedelta(minutes=1)) and (game_date - today_date).days <=1 and int(request.POST['amount']) >= min_bid_amount and int(request.POST['amount']) <= max_bid_amount:
             if request.POST['method'] == 'create':
                 game_results = Game_Result.objects.filter(user=request.user.profiles.filter(year=int(os.environ['CURRENT_YEAR']))[0], game=game)
                 if not game_results:
@@ -229,7 +258,7 @@ class GamesView(LoginRequiredMixin, View):
             if not (today_date < (game_date - datetime.timedelta(minutes=1)) and (game_date - today_date).days <=1):
                 messages.warning(request, 'Bid Time Expired or not Started Yet')
             else:
-                messages.warning(request, f"Bid Amount is not in Range of { MINIMUM_BID_VALUE } to { MAXIMUM_BID_VALUE }")
+                messages.warning(request, f"Bid Amount is not in Range of { min_bid_amount } to { max_bid_amount }")
         if request.POST['method'] == 'other_create':
             user = UserProfile.objects.get(id=request.POST['user_pk'])
             game_results = Game_Result.objects.filter(user=user, game=game)

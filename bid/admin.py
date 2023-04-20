@@ -3,7 +3,7 @@ from .models import UserProfile, Game, Game_Result, ActiveYear, Dream11Scores, D
 # Register your models here.
 
 class GameAdmin(admin.ModelAdmin):
-    list_display = ('name', 'date', 'winner', 'completed', 'team1', 'team2', 'year')
+    list_display = ('name', 'date', 'winner', 'completed', 'isPlayOffs', 'team1', 'team2', 'year')
 
 class UserProfileAdmin(admin.ModelAdmin):
     list_display = ('user', 'amount', 'win_percentage', 'year')

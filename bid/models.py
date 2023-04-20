@@ -67,6 +67,7 @@ class Game(models.Model):
     team1 = models.CharField(max_length=200, choices=choices)
     team2 = models.CharField(max_length=200, choices=choices)
     year = models.IntegerField(default=int(os.environ['CURRENT_YEAR']))
+    isPlayOffs = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.name} {self.year}"
