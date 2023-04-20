@@ -88,7 +88,7 @@ SECRET_KEY = 'django-insecure-3i((eps*(0y%&df@8jiy&tu4wxt)2ny33$0_lqgcb_kf#7-elx
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-MINIMUM_BID_VALUE = 100
+MINIMUM_BID_VALUE = 500
 MAXIMUM_BID_VALUE = 3000
 
 ALLOWED_HOSTS = ["*"]
