@@ -26,7 +26,7 @@
                 <td style="color: red">No Bid</td>
                 {% if user.is_superuser %}
                     {% if not game.completed %}
-                        <td><a class="btn btn-primary" style="font-size:65%" data-toggle="modal" data-target="#exampleModal" data-whatever=",{{ game.team1 }},{{ game.team2 }},{{ game.pk }},other_create,{{ obj.user.pk }}" href="#" role="button">BID AMOUNT</a></td>
+                        <td><a class="btn btn-primary" style="font-size:65%" data-toggle="modal" data-target="#exampleModal" data-whatever=",{{ game.team1 }},{{ game.team2 }},{{ game.pk }},other_create,{{ obj.user.pk }},{% if game.isPlayOffs %}{{ playoffs_min_bid }},{{ playoffs_max_bid }}{% else %}{{ min_bid }},{{ max_bid }}{% endif %}" href="#" role="button">BID AMOUNT</a></td>
                     {% else %}
                         <td><button class="btn btn-primary" style="font-size:65%" disabled>BID AMOUNT</button></td>
                     {% endif %}
@@ -43,7 +43,7 @@
                 {% endif %}
                 {% if user.is_superuser %}
                     {% if not game.completed %}
-                        <td><a class="btn btn-primary" style="font-size:65%" data-toggle="modal" data-target="#exampleModal" data-whatever="{{ game.bid_result.bid_amount }},{{ game.team1 }},{{ game.team2 }},{{ game.pk }},other_update,{{ obj.user.pk }}" href="#" role="button">UPDATE BID</a></td>
+                        <td><a class="btn btn-primary" style="font-size:65%" data-toggle="modal" data-target="#exampleModal" data-whatever="{{ game.bid_result.bid_amount }},{{ game.team1 }},{{ game.team2 }},{{ game.pk }},other_update,{{ obj.user.pk }},{% if game.isPlayOffs %}{{ playoffs_min_bid }},{{ playoffs_max_bid }}{% else %}{{ min_bid }},{{ max_bid }}{% endif %}" href="#" role="button">UPDATE BID</a></td>
                     {% else %}
                         <td><button class="btn btn-primary" style="font-size:65%" disabled>UPDATE BID</button></td>
                     {% endif %}
@@ -93,11 +93,14 @@
             var recipient = button.data('whatever') // Extract info from data-* attributes
             // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
             // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+            console.log("recipient", recipient)
             amount = recipient.split(",")[0]
             team1 = recipient.split(",")[1]
             team2 = recipient.split(",")[2]
             gameId = recipient.split(",")[3]
             method = recipient.split(",")[4]
+            min_bid = recipient.split(",")[6]
+            max_bid = recipient.split(",")[7]
             pk = recipient.split(",")[5]
             select = document.getElementById('team');
             var options = document.querySelectorAll('#team option');
@@ -114,6 +117,8 @@
             }
             amount_field = document.getElementById('amount')
             amount_field.value = amount
+            amount_field.min = parseInt(min_bid)
+            amount_field.max = parseInt(max_bid)
             var bid_form = document.getElementById("bid_form");
             // create an input field to insert
             var gameIdField = document.createElement("input");

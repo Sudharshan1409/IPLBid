@@ -166,10 +166,12 @@ class GameDetailView(LoginRequiredMixin, View):
                })
         print(users)
         return render(request, self.template_name, {
-            'listObj': listObj,
-            'game': game,
-            'min_bid': MINIMUM_BID_VALUE,
-            'max_bid': MAXIMUM_BID_VALUE,
+            "listObj": listObj,
+            "game": game,
+            "min_bid": MINIMUM_BID_VALUE,
+            "max_bid": MAXIMUM_BID_VALUE,
+            "playoffs_min_bid": PLAYOFFS_MINIMUM_BID_VALUE,
+            "playoffs_max_bid": PLAYOFFS_MAXIMUM_BID_VALUE,
         })
 class GamesView(LoginRequiredMixin, View):
     model = Game
