@@ -11,7 +11,7 @@
         <th scope="col">Amount Won</th>
         <th scope="col">Amount Used</th>
         <th scope="col">Profit</th>
-        <th scope="col">Matches Played</th>
+        <th scope="col">Win Percentage</th>
     </tr>
     </thead>
     <tbody>
@@ -22,7 +22,7 @@
             <td {% if score.profit > 0 %} style="color: green;" {% elif score.profit < 0 %} style="color: red;" {% endif %}>{{ score.score }}</td> 
             <td>{{ score.amount_used }}</td> 
             <td {% if score.profit > 0 %} style="color: green;" {% elif score.profit < 0 %} style="color: red;" {% endif %}>{{ score.profit }}</td>
-            <td>{{ score.matchesPlayed }}</td> 
+            <td {% if score.profit > 0 %} style="color: green;" {% elif score.profit < 0 %} style="color: red;" {% endif %}>{{ score.percentage }}</td> 
         </tr>
     {% endfor %}
     </tbody>

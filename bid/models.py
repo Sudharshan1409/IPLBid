@@ -114,6 +114,10 @@ class Dream11Scores(models.Model):
     @property
     def amount_used(self):
        return self.matchesPlayed * 10
+    
+    @property
+    def percentage(self):
+        return round((self.score / (self.matchesPlayed * 40)) * 100, 2)
 
 class Game_Result(models.Model):
     user = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name="results_user")
