@@ -63,8 +63,7 @@ class ScoresView(View):
     
     def get(self, request):
         scores = list(Dream11Scores.objects.all())
-        nandan = scores.pop(4)
-        scores.insert(2, nandan)
+        scores.sort(key=lambda x: x.profit, reverse=True)
         matches = Dream11Matches.objects.all().order_by('-date')
         return render(request, self.template_name, {'scores': scores, 'matches': matches})
         
