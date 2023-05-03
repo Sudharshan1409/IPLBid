@@ -23,7 +23,11 @@
             <td><span>{{ obj.team }}</span></td>
             <td>{{ obj.amount }}</td>
             {% if obj.did_not_bid %}
-                <td style="color: red">No Bid</td>
+                {% if not obj.isCancelled %}
+                    <td style="color: red">No Bid</td>
+                {% else %}
+                    <td style="color: orange">Cancelled (No Bid)</td>
+                {% endif %}
                 {% if user.is_superuser %}
                     {% if not game.completed %}
                         <td><a class="btn btn-primary" style="font-size:65%" data-toggle="modal" data-target="#exampleModal" data-whatever=",{{ game.team1 }},{{ game.team2 }},{{ game.pk }},other_create,{{ obj.user.pk }},{% if game.isPlayOffs %}{{ playoffs_min_bid }},{{ playoffs_max_bid }}{% else %}{{ min_bid }},{{ max_bid }}{% endif %}" href="#" role="button">BID AMOUNT</a></td>
@@ -33,10 +37,14 @@
                 {% endif %}
             {% else %}
                 {% if game.completed %}
-                    {% if obj.won %}
-                        <td style="color:green">Won</td>
+                    {% if not obj.isCancelled %}
+                        {% if obj.won %}
+                            <td style="color:green">Won</td>
+                        {% else %}
+                            <td style="color:red">Lost</td>
+                        {% endif %}
                     {% else %}
-                        <td style="color:red">Lost</td>
+                        <td style="color:orange">Cancelled</td>
                     {% endif %}
                 {% else %}
                     <td>Not Decided</td>

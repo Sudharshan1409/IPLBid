@@ -39,6 +39,8 @@
                 {% if game.bid_result.completed %}
                     {% if game.bid_result.won %}
                         <td style="color: green">+{{ game.bid_result.bid_amount }}</td>
+                    {% elif game.bid_result.cancelled %}
+                        <td style="color: orange">N/A</td>
                     {% else %}
                         <td style="color: red">-{{ game.bid_result.bid_amount }}</td>
                     {% endif %}
@@ -46,13 +48,21 @@
                     <td>N/A</td>
                 {% endif %}
                 {% if game.bid_result and not game.bid_result.did_not_bid %}
-                    {% if game.bid_result.won %}
-                        <td style="color:green">Won</td>
+                    {% if not game.bid_result.cancelled %}
+                        {% if game.bid_result.won %}
+                            <td style="color:green">Won</td>
+                        {% else %}
+                            <td style="color:red">Lost</td>
+                        {% endif %}
                     {% else %}
-                        <td style="color:red">Lost</td>
+                        <td style="color:orange">Cancelled</td>
                     {% endif %}
                 {% else %}
-                    <td style="color: red">No Bid</td>
+                    {% if not game.bid_result.cancelled %}
+                        <td style="color: red">-1000</td>
+                    {% else %}
+                        <td style="color: orange">-1000 (NO Bid)</td>
+                    {% endif %}
                 {% endif %}
             </tr>
         {% endfor %}
@@ -85,6 +95,8 @@
                     {% if not game.bid_result.did_not_bid %}
                         {% if game.bid_result.won %}
                             <td style="color: green">+{{ game.bid_result.bid_amount }}</td>
+                        {% elif game.bid_result.cancelled %}
+                            <td style="color: orange">-</td>
                         {% else %}
                             <td style="color: red">-{{ game.bid_result.bid_amount }}</td>
                         {% endif %}
@@ -138,11 +150,17 @@
                     {% if not game.bid_result.did_not_bid %}
                         {% if game.bid_result.won %}
                             <td style="color: green">+{{ game.bid_result.bid_amount }}</td>
+                        {% elif game.bid_result.cancelled %}
+                            <td style="color: orange">N/A</td>
                         {% else %}
                             <td style="color: red">-{{ game.bid_result.bid_amount }}</td>
                         {% endif %}
                     {% else %}
-                        <td style="color: red">-1000</td>
+                        {% if not game.bid_result.cancelled %}
+                            <td style="color: red">-1000</td>
+                        {% else %}
+                            <td style="color: orange">-1000 (NO Bid)</td>
+                        {% endif %}
                     {% endif %}
                 {% else %}
                     <td>N/A</td>

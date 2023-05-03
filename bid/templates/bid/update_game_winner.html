@@ -17,6 +17,7 @@
       <th scope="col">Name</th>
       <th scope="col">Team1</th>
       <th scope="col">Team2</th>
+      <th scope="col">Cancelled</th>
     </tr>
   </thead>
   <tbody>
@@ -39,6 +40,15 @@
           onclick="updateGame({{ game.pk }}, '{{ game.team2 }}')"
         >
           {{ game.team2 }}
+        </button>
+      </td>
+      <td>
+        <button
+          class="btn btn-primary"
+          style="font-size: 70%"
+          onclick="updateGame({{ game.pk }}, 'None')"
+        >
+          None
         </button>
       </td>
     </tr>

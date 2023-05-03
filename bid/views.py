@@ -40,6 +40,10 @@ class AddMatchView(View):
     
     def post(self, request):
         print(request.POST)
+        if request.POST.get('cancelled') == 'on':
+            game = Game.objects.get(id=request.POST.get('gameId'))
+            Dream11Matches.objects.create(game=game, isCancelled = True)
+            return redirect(reverse('scores'))
         first = request.POST.get('first')
         second = request.POST.get('second')
         third = request.POST.get('third')
@@ -96,6 +100,7 @@ class CreateGameView(View):
         else:
             return redirect(reverse('bid:games') + '#upcoming')
 
+@method_decorator(super_user_or_not, name = 'dispatch')
 class UpdateGameWinnerView(View):
     template_name = 'bid/update_game.html'
 
@@ -106,6 +111,8 @@ class UpdateGameWinnerView(View):
     def post(self, request):
         print(request.POST)
         game = Game.objects.get(id=request.POST['gameId'])
+        if request.POST['team'] == 'None':
+            game.isCancelled = True
         game.winner = request.POST['team']
         game.save()
         return redirect(reverse('bid:update_game_winner'))
@@ -152,6 +159,7 @@ class GameDetailView(LoginRequiredMixin, View):
                     'won': game_result[0].won,
                     'team': game_result[0].team,
                     'did_not_bid': game_result[0].did_not_bid,
+                    'isCancelled': game.isCancelled,
                 })
             else:
                listObj.append({
@@ -162,6 +170,7 @@ class GameDetailView(LoginRequiredMixin, View):
                     'won': None,
                     'team': 'N/A',
                     'did_not_bid': True,
+                    'isCancelled': game.isCancelled,
                })
         print(users)
         return render(request, self.template_name, {

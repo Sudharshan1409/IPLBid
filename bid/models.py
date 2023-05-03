@@ -68,6 +68,7 @@ class Game(models.Model):
     team2 = models.CharField(max_length=200, choices=choices)
     year = models.IntegerField(default=int(os.environ['CURRENT_YEAR']))
     isPlayOffs = models.BooleanField(default=False)
+    isCancelled = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.name} {self.year}"
@@ -87,6 +88,7 @@ class Dream11Matches(models.Model):
     third = models.CharField(max_length=400, null=True)
     fourth = models.CharField(max_length=400, null=True)
     date = models.DateTimeField(null=True)
+    isCancelled = models.BooleanField(default=False)
 
     def __str__(self):
         return self.game.name
@@ -102,6 +104,7 @@ class Dream11Scores(models.Model):
     name = models.CharField(max_length=200, choices=players, unique=True)
     score = models.FloatField(default=0)
     matchesPlayed = models.IntegerField(default=0)
+    cancelledMatches = models.IntegerField(default=0)
 
     def addScore(self, score):
         self.score += score
@@ -113,7 +116,7 @@ class Dream11Scores(models.Model):
     
     @property
     def amount_used(self):
-       return self.matchesPlayed * 10
+       return (self.matchesPlayed - self.cancelledMatches) * 10
     
     @property
     def percentage(self):
@@ -124,6 +127,7 @@ class Game_Result(models.Model):
     game = models.ForeignKey(Game, on_delete=models.CASCADE, related_name="results_game")
     bid_amount = models.IntegerField()
     won = models.BooleanField(default=False)
+    cancelled = models.BooleanField(default=False)
     team = models.CharField(max_length=200, null=True, blank=True, choices=choices)
     completed = models.BooleanField(default=False)
     did_not_bid = models.BooleanField(default=False)
@@ -145,41 +149,48 @@ def create_profile(sender, instance, created, **kwargs):
 @receiver(post_save, sender=Dream11Matches)
 def create_profile(sender, instance, created, **kwargs):
     if created:
-        for score in Dream11Scores.objects.all():
-            score.matchesPlayed = score.matchesPlayed + 1
-            score.save()
-        if '&' in instance.first or '&' in instance.second or '&' in instance.third:
-            if len(instance.first.split('&')) == 2:
-                Dream11Scores.objects.filter(name=instance.first.split('&')[0])[0].addScore((prices[1] + prices[2])/2)
-                Dream11Scores.objects.filter(name=instance.first.split('&')[1])[0].addScore((prices[1] + prices[2])/2)
-                Dream11Scores.objects.filter(name=instance.third)[0].addScore(prices[3])
-                Dream11Scores.objects.filter(name=instance.fourth)[0].addScore(prices[4])
-                instance.second = None
-            elif len(instance.second.split('&')) == 2:
-                Dream11Scores.objects.filter(name=instance.second.split('&')[0])[0].addScore((prices[2] + prices[3])/2)
-                Dream11Scores.objects.filter(name=instance.second.split('&')[1])[0].addScore((prices[2] + prices[3])/2)
-                Dream11Scores.objects.filter(name=instance.first)[0].addScore(prices[1])
-                Dream11Scores.objects.filter(name=instance.fourth)[0].addScore(prices[4])
-                instance.third = None
-            elif len(instance.third.split('&')) == 2:
-                Dream11Scores.objects.filter(name=instance.third.split('&')[0])[0].addScore((prices[3] + prices[4])/2)
-                Dream11Scores.objects.filter(name=instance.third.split('&')[1])[0].addScore((prices[3] + prices[4])/2)
+        if not instance.isCancelled:
+            for score in Dream11Scores.objects.all():
+                score.matchesPlayed = score.matchesPlayed + 1
+                score.save()
+            if '&' in instance.first or '&' in instance.second or '&' in instance.third:
+                if len(instance.first.split('&')) == 2:
+                    Dream11Scores.objects.filter(name=instance.first.split('&')[0])[0].addScore((prices[1] + prices[2])/2)
+                    Dream11Scores.objects.filter(name=instance.first.split('&')[1])[0].addScore((prices[1] + prices[2])/2)
+                    Dream11Scores.objects.filter(name=instance.third)[0].addScore(prices[3])
+                    Dream11Scores.objects.filter(name=instance.fourth)[0].addScore(prices[4])
+                    instance.second = None
+                elif len(instance.second.split('&')) == 2:
+                    Dream11Scores.objects.filter(name=instance.second.split('&')[0])[0].addScore((prices[2] + prices[3])/2)
+                    Dream11Scores.objects.filter(name=instance.second.split('&')[1])[0].addScore((prices[2] + prices[3])/2)
+                    Dream11Scores.objects.filter(name=instance.first)[0].addScore(prices[1])
+                    Dream11Scores.objects.filter(name=instance.fourth)[0].addScore(prices[4])
+                    instance.third = None
+                elif len(instance.third.split('&')) == 2:
+                    Dream11Scores.objects.filter(name=instance.third.split('&')[0])[0].addScore((prices[3] + prices[4])/2)
+                    Dream11Scores.objects.filter(name=instance.third.split('&')[1])[0].addScore((prices[3] + prices[4])/2)
+                    Dream11Scores.objects.filter(name=instance.first)[0].addScore(prices[1])
+                    Dream11Scores.objects.filter(name=instance.second)[0].addScore(prices[2])
+                    instance.fourth = None
+                    
+                elif len(instance.fourth.split('&')) == 2:
+                    Dream11Scores.objects.filter(name=instance.third.split('&')[0])[0].addScore(prices[4]/2)
+                    Dream11Scores.objects.filter(name=instance.third.split('&')[1])[0].addScore(prices[4]/2)
+                    Dream11Scores.objects.filter(name=instance.first)[0].addScore(prices[1])
+                    Dream11Scores.objects.filter(name=instance.second)[0].addScore(prices[2])
+                    Dream11Scores.objects.filter(name=instance.third)[0].addScore(prices[3])
+            else:
                 Dream11Scores.objects.filter(name=instance.first)[0].addScore(prices[1])
                 Dream11Scores.objects.filter(name=instance.second)[0].addScore(prices[2])
-                instance.fourth = None
-                
-            elif len(instance.fourth.split('&')) == 2:
-                Dream11Scores.objects.filter(name=instance.third.split('&')[0])[0].addScore(prices[4]/2)
-                Dream11Scores.objects.filter(name=instance.third.split('&')[1])[0].addScore(prices[4]/2)
-                Dream11Scores.objects.filter(name=instance.first)[0].addScore(prices[1])
-                Dream11Scores.objects.filter(name=instance.second)[0].addScore(prices[2])
                 Dream11Scores.objects.filter(name=instance.third)[0].addScore(prices[3])
+                Dream11Scores.objects.filter(name=instance.fourth)[0].addScore(prices[4])
+            instance.save()
         else:
-            Dream11Scores.objects.filter(name=instance.first)[0].addScore(prices[1])
-            Dream11Scores.objects.filter(name=instance.second)[0].addScore(prices[2])
-            Dream11Scores.objects.filter(name=instance.third)[0].addScore(prices[3])
-            Dream11Scores.objects.filter(name=instance.fourth)[0].addScore(prices[4])
-        instance.save()
+            for score in Dream11Scores.objects.all():
+                score.matchesPlayed = score.matchesPlayed + 1
+                score.cancelledMatches = score.cancelledMatches + 1
+                score.save()
+            instance.save()
         
 
 @receiver(post_save, sender=Game)
@@ -190,18 +201,25 @@ def update_game(sender, instance, created, **kwargs):
             game_result = Game_Result.objects.filter(user=user, game=instance)
             print(game_result)
             if game_result:
-                if instance.winner == game_result[0].team:
-                    game_result[0].won = True
-                    game_result[0].completed = True
-                    user.amount += game_result[0].bid_amount
+                if not instance.isCancelled:
+                    if instance.winner == game_result[0].team:
+                        game_result[0].won = True
+                        game_result[0].completed = True
+                        user.amount += game_result[0].bid_amount
+                    else:
+                        game_result[0].won = False
+                        game_result[0].completed = True
+                        user.amount -= game_result[0].bid_amount
                 else:
-                    game_result[0].won = False
+                    game_result[0].cancelled = True
                     game_result[0].completed = True
-                    user.amount -= game_result[0].bid_amount
                 game_result[0].save()
             else:
                 user.amount -= 1000
-                Game_Result.objects.create(user=user, game=instance, bid_amount=1000, won=False, completed=True, did_not_bid=True)
+                if not instance.isCancelled:
+                    Game_Result.objects.create(user=user, game=instance, bid_amount=1000, won=False, completed=True, did_not_bid=True)
+                else:
+                    Game_Result.objects.create(user=user, game=instance, bid_amount=1000, won=False, completed=True, did_not_bid=True, cancelled=True)
 
             user.save()
         instance.completed = True
