@@ -24,7 +24,8 @@ class UserProfile(models.Model):
                 if result.bid_amount > 0:
                     if result.won:
                         amount += result.bid_amount
-                    total += result.bid_amount
+                    if not result.cancelled:
+                        total += result.bid_amount
                 else:
                     total += 1000
         if total == 0:
@@ -120,7 +121,7 @@ class Dream11Scores(models.Model):
     
     @property
     def percentage(self):
-        return round((self.score / (self.matchesPlayed * 40)) * 100, 2)
+        return round((self.score / ((self.matchesPlayed - self.cancelledMatches) * 40)) * 100, 2)
 
 class Game_Result(models.Model):
     user = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name="results_user")
