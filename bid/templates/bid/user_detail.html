@@ -27,8 +27,6 @@
           </div>
         </div>
       </div>
-      <br/>
-      <br/>
       <div class="filter-container">
         <div class="flex-1">
             <label for="status" class="form-label">Status:</label>
@@ -90,6 +88,8 @@
                     {% if not result.cancelled %}
                         {% if result.won %}
                             <td style="color:green">Won</td>
+                        {% elif result.did_not_bid %}
+                            <td style="color:red">No Bid</td>
                         {% else %}
                             <td style="color:red">Lost</td>
                         {% endif %}
@@ -103,6 +103,21 @@
         {% endfor %}
         </tbody>
     </table>
+    <div class="pagination" id="pagination">
+        <nav aria-label="...">
+            <ul class="pagination">
+              
+            <li class="page-item {% if not results.has_previous %} disabled {% endif %}">
+                <a class="page-link" href="?page={% if results.has_previous %}{{ results.previous_page_number }}{% endif %}#completed">Previous</a>
+            </li>
+              <li class="page-item {% if not results.has_next %} disabled {% endif %}">
+                <a class="page-link" href="?page={% if results.has_next %}{{ results.next_page_number }}{% endif %}#completed">Next</a>
+              </li>
+            </ul>
+          </nav>
+    </div>
+    <br/>
+    <br/>
 {% endblock %}
 
 {% block script %}

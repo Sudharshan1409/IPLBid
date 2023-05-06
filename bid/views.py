@@ -152,7 +152,9 @@ class UserDetailView(LoginRequiredMixin, View):
         for game_result in game_results:
             results_array.append(game_result)
         results_array.sort(key=lambda x: x.game.date, reverse=True)
-        return render(request, self.template_name, {'results': results_array, 'result_user': user, 'teams': teams, 'all_teams': ALL_TEAMS})
+        results_paginator = Paginator(list(results_array), 10)
+        results_games_page = results_paginator.get_page(request.GET.get('page', 1))
+        return render(request, self.template_name, {'results': results_games_page, 'result_user': user, 'teams': teams, 'all_teams': ALL_TEAMS})
     
 class ChangeActiveYearView(LoginRequiredMixin, View):
     model = ActiveYear
