@@ -32,7 +32,7 @@
       <div class="filter-container">
         <div class="flex-1">
             <label for="status" class="form-label">Status:</label>
-            <select id="status-field" name="status" class="form-select" aria-label="Default select example" onchange="changeParams();">
+            <select id="status-field" name="status" class="form-select" aria-label="Default select example" onchange="changeParams();" style="font-size: 75%">
                 <option value="no">No Filter</option>
                 <option value="won">Won</option>
                 <option value="lost">Lost</option>
@@ -42,7 +42,7 @@
         </div>
         <div class="flex-2">
             <label for="team" class="form-label">Team:</label>
-            <select id="team-field" name="year" class="form-select" aria-label="Default select example" onchange="changeParams();">
+            <select id="team-field" name="year" class="form-select" aria-label="Default select example" onchange="changeParams();" style="font-size: 75%">
                 <option value="no">No Filter</option>
                 {% for team in teams %}
                     <option value="{{ team.0 }}">{{ team.1 }}</option>
@@ -193,11 +193,11 @@
             margin-left: 30%;
         }
         .flex-1 {
-            flex: 1.5;
+            flex: 1;
             padding-left: 10px;
         }
         .flex-2 {
-            flex: 1;
+            flex: 0.8;
             padding-left: 10px;
         }
     </style>
