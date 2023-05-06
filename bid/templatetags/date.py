@@ -35,3 +35,23 @@ def nameCheck(name):
         name_split = name.split('&')
         return name_split[0] + ' & ' + name_split[1]
     return name
+
+@register.filter(name = 'convertToJson')
+def convertToJson(value):
+    import json
+    from django.utils.safestring import mark_safe
+    _js_escapes = {
+    ord('\\'): '\\u005C',
+    ord('\''): '\\u0027',
+    ord('"'): '\\u0022',
+    ord('>'): '\\u003E',
+    ord('<'): '\\u003C',
+    ord('&'): '\\u0026',
+    ord('='): '\\u003D',
+    ord('-'): '\\u002D',
+    ord(';'): '\\u003B',
+    ord('`'): '\\u0060',
+    ord('\u2028'): '\\u2028',
+    ord('\u2029'): '\\u2029'
+}
+    return mark_safe(str(json.dumps(value)).translate(_js_escapes))

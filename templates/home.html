@@ -16,7 +16,7 @@
         {% for current_user in users %}
             <tr {% if current_user.user.pk == user.pk %}style="background:rgb(237, 209, 237)"{% endif %}>
                 <td>{{ forloop.counter }}</td>
-                <td><a href="{% url 'bid:user' current_user.pk %}">{{ current_user.user.first_name.upper }} {{ current_user.user.last_name.upper }}</a></td>
+                <td><a href="{% url 'bid:user' current_user.pk %}?status=no&team=no">{{ current_user.user.first_name.upper }} {{ current_user.user.last_name.upper }}</a></td>
                 <td>{{ current_user.amount }}</td> 
                 <td>{{ current_user.stats.0 }}</td> 
                 <td>{{ current_user.stats.1 }}</td> 

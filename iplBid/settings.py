@@ -35,18 +35,23 @@ TEAM_COLOR_CODES = {
 CURRENT_YEAR = 2023
 os.environ['CURRENT_YEAR'] = str(CURRENT_YEAR)
 
-IPL_TEAMS = [
-    ('DC', 'DC'),
-    ('PBKS', 'PBKS'),
-    ('KKR', 'KKR'),
-    ('LSG', 'LSG'),
-    ('SRH', 'SRH'),
-    ('RR', 'RR'),
-    ('GT', 'GT'),
-    ('CSK', 'CSK'),
-    ('RCB', 'RCB'),
-    ('MI', 'MI'),
+ALL_TEAMS = [
+    'DC',
+    'PBKS',
+    'KKR',
+    'LSG',
+    'SRH',
+    'RR',
+    'GT',
+    'CSK',
+    'RCB',
+    'MI',
 ]
+
+IPL_TEAMS = []
+
+for team in ALL_TEAMS:
+    IPL_TEAMS.append((team, team))
 
 DREAM11_PLAYERS = [
     ('Darshan', 'Darshan'),

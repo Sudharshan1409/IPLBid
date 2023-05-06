@@ -19,7 +19,7 @@
     <tbody>
     {% for obj in listObj %}
         <tr>
-            <td><a href="{% url 'bid:user' obj.user.pk %}">{{ obj.name }}</a></td>
+            <td><a href="{% url 'bid:user' obj.user.pk %}?status=no&team=no">{{ obj.name }}</a></td>
             <td><span>{{ obj.team }}</span></td>
             <td>{{ obj.amount }}</td>
             {% if obj.did_not_bid %}

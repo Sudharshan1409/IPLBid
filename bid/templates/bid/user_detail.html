@@ -5,7 +5,7 @@
     <h2>{{ result_user.user.first_name.capitalize }}'s Bid History</h2>
     <h5>Amount: {{ result_user.amount }}</h5>
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
-        View Chart
+        Stats
       </button>
       
       <!-- Modal -->
@@ -29,6 +29,28 @@
       </div>
       <br/>
       <br/>
+      <div class="filter-container">
+        <div class="flex-1">
+            <label for="status" class="form-label">Status:</label>
+            <select id="status-field" name="status" class="form-select" aria-label="Default select example" onchange="changeParams();">
+                <option value="no">No Filter</option>
+                <option value="won">Won</option>
+                <option value="lost">Lost</option>
+                <option value="not_completed">Not Completed</option>
+                <option value="cancelled">Cancelled</option>
+            </select>
+        </div>
+        <div class="flex-2">
+            <label for="team" class="form-label">Team:</label>
+            <select id="team-field" name="year" class="form-select" aria-label="Default select example" onchange="changeParams();">
+                <option value="no">No Filter</option>
+                {% for team in teams %}
+                    <option value="{{ team.0 }}">{{ team.1 }}</option>
+                {% endfor %}
+            </select>
+        </div>
+      </div>
+    </br>
     <table class="table table-striped contents" style="font-size:80%;text-align:left;">
         <thead>
         <tr>
@@ -86,6 +108,7 @@
 {% block script %}
 <script>
     const ctx = document.getElementById('myChart').getContext('2d');
+    const all_teams = JSON.parse('{{ all_teams|convertToJson }}')
     const myChart = new Chart(ctx, {
         type: 'line',
         data: {
@@ -112,5 +135,66 @@
             }
         }
     });
+    const changeParams = () => {
+        const status = document.getElementById('status-field').value;
+        const team = document.getElementById('team-field').value;
+        window.location.href = `{% url 'bid:user' user.pk %}?status=${status}&team=${team}`;
+    }
+    window.addEventListener('DOMContentLoaded', function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const statusField = document.getElementById('status-field');
+        const teamField = document.getElementById('team-field');
+        
+        // Get the value from the URL parameter 'value'
+        const status = urlParams.get('status');
+        const team = urlParams.get('team');
+        console.log("status", status);
+        console.log("team", team);
+
+        if (status) {
+            if (status == "won") {
+                statusField.value = "won";
+            }
+            else if (status == "lost") {
+                statusField.value = "lost";
+            }
+            else if (status == "cancelled") {
+                statusField.value = "cancelled";
+            }
+            else if (status == "not_completed") {
+                statusField.value = "not_completed";
+            }
+            else {
+                statusField.value = "no";
+            }
+        }
+        else {
+            statusField.value = "no";
+        }
+        if (team) {
+            if (all_teams.includes(team)) {
+                teamField.value = team;
+            }
+            else {
+                teamField.value = "no";
+            }
+        }
+        else {
+            teamField.value = "no";
+        }
+        
+      });
     </script>
 {% endblock script %}
+{% block style %}
+    <style>
+        .filter-container {
+            display: flex;
+            margin-left: 30%;
+        }
+        .flex-1, .flex-2 {
+            flex: 1;
+            padding-left: 10px;
+        }
+    </style>
+{% endblock %}   

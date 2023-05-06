@@ -15,7 +15,8 @@ from iplBid.settings import (
     PLAYOFFS_MAXIMUM_BID_VALUE, 
     PLAYOFFS_MINIMUM_BID_VALUE, 
     IPL_TEAMS as teams, 
-    DREAM11_PLAYERS as players
+    DREAM11_PLAYERS as players,
+    ALL_TEAMS
 )
 import os
 # Create your views here.
@@ -120,14 +121,38 @@ class UserDetailView(LoginRequiredMixin, View):
     model = UserProfile
     template_name = 'bid/user_detail.html'
     def get(self, request, *args, **kwargs):
+        print(request.GET)
+        status = request.GET.get('status')
+        team = request.GET.get('team')
+        if not status:
+            status = 'no'
+        if not team:
+            team = 'no'
+
         os.environ['CURRENT_YEAR'] = str(request.user.active_year.year)
         user = UserProfile.objects.get(pk=kwargs['pk'])
         game_results = Game_Result.objects.filter(user=user, year = int(os.environ['CURRENT_YEAR']))
+        if status != 'no':
+            if status == 'won':
+                game_results = game_results.filter(won=True, completed=True)
+            elif status == 'lost':
+                game_results = game_results.filter(won=False, completed=True)
+            elif status == 'cancelled':
+                game_results = game_results.filter(cancelled=True)
+            elif status == 'not_completed':
+                game_results = game_results.filter(completed=False)
+            else:
+                pass
+        if team != 'no':
+            if team in ALL_TEAMS:
+                game_results = game_results.filter(game__team1=team) | game_results.filter(game__team2=team)
+            else:
+                pass
         results_array = []
         for game_result in game_results:
             results_array.append(game_result)
         results_array.sort(key=lambda x: x.game.date, reverse=True)
-        return render(request, self.template_name, {'results': results_array, 'result_user': user})
+        return render(request, self.template_name, {'results': results_array, 'result_user': user, 'teams': teams, 'all_teams': ALL_TEAMS})
     
 class ChangeActiveYearView(LoginRequiredMixin, View):
     model = ActiveYear
