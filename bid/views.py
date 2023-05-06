@@ -136,7 +136,7 @@ class UserDetailView(LoginRequiredMixin, View):
             if status == 'won':
                 game_results = game_results.filter(won=True, completed=True)
             elif status == 'lost':
-                game_results = game_results.filter(won=False, completed=True)
+                game_results = game_results.filter(won=False, completed=True, cancelled=False)
             elif status == 'cancelled':
                 game_results = game_results.filter(cancelled=True)
             elif status == 'not_completed':
