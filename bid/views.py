@@ -70,7 +70,9 @@ class ScoresView(View):
         scores = list(Dream11Scores.objects.all())
         scores.sort(key=lambda x: x.profit, reverse=True)
         matches = Dream11Matches.objects.all().order_by('-date')
-        return render(request, self.template_name, {'scores': scores, 'matches': matches})
+        matches_paginator = Paginator(list(matches), 10)
+        matches_games_page = matches_paginator.get_page(request.GET.get('page', 1))
+        return render(request, self.template_name, {'scores': scores, 'matches': matches_games_page})
         
 @method_decorator(super_user_or_not, name = 'dispatch')
 class CreateGameView(View):
@@ -154,7 +156,7 @@ class UserDetailView(LoginRequiredMixin, View):
         results_array.sort(key=lambda x: x.game.date, reverse=True)
         results_paginator = Paginator(list(results_array), 10)
         results_games_page = results_paginator.get_page(request.GET.get('page', 1))
-        return render(request, self.template_name, {'results': results_games_page, 'result_user': user, 'teams': teams, 'all_teams': ALL_TEAMS})
+        return render(request, self.template_name, {'results': results_games_page, 'result_user': user, 'teams': teams, 'all_teams': ALL_TEAMS, 'status': status, 'team': team})
     
 class ChangeActiveYearView(LoginRequiredMixin, View):
     model = ActiveYear
