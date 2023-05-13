@@ -31,8 +31,6 @@
                 {% if user.is_superuser %}
                     {% if not game.completed %}
                         <td><a class="btn btn-primary" style="font-size:65%" data-toggle="modal" data-target="#exampleModal" data-whatever=",{{ game.team1 }},{{ game.team2 }},{{ game.pk }},other_create,{{ obj.user.pk }},{% if game.isPlayOffs %}{{ playoffs_min_bid }},{{ playoffs_max_bid }}{% else %}{{ min_bid }},{{ max_bid }}{% endif %}" href="#" role="button">BID AMOUNT</a></td>
-                    {% else %}
-                        <td><button class="btn btn-primary" style="font-size:65%" disabled>BID AMOUNT</button></td>
                     {% endif %}
                 {% endif %}
             {% else %}
@@ -51,9 +49,7 @@
                 {% endif %}
                 {% if user.is_superuser %}
                     {% if not game.completed %}
-                        <td><a class="btn btn-primary" style="font-size:65%" data-toggle="modal" data-target="#exampleModal" data-whatever="{{ game.bid_result.bid_amount }},{{ game.team1 }},{{ game.team2 }},{{ game.pk }},other_update,{{ obj.user.pk }},{% if game.isPlayOffs %}{{ playoffs_min_bid }},{{ playoffs_max_bid }}{% else %}{{ min_bid }},{{ max_bid }}{% endif %}" href="#" role="button">UPDATE BID</a></td>
-                    {% else %}
-                        <td><button class="btn btn-primary" style="font-size:65%" disabled>UPDATE BID</button></td>
+                        <td><a class="btn btn-primary" style="font-size:65%" data-toggle="modal" data-target="#exampleModal" data-whatever="{{ obj.amount }},{{ game.team1 }},{{ game.team2 }},{{ game.pk }},other_update,{{ obj.user.pk }},{% if game.isPlayOffs %}{{ playoffs_min_bid }},{{ playoffs_max_bid }}{% else %}{{ min_bid }},{{ max_bid }},{{ obj.team }}{% endif %}" href="#" role="button">UPDATE BID</a></td>
                     {% endif %}
                 {% endif %}
             {% endif %}
@@ -97,21 +93,22 @@
 {% block script %}
     <script>
         $('#exampleModal').on('show.bs.modal', function (event) {
-            var button = $(event.relatedTarget) // Button that triggered the modal
-            var recipient = button.data('whatever') // Extract info from data-* attributes
+            const button = $(event.relatedTarget) // Button that triggered the modal
+            const recipient = button.data('whatever') // Extract info from data-* attributes
             // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
             // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
             console.log("recipient", recipient)
-            amount = recipient.split(",")[0]
-            team1 = recipient.split(",")[1]
-            team2 = recipient.split(",")[2]
-            gameId = recipient.split(",")[3]
-            method = recipient.split(",")[4]
-            min_bid = recipient.split(",")[6]
-            max_bid = recipient.split(",")[7]
-            pk = recipient.split(",")[5]
-            select = document.getElementById('team');
-            var options = document.querySelectorAll('#team option');
+            const amount = recipient.split(",")[0]
+            const team1 = recipient.split(",")[1]
+            const team2 = recipient.split(",")[2]
+            const gameId = recipient.split(",")[3]
+            const method = recipient.split(",")[4]
+            const pk = recipient.split(",")[5]
+            const min_bid = recipient.split(",")[6]
+            const max_bid = recipient.split(",")[7]
+            const team = recipient.split(",")[8]
+            const select = document.getElementById('team');
+            const options = document.querySelectorAll('#team option');
             options.forEach(o => o.remove());
             select.options[select.options.length] = new Option(team1, team1);
             select.options[select.options.length] = new Option(team2, team2);
@@ -127,11 +124,11 @@
             amount_field.value = amount
             amount_field.min = parseInt(min_bid)
             amount_field.max = parseInt(max_bid)
-            var bid_form = document.getElementById("bid_form");
+            const bid_form = document.getElementById("bid_form");
             // create an input field to insert
-            var gameIdField = document.createElement("input");
-            var methodField = document.createElement("input");
-            var pkField = document.createElement("input");
+            const gameIdField = document.createElement("input");
+            const methodField = document.createElement("input");
+            const pkField = document.createElement("input");
             // set input field data type to text
             gameIdField.setAttribute("type", "hidden");
             methodField.setAttribute("type", "hidden");
@@ -144,7 +141,7 @@
             pkField.setAttribute("name", "user_pk");
             pkField.value = pk;
             // select last position to insert element before it
-            var pos = bid_form.childElementCount;
+            const pos = bid_form.childElementCount;
 
             // insert element
             bid_form.insertBefore(gameIdField, bid_form.childNodes[pos]);

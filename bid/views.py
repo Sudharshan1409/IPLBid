@@ -178,8 +178,8 @@ class GameDetailView(LoginRequiredMixin, View):
         listObj = []
         for user in users:
             game_result = Game_Result.objects.filter(user=user, game=game)
-            print(game_result)
             if game_result:
+                print('game result: ', game_result[0].bid_amount)
                 listObj.append({
                     'user': user,
                     'game_result': game_result[0],
@@ -195,7 +195,7 @@ class GameDetailView(LoginRequiredMixin, View):
                     'user': user,
                     'game_result': None,
                     'name': f"{user.user.first_name.upper()} {user.user.last_name.upper()}",
-                    'amount': 'N/A',
+                    'amount': None,
                     'won': None,
                     'team': 'N/A',
                     'did_not_bid': True,
