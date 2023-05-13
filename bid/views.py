@@ -270,14 +270,14 @@ class GamesView(LoginRequiredMixin, View):
             return redirect(reverse('bid:games'))
         game = Game.objects.get(id=request.POST['gameId'])
         game_date = game.date.astimezone(timezone('Asia/Kolkata'))
-        today_date = datetime.datetime.now(timezone('Asia/Kolkata')) + datetime.timedelta(minutes=1)
+        today_date = datetime.datetime.now(timezone('Asia/Kolkata'))
         if game.isPlayOffs:
             min_bid_amount = PLAYOFFS_MINIMUM_BID_VALUE
             max_bid_amount = PLAYOFFS_MAXIMUM_BID_VALUE
         else:
             min_bid_amount = MINIMUM_BID_VALUE
             max_bid_amount = MAXIMUM_BID_VALUE
-        if today_date < (game_date - datetime.timedelta(minutes=1)) and (game_date - today_date).days <=1 and int(request.POST['amount']) >= min_bid_amount and int(request.POST['amount']) <= max_bid_amount:
+        if today_date < game_date and (game_date - today_date).days <=1 and int(request.POST['amount']) >= min_bid_amount and int(request.POST['amount']) <= max_bid_amount:
             if request.POST['method'] == 'create':
                 game_results = Game_Result.objects.filter(user=request.user.profiles.filter(year=int(os.environ['CURRENT_YEAR']))[0], game=game)
                 if not game_results:
@@ -294,7 +294,7 @@ class GamesView(LoginRequiredMixin, View):
                 game_result.save()
                 messages.success(request, 'Bid Updated Successfully')
         else:
-            if not (today_date < (game_date - datetime.timedelta(minutes=1)) and (game_date - today_date).days <=1):
+            if not (today_date < game_date and (game_date - today_date).days <=1):
                 messages.warning(request, 'Bid Time Expired or not Started Yet')
             else:
                 messages.warning(request, f"Bid Amount is not in Range of { min_bid_amount } to { max_bid_amount }")
