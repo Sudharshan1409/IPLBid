@@ -36,6 +36,12 @@ def nameCheck(name):
         return name_split[0] + ' & ' + name_split[1]
     return name
 
+@register.filter(name = 'checkPlayOffsCondition')
+def checkPlayOffsCondition(game, user):
+    if game.completed or (not game.isPlayOffs or user.is_superuser):
+        return True
+    return False
+
 @register.filter(name = 'convertToJson')
 def convertToJson(value):
     import json

@@ -9,6 +9,7 @@
 <br/>
 <br/>
 <h2><span {% if game.winner %}style="color:{% if game.winner == game.team1 %}green{% else %}red{% endif %}"{% endif %}><img style="width: 50px; height: 50px;" src="{% static 'bid/img/' %}{{ game.team1 }}.png" alt="Italian Trulli"> {{ game.team1 }}</span> vs <span {% if game.winner %}style="color:{% if game.winner == game.team2 %}green{% else %}red{% endif %}"{% endif %}><img style="width: 50px; height: 50px" src="{% static 'bid/img/' %}{{ game.team2 }}.png" alt="Italian Trulli"> {{ game.team2 }}</span></h2>
+{% if game|checkPlayOffsCondition:user %}
 <table class="table table-striped contents" style="font-size:80%;text-align:left;">
     <thead>
     <tr>
@@ -62,13 +63,16 @@
     {% endfor %}
     </tbody>
 </table>
+{% else %}
+<h6>Bids are not visible until the game is completed!</h6>
+{% endif %}
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLabel">New message</h5>
           <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
-            
+            <span aria-hidden="true">&times;</span>
           </button>
         </div>
         <div class="modal-body">
