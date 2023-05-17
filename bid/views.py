@@ -59,7 +59,7 @@ class AddMatchView(View):
             fourth = request.POST.get('fourthText')
         
         game = Game.objects.get(id=request.POST.get('gameId'))
-        Dream11Matches.objects.create(game=game, first=first, second=second, third=third, fourth=fourth)
+        Dream11Matches.objects.create(game=game, first=first, second=second, third=third)
         return redirect(reverse('scores'))
     
 @method_decorator(super_user_or_not, name = 'dispatch')

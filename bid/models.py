@@ -152,20 +152,21 @@ def create_profile(sender, instance, created, **kwargs):
     if created:
         if not instance.isCancelled:
             for score in Dream11Scores.objects.all():
-                score.matchesPlayed = score.matchesPlayed + 1
-                score.save()
+                if not score.name == 'Nandan':
+                    score.matchesPlayed = score.matchesPlayed + 1
+                    score.save()
             if '&' in instance.first or '&' in instance.second or '&' in instance.third:
                 if len(instance.first.split('&')) == 2:
                     Dream11Scores.objects.filter(name=instance.first.split('&')[0])[0].addScore((prices[1] + prices[2])/2)
                     Dream11Scores.objects.filter(name=instance.first.split('&')[1])[0].addScore((prices[1] + prices[2])/2)
                     Dream11Scores.objects.filter(name=instance.third)[0].addScore(prices[3])
-                    Dream11Scores.objects.filter(name=instance.fourth)[0].addScore(prices[4])
+                    # Dream11Scores.objects.filter(name=instance.fourth)[0].addScore(prices[4])
                     instance.second = None
                 elif len(instance.second.split('&')) == 2:
                     Dream11Scores.objects.filter(name=instance.second.split('&')[0])[0].addScore((prices[2] + prices[3])/2)
                     Dream11Scores.objects.filter(name=instance.second.split('&')[1])[0].addScore((prices[2] + prices[3])/2)
                     Dream11Scores.objects.filter(name=instance.first)[0].addScore(prices[1])
-                    Dream11Scores.objects.filter(name=instance.fourth)[0].addScore(prices[4])
+                    # Dream11Scores.objects.filter(name=instance.fourth)[0].addScore(prices[4])
                     instance.third = None
                 elif len(instance.third.split('&')) == 2:
                     Dream11Scores.objects.filter(name=instance.third.split('&')[0])[0].addScore((prices[3] + prices[4])/2)
@@ -174,17 +175,17 @@ def create_profile(sender, instance, created, **kwargs):
                     Dream11Scores.objects.filter(name=instance.second)[0].addScore(prices[2])
                     instance.fourth = None
                     
-                elif len(instance.fourth.split('&')) == 2:
-                    Dream11Scores.objects.filter(name=instance.third.split('&')[0])[0].addScore(prices[4]/2)
-                    Dream11Scores.objects.filter(name=instance.third.split('&')[1])[0].addScore(prices[4]/2)
-                    Dream11Scores.objects.filter(name=instance.first)[0].addScore(prices[1])
-                    Dream11Scores.objects.filter(name=instance.second)[0].addScore(prices[2])
-                    Dream11Scores.objects.filter(name=instance.third)[0].addScore(prices[3])
+                # elif len(instance.fourth.split('&')) == 2:
+                #     Dream11Scores.objects.filter(name=instance.third.split('&')[0])[0].addScore(prices[4]/2)
+                #     Dream11Scores.objects.filter(name=instance.third.split('&')[1])[0].addScore(prices[4]/2)
+                #     Dream11Scores.objects.filter(name=instance.first)[0].addScore(prices[1])
+                #     Dream11Scores.objects.filter(name=instance.second)[0].addScore(prices[2])
+                #     Dream11Scores.objects.filter(name=instance.third)[0].addScore(prices[3])
             else:
                 Dream11Scores.objects.filter(name=instance.first)[0].addScore(prices[1])
                 Dream11Scores.objects.filter(name=instance.second)[0].addScore(prices[2])
                 Dream11Scores.objects.filter(name=instance.third)[0].addScore(prices[3])
-                Dream11Scores.objects.filter(name=instance.fourth)[0].addScore(prices[4])
+                # Dream11Scores.objects.filter(name=instance.fourth)[0].addScore(prices[4])
             instance.save()
         else:
             for score in Dream11Scores.objects.all():
