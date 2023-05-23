@@ -38,7 +38,9 @@ def nameCheck(name):
 
 @register.filter(name = 'checkPlayOffsCondition')
 def checkPlayOffsCondition(game, user):
-    if game.completed or (not game.isPlayOffs or user.is_superuser):
+    game_date = game.date.astimezone(timezone('Asia/Kolkata'))
+    today_date = datetime.datetime.now(timezone('Asia/Kolkata'))
+    if today_date > game_date or (not game.isPlayOffs or user.is_superuser):
         return True
     return False
 

@@ -217,12 +217,18 @@ def update_game(sender, instance, created, **kwargs):
                     game_result[0].completed = True
                 game_result[0].save()
             else:
-                user.amount -= 1000
-                if not instance.isCancelled:
-                    Game_Result.objects.create(user=user, game=instance, bid_amount=1000, won=False, completed=True, did_not_bid=True)
+                if not instance.isPlayOffs:
+                    user.amount -= 1000
+                    if not instance.isCancelled:
+                        Game_Result.objects.create(user=user, game=instance, bid_amount=1000, won=False, completed=True, did_not_bid=True)
+                    else:
+                        Game_Result.objects.create(user=user, game=instance, bid_amount=1000, won=False, completed=True, did_not_bid=True, cancelled=True)
                 else:
-                    Game_Result.objects.create(user=user, game=instance, bid_amount=1000, won=False, completed=True, did_not_bid=True, cancelled=True)
-
+                    user.amount -= 2500
+                    if not instance.isCancelled:
+                        Game_Result.objects.create(user=user, game=instance, bid_amount=2500, won=False, completed=True, did_not_bid=True)
+                    else:
+                        Game_Result.objects.create(user=user, game=instance, bid_amount=2500, won=False, completed=True, did_not_bid=True, cancelled=True)
             user.save()
         instance.completed = True
         instance.save()

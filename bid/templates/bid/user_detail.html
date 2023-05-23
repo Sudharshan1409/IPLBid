@@ -67,14 +67,14 @@
         <tbody>
         {% for result in results %}
             <tr>
-                <td><a href="{% url 'bid:game_detail' result.game.pk %}">{{ result.game.name }}</a></td>
-                {% if result.game|checkPlayOffsCondition:user %}<td>{{ result.team }}</td>{% else %}<td>Can't Disclose</td>{% endif %}
-                {% if result.game|checkPlayOffsCondition:user %}<td>{{ result.bid_amount }}</td>{% else %}<td>Can't Disclose</td>{% endif %}
+                <td><a href="{% url 'bid:game_detail' result.game.pk %}">{{ result.game.name }}</a>{% if result.game.isPlayOffs %}<span> (Playoffs) </span>{% endif %}</td>
+                {% if result.game|checkPlayOffsCondition:user or result_user.pk == user.pk %}<td>{{ result.team }}</td>{% else %}<td>Can't Disclose</td>{% endif %}
+                {% if result.game|checkPlayOffsCondition:user or result_user.pk == user.pk %}<td>{{ result.bid_amount }}</td>{% else %}<td>Can't Disclose</td>{% endif %}
                 {% if result.did_not_bid %}
                     {% if not result.cancelled %}
-                        <td style="color: red">-1000</td>
+                        <td style="color: red">-{{ result.bid_amount }}</td>
                     {% else %}
-                        <td style="color: orange">-1000 (NO Bid)</td>
+                        <td style="color: orange">-{{ result.bid_amount }} (NO Bid)</td>
                     {% endif %}
                 {% else %}
                     {% if result.game.completed %}
