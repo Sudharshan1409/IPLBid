@@ -6,8 +6,10 @@ import os
 from iplBid.settings import IPL_TEAMS as choices, DREAM11_PLAYERS as players, PRICE_VALUES as prices, CURRENT_YEAR as current_year
 # Create your models here.
 
+
 class UserProfile(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="profiles")
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="profiles")
     amount = models.IntegerField(default=10000)
     year = models.IntegerField(default=int(os.environ['CURRENT_YEAR']))
 
@@ -16,7 +18,8 @@ class UserProfile(models.Model):
 
     @property
     def win_percentage(self):
-        game_results = self.results_user.filter(year=int(os.environ['CURRENT_YEAR']))
+        game_results = self.results_user.filter(
+            year=int(os.environ['CURRENT_YEAR']))
         amount = 0
         total = 0
         for result in game_results:
@@ -30,11 +33,12 @@ class UserProfile(models.Model):
                     total += 1000
         if total == 0:
             return 0
-        return round((amount / total) * 100, 2) 
+        return round((amount / total) * 100, 2)
 
     @property
     def stats(self):
-        game_results = self.results_user.filter(year=int(os.environ['CURRENT_YEAR']))
+        game_results = self.results_user.filter(
+            year=int(os.environ['CURRENT_YEAR']))
         wins = 0
         lost = 0
         for result in game_results:
@@ -47,7 +51,8 @@ class UserProfile(models.Model):
 
     @property
     def chart(self):
-        game_results = list(self.results_user.filter(year=int(os.environ['CURRENT_YEAR'])))
+        game_results = list(self.results_user.filter(
+            year=int(os.environ['CURRENT_YEAR'])))
         game_results.sort(key=lambda x: x.game.date, reverse=False)
         games = ['', ]
         amounts = [10000, ]
@@ -60,11 +65,13 @@ class UserProfile(models.Model):
                     amounts.append(amounts[-1] - result.bid_amount)
         return (games, amounts)
 
+
 class Game(models.Model):
     name = models.CharField(max_length=200, null=True, blank=True)
     date = models.DateTimeField()
     completed = models.BooleanField(default=False)
-    winner = models.CharField(max_length=200, null=True, blank=True, choices=choices)
+    winner = models.CharField(
+        max_length=200, null=True, blank=True, choices=choices)
     team1 = models.CharField(max_length=200, choices=choices)
     team2 = models.CharField(max_length=200, choices=choices)
     year = models.IntegerField(default=int(os.environ['CURRENT_YEAR']))
@@ -73,17 +80,21 @@ class Game(models.Model):
 
     def __str__(self):
         return f"{self.name} {self.year}"
-    
+
     def save(self, *args, **kwargs):
         self.name = f"{self.team1} vs {self.team2}"
         super().save(*args, **kwargs)
 
+
 class ActiveYear(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="active_year")
+    user = models.OneToOneField(
+        User, on_delete=models.CASCADE, related_name="active_year")
     year = models.IntegerField(default=int(os.environ['CURRENT_YEAR']))
 
+
 class Dream11Matches(models.Model):
-    game = models.OneToOneField(Game, on_delete=models.CASCADE, related_name="match", null=True)
+    game = models.OneToOneField(
+        Game, on_delete=models.CASCADE, related_name="match", null=True)
     first = models.CharField(max_length=400, null=True)
     second = models.CharField(max_length=400, null=True)
     third = models.CharField(max_length=400, null=True)
@@ -93,13 +104,13 @@ class Dream11Matches(models.Model):
 
     def __str__(self):
         return self.game.name
-    
+
     def save(self, *args, **kwargs):
         if not self.game.year == current_year:
             raise Exception("Game year does not match current year")
         self.date = self.game.date
         super().save(*args, **kwargs)
-    
+
 
 class Dream11Scores(models.Model):
     name = models.CharField(max_length=200, choices=players, unique=True)
@@ -109,27 +120,33 @@ class Dream11Scores(models.Model):
 
     def addScore(self, score):
         self.score += score
-        self.save() 
-    
+        self.save()
+
     @property
     def profit(self):
         return self.score - self.amount_used
-    
+
     @property
     def amount_used(self):
-       return (self.matchesPlayed - self.cancelledMatches) * 10
-    
+        return (self.matchesPlayed - self.cancelledMatches) * 10
+
     @property
     def percentage(self):
+        if self.matchesPlayed == 0:
+            return 0
         return round((self.score / ((self.matchesPlayed - self.cancelledMatches) * 40)) * 100, 2)
 
+
 class Game_Result(models.Model):
-    user = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name="results_user")
-    game = models.ForeignKey(Game, on_delete=models.CASCADE, related_name="results_game")
+    user = models.ForeignKey(
+        UserProfile, on_delete=models.CASCADE, related_name="results_user")
+    game = models.ForeignKey(
+        Game, on_delete=models.CASCADE, related_name="results_game")
     bid_amount = models.IntegerField()
     won = models.BooleanField(default=False)
     cancelled = models.BooleanField(default=False)
-    team = models.CharField(max_length=200, null=True, blank=True, choices=choices)
+    team = models.CharField(max_length=200, null=True,
+                            blank=True, choices=choices)
     completed = models.BooleanField(default=False)
     did_not_bid = models.BooleanField(default=False)
     year = models.IntegerField(default=int(os.environ['CURRENT_YEAR']))
@@ -140,41 +157,49 @@ class Game_Result(models.Model):
     class Meta:
         unique_together = ('user', 'game',)
 
+
 @receiver(post_save, sender=User)
 def create_profile(sender, instance, created, **kwargs):
     if created:
-        UserProfile.objects.create(user = instance)
-        ActiveYear.objects.create(user = instance)
+        UserProfile.objects.create(user=instance)
+        ActiveYear.objects.create(user=instance)
         print('profile created')
 
+
 @receiver(post_save, sender=Dream11Matches)
-def create_profile(sender, instance, created, **kwargs):
+def create_match(sender, instance, created, **kwargs):
     if created:
         if not instance.isCancelled:
-            for score in Dream11Scores.objects.all():
-                if not score.name == 'Nandan':
-                    score.matchesPlayed = score.matchesPlayed + 1
-                    score.save()
             if '&' in instance.first or '&' in instance.second or '&' in instance.third:
                 if len(instance.first.split('&')) == 2:
-                    Dream11Scores.objects.filter(name=instance.first.split('&')[0])[0].addScore((prices[1] + prices[2])/2)
-                    Dream11Scores.objects.filter(name=instance.first.split('&')[1])[0].addScore((prices[1] + prices[2])/2)
-                    Dream11Scores.objects.filter(name=instance.third)[0].addScore(prices[3])
+                    Dream11Scores.objects.filter(name=instance.first.split('&')[0])[
+                        0].addScore((prices[1] + prices[2])/2)
+                    Dream11Scores.objects.filter(name=instance.first.split('&')[1])[
+                        0].addScore((prices[1] + prices[2])/2)
+                    Dream11Scores.objects.filter(name=instance.third)[
+                        0].addScore(prices[3])
                     # Dream11Scores.objects.filter(name=instance.fourth)[0].addScore(prices[4])
                     instance.second = None
                 elif len(instance.second.split('&')) == 2:
-                    Dream11Scores.objects.filter(name=instance.second.split('&')[0])[0].addScore((prices[2] + prices[3])/2)
-                    Dream11Scores.objects.filter(name=instance.second.split('&')[1])[0].addScore((prices[2] + prices[3])/2)
-                    Dream11Scores.objects.filter(name=instance.first)[0].addScore(prices[1])
+                    Dream11Scores.objects.filter(name=instance.second.split('&')[0])[
+                        0].addScore((prices[2] + prices[3])/2)
+                    Dream11Scores.objects.filter(name=instance.second.split('&')[1])[
+                        0].addScore((prices[2] + prices[3])/2)
+                    Dream11Scores.objects.filter(name=instance.first)[
+                        0].addScore(prices[1])
                     # Dream11Scores.objects.filter(name=instance.fourth)[0].addScore(prices[4])
                     instance.third = None
                 elif len(instance.third.split('&')) == 2:
-                    Dream11Scores.objects.filter(name=instance.third.split('&')[0])[0].addScore((prices[3] + prices[4])/2)
-                    Dream11Scores.objects.filter(name=instance.third.split('&')[1])[0].addScore((prices[3] + prices[4])/2)
-                    Dream11Scores.objects.filter(name=instance.first)[0].addScore(prices[1])
-                    Dream11Scores.objects.filter(name=instance.second)[0].addScore(prices[2])
+                    Dream11Scores.objects.filter(name=instance.third.split('&')[0])[
+                        0].addScore((prices[3] + prices[4])/2)
+                    Dream11Scores.objects.filter(name=instance.third.split('&')[1])[
+                        0].addScore((prices[3] + prices[4])/2)
+                    Dream11Scores.objects.filter(name=instance.first)[
+                        0].addScore(prices[1])
+                    Dream11Scores.objects.filter(name=instance.second)[
+                        0].addScore(prices[2])
                     instance.fourth = None
-                    
+
                 # elif len(instance.fourth.split('&')) == 2:
                 #     Dream11Scores.objects.filter(name=instance.third.split('&')[0])[0].addScore(prices[4]/2)
                 #     Dream11Scores.objects.filter(name=instance.third.split('&')[1])[0].addScore(prices[4]/2)
@@ -182,9 +207,12 @@ def create_profile(sender, instance, created, **kwargs):
                 #     Dream11Scores.objects.filter(name=instance.second)[0].addScore(prices[2])
                 #     Dream11Scores.objects.filter(name=instance.third)[0].addScore(prices[3])
             else:
-                Dream11Scores.objects.filter(name=instance.first)[0].addScore(prices[1])
-                Dream11Scores.objects.filter(name=instance.second)[0].addScore(prices[2])
-                Dream11Scores.objects.filter(name=instance.third)[0].addScore(prices[3])
+                Dream11Scores.objects.filter(name=instance.first)[
+                    0].addScore(prices[1])
+                Dream11Scores.objects.filter(name=instance.second)[
+                    0].addScore(prices[2])
+                Dream11Scores.objects.filter(name=instance.third)[
+                    0].addScore(prices[3])
                 # Dream11Scores.objects.filter(name=instance.fourth)[0].addScore(prices[4])
             instance.save()
         else:
@@ -193,12 +221,13 @@ def create_profile(sender, instance, created, **kwargs):
                 score.cancelledMatches = score.cancelledMatches + 1
                 score.save()
             instance.save()
-        
+
 
 @receiver(post_save, sender=Game)
 def update_game(sender, instance, created, **kwargs):
     if not created and not instance.completed and instance.winner:
-        users = UserProfile.objects.filter(year=int(os.environ['CURRENT_YEAR']))
+        users = UserProfile.objects.filter(
+            year=int(os.environ['CURRENT_YEAR']))
         for user in users:
             game_result = Game_Result.objects.filter(user=user, game=instance)
             print(game_result)
@@ -220,15 +249,19 @@ def update_game(sender, instance, created, **kwargs):
                 if not instance.isPlayOffs:
                     user.amount -= 1000
                     if not instance.isCancelled:
-                        Game_Result.objects.create(user=user, game=instance, bid_amount=1000, won=False, completed=True, did_not_bid=True)
+                        Game_Result.objects.create(
+                            user=user, game=instance, bid_amount=1000, won=False, completed=True, did_not_bid=True)
                     else:
-                        Game_Result.objects.create(user=user, game=instance, bid_amount=1000, won=False, completed=True, did_not_bid=True, cancelled=True)
+                        Game_Result.objects.create(
+                            user=user, game=instance, bid_amount=1000, won=False, completed=True, did_not_bid=True, cancelled=True)
                 else:
                     user.amount -= 2500
                     if not instance.isCancelled:
-                        Game_Result.objects.create(user=user, game=instance, bid_amount=2500, won=False, completed=True, did_not_bid=True)
+                        Game_Result.objects.create(
+                            user=user, game=instance, bid_amount=2500, won=False, completed=True, did_not_bid=True)
                     else:
-                        Game_Result.objects.create(user=user, game=instance, bid_amount=2500, won=False, completed=True, did_not_bid=True, cancelled=True)
+                        Game_Result.objects.create(
+                            user=user, game=instance, bid_amount=2500, won=False, completed=True, did_not_bid=True, cancelled=True)
             user.save()
         instance.completed = True
         instance.save()

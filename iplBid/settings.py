@@ -32,7 +32,7 @@ TEAM_COLOR_CODES = {
     'GT': '#f9f9f9',
     'LSG': '#50cdc3',
 }
-CURRENT_YEAR = 2023
+CURRENT_YEAR = 2024
 os.environ['CURRENT_YEAR'] = str(CURRENT_YEAR)
 
 ALL_TEAMS = [
@@ -78,9 +78,8 @@ DREAM11_PLAYERS_USERNAMES = [
 
 PRICE_VALUES = {
     1: 40,
-    2: 30,
-    3: 20,
-    4: 0
+    2: 25,
+    3: 15,
 }
 
 
@@ -135,7 +134,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            os.path.join(BASE_DIR,'templates')
+            os.path.join(BASE_DIR, 'templates')
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -210,9 +209,9 @@ LOGIN_URL = '/login/'
 LOGOUT_REDIRECT_URL = '/'
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [os.path.join(BASE_DIR,'static'),]
-STATIC_ROOT = os.path.join(BASE_DIR,'staticfiles')
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'),]
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR,'media')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

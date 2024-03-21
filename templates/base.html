@@ -118,7 +118,8 @@
           {% if request.path == '/' or '/bid/games' in request.path or '/bid/user' in request.path %}
             <input type="hidden", value={{ request.path }} name="path">
             <select id="year-select" name="year" class="form-select" aria-label="Default select example" style="margin-left: 5%; width: 60vw" onchange="changeYear()">
-              <option {% if user.active_year.year == 2023 %} selected {% endif %} value="2023">Current Year (2023)</option>
+              <option {% if user.active_year.year == 2024 %} selected {% endif %} value="2024">Current Year (2024)</option>
+              <option {% if user.active_year.year == 2023 %} selected {% endif %}value="2023">2023</option>
               <option {% if user.active_year.year == 2022 %} selected {% endif %}value="2022">2022</option>
             </select>
           {% endif %}
