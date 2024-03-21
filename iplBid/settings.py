@@ -58,12 +58,12 @@ DREAM11_PLAYERS = [
     ('Panee', 'Panee'),
     ('Badri', 'Badri'),
     ('Srinidhi', 'Srinidhi'),
-    ('Nandan', 'Nandan'),
+    # ('Nandan', 'Nandan'),
     ('PavanG', 'PavanG'),
     ('PavanK', 'PavanK'),
     ('Ananthu', 'Ananthu'),
     ('Teju', 'Teju'),
-    ('Jithu', 'Jithu'),
+    # ('Jithu', 'Jithu'),
 ]
 
 DREAM11_PLAYERS_USERNAMES = [
@@ -73,7 +73,7 @@ DREAM11_PLAYERS_USERNAMES = [
     'AnanthaM_95',
     'Jagaluru_boys',
     'txms',
-    'Jithu'
+    # 'Jithu'
 ]
 
 PRICE_VALUES = {
