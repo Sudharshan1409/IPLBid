@@ -12,6 +12,7 @@
     <div class="mb-3">
       <label for="date" class="form-label">Month</label>
       <select class="form-select" name="month">
+        <option value="03" {% if latestGameMonth == 03 %} selected {% endif %}>March</option>
         <option value="04" {% if latestGameMonth == 04 %} selected {% endif %}>April</option>
         <option value="05" {% if latestGameMonth == 05 %} selected {% endif %}>May</option>
         <option value="06"{% if latestGameMonth == 06 %} selected {% endif %}>June</option>
