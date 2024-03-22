@@ -49,7 +49,7 @@ class UserProfile(models.Model):
                     lost += 1
         return (wins, lost)
 
-    @property
+    @ property
     def chart(self):
         game_results = list(self.results_user.filter(
             year=int(os.environ['CURRENT_YEAR'])))
@@ -64,6 +64,12 @@ class UserProfile(models.Model):
                 else:
                     amounts.append(amounts[-1] - result.bid_amount)
         return (games, amounts)
+
+    class Meta:
+        unique_together = ('user', 'year',)
+        indexes = [
+            models.Index(fields=['year', ])
+        ]
 
 
 class Game(models.Model):
@@ -84,6 +90,13 @@ class Game(models.Model):
     def save(self, *args, **kwargs):
         self.name = f"{self.team1} vs {self.team2}"
         super().save(*args, **kwargs)
+
+    class Meta:
+        indexes = [
+            models.Index(fields=['year', ]),
+            models.Index(fields=['completed', ]),
+            models.Index(fields=['date', ]),
+        ]
 
 
 class ActiveYear(models.Model):
@@ -111,6 +124,11 @@ class Dream11Matches(models.Model):
         self.date = self.game.date
         super().save(*args, **kwargs)
 
+    class Meta:
+        indexes = [
+            models.Index(fields=['date', ]),
+        ]
+
 
 class Dream11Scores(models.Model):
     name = models.CharField(max_length=200, choices=players, unique=True)
@@ -122,15 +140,15 @@ class Dream11Scores(models.Model):
         self.score += score
         self.save()
 
-    @property
+    @ property
     def profit(self):
         return self.score - self.amount_used
 
-    @property
+    @ property
     def amount_used(self):
         return (self.matchesPlayed - self.cancelledMatches) * 10
 
-    @property
+    @ property
     def percentage(self):
         if self.matchesPlayed == 0:
             return 0
@@ -156,9 +174,13 @@ class Game_Result(models.Model):
 
     class Meta:
         unique_together = ('user', 'game',)
+        indexes = [
+            models.Index(fields=['year', ]),
+            models.Index(fields=['completed', ]),
+        ]
 
 
-@receiver(post_save, sender=User)
+@ receiver(post_save, sender=User)
 def create_profile(sender, instance, created, **kwargs):
     if created:
         UserProfile.objects.create(user=instance)
@@ -166,7 +188,7 @@ def create_profile(sender, instance, created, **kwargs):
         print('profile created')
 
 
-@receiver(post_save, sender=Dream11Matches)
+@ receiver(post_save, sender=Dream11Matches)
 def create_match(sender, instance, created, **kwargs):
     if created:
         if not instance.isCancelled:
