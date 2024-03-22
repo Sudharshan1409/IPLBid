@@ -125,16 +125,16 @@
         </form>
           {% endif %}
         <br>
-          {% if user.id|checkRemainderCondition:request.path %}
-        <form id="change-remainder" method="POST" action="{% url 'bid:change_remainder' %}">
-          {% csrf_token %}
-            <input type="hidden", value={{ request.path }} name="path">
-            <div class="form-check form-switch" style="margin-left: 5%">
-                <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" name="remainder" onchange="changeRemainder()" {% if user.id|remainderCheck %} checked {% endif %}>
-              <label class="form-check-label" for="flexSwitchCheckDefault">Get Remainder for Bidding</label>
-            </div>
-        </form>
-          {% endif %}
+          <!-- {% if user.id|checkRemainderCondition:request.path %} -->
+        <!-- <form id="change-remainder" method="POST" action="{% url 'bid:change_remainder' %}"> -->
+          <!-- {% csrf_token %} -->
+          <!--   <input type="hidden", value={{ request.path }} name="path"> -->
+          <!--   <div class="form-check form-switch" style="margin-left: 5%"> -->
+          <!--       <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" name="remainder" onchange="changeRemainder()" {% if user.id|remainderCheck %} checked {% endif %}> -->
+          <!--     <label class="form-check-label" for="flexSwitchCheckDefault">Get Remainder for Bidding</label> -->
+          <!--   </div> -->
+        <!-- </form> -->
+          <!-- {% endif %} -->
         <br>
         <div class="content container">
             {% block content %}
