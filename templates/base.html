@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 {% load static %}
 {% load bootstrap5 %}
-{% load date %}
+{% load customTags %}
 <html lang="en" dir="ltr">
     <head>
         <meta charset="utf-8">
@@ -113,17 +113,28 @@
           </a>
         </div>
         <br>
+          {% if request.path == '/' or '/bid/games' in request.path or '/bid/user' in request.path %}
         <form id="change-year-form" method="POST" action="{% url 'bid:change_active_year' %}">
           {% csrf_token %}
-          {% if request.path == '/' or '/bid/games' in request.path or '/bid/user' in request.path %}
             <input type="hidden", value={{ request.path }} name="path">
             <select id="year-select" name="year" class="form-select" aria-label="Default select example" style="margin-left: 5%; width: 60vw" onchange="changeYear()">
               <option {% if user.active_year.year == 2024 %} selected {% endif %} value="2024">Current Year (2024)</option>
               <option {% if user.active_year.year == 2023 %} selected {% endif %}value="2023">2023</option>
               <option {% if user.active_year.year == 2022 %} selected {% endif %}value="2022">2022</option>
             </select>
-          {% endif %}
         </form>
+          {% endif %}
+        <br>
+          {% if user.id|checkRemainderCondition:request.path %}
+        <form id="change-remainder" method="POST" action="{% url 'bid:change_remainder' %}">
+          {% csrf_token %}
+            <input type="hidden", value={{ request.path }} name="path">
+            <div class="form-check form-switch" style="margin-left: 5%">
+                <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" name="remainder" onchange="changeRemainder()" {% if user.id|remainderCheck %} checked {% endif %}>
+              <label class="form-check-label" for="flexSwitchCheckDefault">Get Remainder for Bidding</label>
+            </div>
+        </form>
+          {% endif %}
         <br>
         <div class="content container">
             {% block content %}
@@ -156,6 +167,9 @@
             }
             const changeYear = function() {
               document.getElementById('change-year-form').submit();
+            }
+            const changeRemainder = function() {
+              document.getElementById('change-remainder').submit();
             }
         </script>
         {% block script %}

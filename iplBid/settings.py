@@ -63,7 +63,7 @@ DREAM11_PLAYERS = [
     ('PavanK', 'PavanK'),
     ('Ananthu', 'Ananthu'),
     ('Teju', 'Teju'),
-    # ('Jithu', 'Jithu'),
+    ('Jithu', 'Jithu'),
 ]
 
 DREAM11_PLAYERS_USERNAMES = [
@@ -73,12 +73,12 @@ DREAM11_PLAYERS_USERNAMES = [
     'AnanthaM_95',
     'Jagaluru_boys',
     'txms',
-    # 'Jithu'
+    'Jithu'
 ]
 
 PRICE_VALUES = {
-    1: 40,
-    2: 25,
+    1: 45,
+    2: 30,
     3: 15,
 }
 
@@ -105,6 +105,10 @@ ALLOWED_HOSTS = ["*"]
 
 MESSAGE_STORAGE = 'django.contrib.messages.storage.cookie.CookieStorage'
 
+CRONJOBS = [
+    ('0 14,18 * * *', 'bid.views.remainder', f">> {os.path.join(BASE_DIR, 'remainder.log')}"),
+]
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -115,7 +119,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'bootstrap5',
-    'bid'
+    'django_crontab',
+    'bid',
 ]
 
 MIDDLEWARE = [

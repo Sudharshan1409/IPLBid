@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% load bootstrap5 %}
-{% load date %}
+{% load customTags %}
 {% block content %}
 <h2>Create Game Page:</h2>
 <form action="{% url 'bid:create_game' %}" method="POST">

@@ -12,9 +12,10 @@ class UserProfile(models.Model):
         User, on_delete=models.CASCADE, related_name="profiles")
     amount = models.IntegerField(default=10000)
     year = models.IntegerField(default=int(os.environ['CURRENT_YEAR']))
+    remainder = models.BooleanField(default=False)
 
     def __str__(self):
-        return f"{self.user.username.capitalize()} Profile"
+        return f"{self.user.username.capitalize()} {self.year} Profile"
 
     @property
     def win_percentage(self):
@@ -177,6 +178,7 @@ class Game_Result(models.Model):
         indexes = [
             models.Index(fields=['year', ]),
             models.Index(fields=['completed', ]),
+            models.Index(fields=['user', 'game']),
         ]
 
 

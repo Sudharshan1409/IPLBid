@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% load bootstrap5 %}
-{% load date %}
+{% load customTags %}
 {% block content %}
 <h2>Update Game Winner Page:</h2>
 <form id="update_game_form" action="{% url 'bid:update_game_winner' %}" method="POST">

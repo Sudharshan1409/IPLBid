@@ -10,4 +10,5 @@ urlpatterns = [
     path('game/create/', views.CreateGameView.as_view(), name='create_game'),
     path('game/update/', views.UpdateGameWinnerView.as_view(), name='update_game_winner'),
     path('change_active_year/', views.ChangeActiveYearView.as_view(), name='change_active_year'),
+    path('change_remainder/', views.ChangeRemainderView.as_view(), name='change_remainder'),
 ]
