@@ -38,6 +38,8 @@ def remainder():
     for user in users:
         game_result = Game_Result.objects.filter(user=user, game=game)
         if not game_result:
+            if not user.remainder:
+                continue
             email = user.user.email
             print('email', email)
             send_mail(
