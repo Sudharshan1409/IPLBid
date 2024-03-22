@@ -110,9 +110,9 @@ class Dream11Matches(models.Model):
     game = models.OneToOneField(
         Game, on_delete=models.CASCADE, related_name="match", null=True)
     first = models.CharField(max_length=400, null=True)
-    second = models.CharField(max_length=400, null=True)
-    third = models.CharField(max_length=400, null=True)
-    fourth = models.CharField(max_length=400, null=True)
+    second = models.CharField(max_length=400, null=True, blank=True)
+    third = models.CharField(max_length=400, null=True, blank=True)
+    fourth = models.CharField(max_length=400, null=True, blank=True)
     date = models.DateTimeField(null=True)
     isCancelled = models.BooleanField(default=False)
 
@@ -197,27 +197,27 @@ def create_match(sender, instance, created, **kwargs):
             if '&' in instance.first or '&' in instance.second or '&' in instance.third:
                 if len(instance.first.split('&')) == 2:
                     Dream11Scores.objects.filter(name=instance.first.split('&')[0])[
-                        0].addScore((prices[1] + prices[2])/2)
+                        0].addScore((prices[1] + prices[2]) / 2)
                     Dream11Scores.objects.filter(name=instance.first.split('&')[1])[
-                        0].addScore((prices[1] + prices[2])/2)
+                        0].addScore((prices[1] + prices[2]) / 2)
                     Dream11Scores.objects.filter(name=instance.third)[
                         0].addScore(prices[3])
                     # Dream11Scores.objects.filter(name=instance.fourth)[0].addScore(prices[4])
                     instance.second = None
                 elif len(instance.second.split('&')) == 2:
                     Dream11Scores.objects.filter(name=instance.second.split('&')[0])[
-                        0].addScore((prices[2] + prices[3])/2)
+                        0].addScore((prices[2] + prices[3]) / 2)
                     Dream11Scores.objects.filter(name=instance.second.split('&')[1])[
-                        0].addScore((prices[2] + prices[3])/2)
+                        0].addScore((prices[2] + prices[3]) / 2)
                     Dream11Scores.objects.filter(name=instance.first)[
                         0].addScore(prices[1])
                     # Dream11Scores.objects.filter(name=instance.fourth)[0].addScore(prices[4])
                     instance.third = None
                 elif len(instance.third.split('&')) == 2:
                     Dream11Scores.objects.filter(name=instance.third.split('&')[0])[
-                        0].addScore((prices[3] + prices[4])/2)
+                        0].addScore((prices[3] + prices[4]) / 2)
                     Dream11Scores.objects.filter(name=instance.third.split('&')[1])[
-                        0].addScore((prices[3] + prices[4])/2)
+                        0].addScore((prices[3] + prices[4]) / 2)
                     Dream11Scores.objects.filter(name=instance.first)[
                         0].addScore(prices[1])
                     Dream11Scores.objects.filter(name=instance.second)[
