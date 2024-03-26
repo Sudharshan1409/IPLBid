@@ -75,6 +75,8 @@ def convertToJson(value):
 
 @register.filter(name='checkRemainderCondition')
 def checkRemainderCondition(userId, requestPath):
+    if not userId:
+        return False
     user = User.objects.get(id=userId)
     active_year = user.active_year.year
     if active_year != int(CURRENT_YEAR):
