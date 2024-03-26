@@ -106,6 +106,8 @@ class HomePageView(View):
     def get(self, request):
         if request.user.is_authenticated:
             current_year = str(request.user.active_year.year)
+        else:
+            current_year = os.environ.get('CURRENT_YEAR')
         users = UserProfile.objects.filter(
             year=int(current_year))
         users_array = []
