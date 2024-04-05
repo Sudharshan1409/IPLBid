@@ -237,9 +237,9 @@ def create_match(sender, instance, created, **kwargs):
                     0].addScore(prices[2])
                 Dream11Scores.objects.filter(name=instance.third)[
                     0].addScore(prices[3])
-                for score in Dream11Scores.objects.all():
-                    score.matchesPlayed = score.matchesPlayed + 1
-                    score.save()
+            for score in Dream11Scores.objects.all():
+                score.matchesPlayed = score.matchesPlayed + 1
+                score.save()
                 # Dream11Scores.objects.filter(name=instance.fourth)[0].addScore(prices[4])
             instance.save()
         else:
