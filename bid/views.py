@@ -227,9 +227,9 @@ class ChangeActiveYearView(LoginRequiredMixin, View):
         activeYear.save()
         print('path', request.POST['path'])
         if request.POST['path'] == '/bid/games/':
-            return redirect(reverse('bid:games')+'#ongoing')
+            return redirect(reverse('bid:games') + '#ongoing')
         if '/bid/user' in request.POST['path']:
-            return redirect('/bid/user/'+str(request.user.profiles.filter(year=int(activeYear.year)).first().id)+'?status=no&team=no')
+            return redirect('/bid/user/' + str(request.user.profiles.filter(year=int(activeYear.year)).first().id) + '?status=no&team=no')
         return redirect(request.POST['path'])
 
 
@@ -306,20 +306,16 @@ class GamesView(LoginRequiredMixin, View):
         ongoing_games = []
         upcoming_games = []
         today_date = datetime.datetime.now(timezone('Asia/Kolkata'))
+        profile = request.user.profiles.filter(year=int(current_year)).first()
         games = Game.objects.filter(year=int(current_year))
         for game in games:
-            found = False
-            res = None
-            for result in game.results_game.filter(year=int(current_year)):
-                if result.user.user == request.user:
-                    found = True
-                    res = result
-                    break
-            if found:
+            res = Game_Result.objects.filter(user=profile, game=game).first()
+            if res:
                 game.isBid = True
                 game.bid_result = res
             else:
                 game.isBid = False
+
             if game.date.astimezone(timezone('Asia/Kolkata')).date() < today_date.date():
                 completed_games.append(game)
             if game.date.astimezone(timezone('Asia/Kolkata')).date() == today_date.date():
