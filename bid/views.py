@@ -82,9 +82,13 @@ class AddMatchView(View):
     template_name = "bid/add_match.html"
 
     def get(self, request):
-        latestMatch = Dream11Matches.objects.latest("date")
-        # get Games from the date of the latest match
-        game = Game.objects.filter(date__gt=latestMatch.date).first()
+        try:
+            latestMatch = Dream11Matches.objects.latest("date")
+            # get Games from the date of the latest match
+            game = Game.objects.filter(date__gt=latestMatch.date).first()
+        except Dream11Matches.DoesNotExist:
+            latestMatch = None
+            game = None
         return render(
             request,
             self.template_name,
