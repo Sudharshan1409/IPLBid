@@ -77,8 +77,8 @@ DREAM11_PLAYERS_USERNAMES = [
 ]
 
 PRICE_VALUES = {
-    1: 45,
-    2: 30,
+    1: 40,
+    2: 25,
     3: 15,
     4: 0,
 }
