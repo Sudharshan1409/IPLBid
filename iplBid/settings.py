@@ -60,7 +60,7 @@ DREAM11_PLAYERS = [
     ("Srinidhi", "Srinidhi"),
     # ('Nandan', 'Nandan'),
     ("PavanG", "PavanG"),
-    ("PavanK", "PavanK"),
+    # ("PavanK", "PavanK"),
     ("Ananthu", "Ananthu"),
     ("Teju", "Teju"),
     ("Jithu", "Jithu"),
