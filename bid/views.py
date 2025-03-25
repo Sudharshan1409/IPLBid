@@ -257,6 +257,7 @@ class UserDetailView(LoginRequiredMixin, View):
                 "all_teams": ALL_TEAMS,
                 "status": status,
                 "team": team,
+                "profile_pk": user.pk,
             },
         )
 

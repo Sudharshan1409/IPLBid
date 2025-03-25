@@ -158,7 +158,7 @@
     const changeParams = () => {
         const status = document.getElementById('status-field').value;
         const team = document.getElementById('team-field').value;
-        window.location.href = `{% url 'bid:user' user.pk %}?status=${status}&team=${team}`;
+        window.location.href = `{% url 'bid:user' profile_pk %}?status=${status}&team=${team}`;
     }
     window.addEventListener('DOMContentLoaded', function() {
         const urlParams = new URLSearchParams(window.location.search);
